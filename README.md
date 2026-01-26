@@ -1,159 +1,173 @@
-# 🎮 OBS 直播叠加层 - Cyber Glitch 风格
+# 🎮 OBS Streaming Overlay - Cyber Glitch Style
 
-一个赛博朋克/故障风格的 OBS 直播叠加层，支持 21:9 游戏画面显示。
+A cyberpunk/glitch-style OBS streaming overlay with 21:9 game area support.
 
-## ✨ 特性
+## ✨ Features
 
-- 🎨 **赛博朋克配色**：绿色 (#4D7006) + 紫色 (#462BA5) 主题
-- 📺 **21:9 游戏区域**：1920×823 透明游戏画面区，支持超宽显示器内容
-- 🌟 **霓虹流光边框**：SVG 路径动画 + 故障效果，沿游戏边框流动
-- 💬 **弹幕面板**：右上角斜切科技风弹幕区域，带扫描线和呼吸光效
-- 🎵 **音乐模块**：可显示/隐藏的音乐播放区域（CSS 变量控制）
-- ⚡ **故障特效**：噪点、RGB分离、闪烁等动态效果
-- 🕐 **实时时钟**：自动更新的时间显示
-- 🔴 **LIVE 徽章**：平行四边形斜切样式 + 脉动动画
-- 🔲 **统一斜切边框**：所有面板采用一致的六边形斜切设计
-- ✨ **顶部装饰特效**：浮动粒子、数据流光线
-- 🌊 **底部装饰特效**：波浪线、能量条、闪烁指示灯
-- 📐 **角落装饰**：L形发光边角 + 脉冲环效果
+- 🎨 **Cyberpunk Color Scheme**: Green (#4D7006) + Purple (#462BA5) theme
+- 📺 **21:9 Game Area**: 1920×823 transparent game zone for ultrawide content
+- 🌟 **Neon Flow Border**: SVG path animation + glitch effects around game frame
+- 💬 **Danmaku Panel**: Top-right tech-cut chat area with scan line and glow effects
+- 🎵 **Music Module**: Toggleable music display area (CSS variable controlled)
+- ⚡ **Glitch Effects**: Noise, RGB split, flicker and more dynamic effects
+- 🕐 **Real-time Clock**: Auto-updating time display with Orbitron font
+- 🔴 **LIVE Badge**: Parallelogram style with pulse animation
+- 🔲 **Unified Tech-Cut Borders**: All panels use consistent hexagonal clip-path design
+- ✨ **Top Decorations**: Floating particles, data streams, matrix rain, status indicators
+- 🌊 **Bottom Decorations**: Audio visualizer, circuit traces, progress bars, tech ring
+- 📐 **Corner Decorations**: L-shaped glowing corners + pulse ring effects
 
-## 📁 文件结构
+## 📁 File Structure
 
 ```
 obsliveoverlay/
-├── overlay.html    # 主叠加层文件
-├── README.md       # 说明文档
-└── LICENSE         # 许可证
+├── overlay.html    # Main overlay file
+├── README.md       # Documentation
+└── LICENSE         # License file
 ```
 
-## 🚀 使用方法
+## 🚀 Usage
 
-### 在 OBS 中添加
+### Adding to OBS
 
-1. 打开 OBS Studio
-2. 在场景中添加「浏览器」源
-3. 勾选「本地文件」，选择 `overlay.html`
-4. 设置宽度：`1920`，高度：`1080`
-5. 将游戏/视频源放在叠加层下方
+1. Open OBS Studio
+2. Add a "Browser" source to your scene
+3. Check "Local file" and select `overlay.html`
+4. Set width: `1920`, height: `1080`
+5. Place your game/video source below the overlay
 
-### 布局说明
+### Layout Overview
 
 ```
 ┌──────────────────────────────────────────────────┐
-│  顶部栏 (129px) - 公告、时钟、LIVE徽章            │
+│  Top Bar (129px) - Notice, Clock, LIVE Badge     │
 ├──────────────────────────────────────────────────┤
 │                                          ┌────┐  │
-│                                          │弹幕│  │
-│           游戏区域 (1920×823)             │面板│  │
-│              透明区域                     └────┘  │
+│                                          │Chat│  │
+│           Game Area (1920×823)           │Panel│ │
+│             Transparent Zone             └────┘  │
 │                                                  │
 │                                      ┌─────────┐│
-│                                      │虚拟形象 ││
-│                                      │  区域   ││
+│                                      │ Avatar  ││
+│                                      │  Area   ││
 ├──────────────────────────────────────┴─────────┘│
-│  底部栏 (128px) - 游戏名称、音乐模块              │
+│  Bottom Bar (128px) - Game Name, Music Module    │
 └──────────────────────────────────────────────────┘
 ```
 
-## ⚙️ 自定义配置
+## ⚙️ Configuration
 
-### 修改文字内容
+### Modifying Text Content
 
-在 `overlay.html` 中搜索以下标记进行修改：
-
-```html
-<!-- ▼▼▼ 在这里修改公告内容 ▼▼▼ -->
-好说的，都来我家喝酒吧 没啥!
-<!-- ▲▲▲ 在这里修改公告内容 ▲▲▲ -->
-```
-
-```html
-<!-- ▼▼▼ 在这里修改游戏名称 ▼▼▼ -->
-双峰 S1E2
-<!-- ▲▲▲ 在这里修改游戏名称 ▲▲▲ -->
-```
-
-### 显示/隐藏音乐模块
-
-在 CSS 的 `:root` 部分修改 `--music-display` 变量：
-
-```css
-/* 显示音乐区 */
---music-display: flex;
-
-/* 隐藏音乐区 */
---music-display: none;
-```
-
-### 自定义颜色
-
-在 `:root` 中修改以下变量：
+Edit CSS variables in the `:root` section of `overlay.html`:
 
 ```css
 :root {
-  /* 主要颜色 */
-  --primary-green: #4D7006;    /* 主绿色 */
-  --neon-green: #8BC34A;       /* 霓虹绿 */
-  --primary-purple: #462BA5;   /* 主紫色 */
-  --neon-purple: #9C6ADE;      /* 霓虹紫 */
+  /* Text Content */
+  --announcement-text: "Your announcement here!";  /* Notice bar text */
+  --game-name-text: "Game Title";                  /* Game name */
+  
+  /* Music Module Toggle */
+  --music-display: flex;  /* Show: flex | Hide: none */
 }
 ```
 
-## 📍 叠加其他源
+### Show/Hide Music Module
 
-### 弹幕区域
+In the `:root` CSS section, modify `--music-display`:
 
-弹幕面板 (`#danmakuArea`) 内部留空，你可以在 OBS 中：
+```css
+/* Show music area */
+--music-display: flex;
 
-1. 添加另一个「浏览器」源显示弹幕
-2. 调整位置覆盖在弹幕面板区域
+/* Hide music area */
+--music-display: none;
+```
 
-### 歌曲名称
+### Custom Colors
 
-音乐模块中的歌名区域 (`#musicNameArea`) 留空，可以叠加：
+Modify these variables in `:root`:
 
-1. 歌曲信息插件输出
-2. Spotify/网易云音乐的「正在播放」源
+```css
+:root {
+  /* Primary Colors */
+  --primary-green: #4D7006;    /* Main green */
+  --neon-green: #8BC34A;       /* Neon green */
+  --primary-purple: #462BA5;   /* Main purple */
+  --neon-purple: #9C6ADE;      /* Neon purple */
+}
+```
 
-### 虚拟形象
+## 📍 Overlay Sources
 
-右下角 480×128 区域预留给虚拟形象，可放置：
+### Danmaku/Chat Area
 
-1. VTuber 形象
-2. Webcam 画面
-3. 其他装饰元素
+The danmaku panel (`#danmakuArea`) is empty inside. In OBS you can:
 
-## 🎯 设计元素说明
+1. Add another "Browser" source for chat display
+2. Position it over the danmaku panel area (360×240 content area)
 
-| 元素 | 描述 |
-|------|------|
-| 霓虹流光边框 | SVG 路径动画 + 故障抖动效果 |
-| 斜切边框 | 统一的六边形 clip-path 斜切设计 |
-| 浮动粒子 | 顶部区域绿/紫交替漂浮的发光粒子 |
-| 数据流 | 顶部垂直流动的光线 |
-| 波浪线 | 底部水平流动的渐变光波 |
-| 能量条 | 带脉冲动画的进度条 |
-| 指示灯 | 四色交替闪烁的状态灯 |
-| 角落装饰 | 四角 L 形发光边框 |
-| 脉冲环 | 不断扩散的圆环动画 |
-| 扫描线 | 弹幕区从上到下的扫描光线 |
-| 噪点效果 | 全局微弱的噪点层 |
-| RGB分离 | 偶发的色彩偏移故障效果 |
+### Song Name
 
-## 📐 技术规格
+The music module song area (`#musicNameArea`) is empty. Overlay with:
 
-- **分辨率**：1920 × 1080 (1080p)
-- **游戏区域**：1920 × 823 (21:9 比例)
-- **顶部栏**：129px
-- **底部栏**：128px
-- **弹幕面板**：300 × 380px
-- **虚拟形象区**：480 × 128px
-- **公告栏**：450px 宽，25秒无缝滚动
-- **边框样式**：统一斜切科技风（12-20px 斜角）
+1. Song info plugin output
+2. Spotify/music player "Now Playing" source
 
-## 📝 许可证
+### Avatar Area
 
-MIT License - 可自由使用和修改
+Bottom-right 480×128 area is reserved for avatars:
+
+1. VTuber model
+2. Webcam feed
+3. Other decorative elements
+
+## 🎯 Design Elements
+
+| Element | Description |
+|---------|-------------|
+| Neon Flow Border | SVG path animation with glitch shake effect |
+| Tech-Cut Borders | Unified hexagonal clip-path design |
+| Matrix Rain | Binary digits falling animation (top bar) |
+| Status Indicators | ONLINE/REC/SIGNAL status lights |
+| Floating Particles | Green/purple alternating glow particles |
+| Data Streams | Vertical flowing light beams |
+| Audio Visualizer | 8 bouncing audio bars (bottom bar) |
+| Circuit Traces | Animated circuit board paths |
+| Progress Bars | CPU/GPU/MEM simulated progress |
+| Tech Ring | Dual-layer counter-rotating ring |
+| Pulse Rings | Expanding circle animations |
+| Scan Line | Top-to-bottom scanning light in chat panel |
+| Noise Effect | Subtle global noise layer |
+| RGB Split | Occasional color shift glitch effect |
+| Data Ribbons | Horizontal flowing gradient strips |
+
+## 📐 Technical Specifications
+
+- **Resolution**: 1920 × 1080 (1080p)
+- **Game Area**: 1920 × 823 (21:9 ratio)
+- **Top Bar**: 129px
+- **Bottom Bar**: 128px
+- **Danmaku Panel**: 384 × 292px (360×240 content area)
+- **Avatar Area**: 480 × 128px
+- **Notice Bar**: 450px wide, 25s seamless scroll
+- **Border Style**: Unified tech-cut (12-20px angles)
+- **Clock Font**: Orbitron (Google Fonts)
+
+## 🎨 Animation Effects
+
+- Panel border glow pulsing
+- Clock digit flickering
+- LIVE badge scaling + glow
+- Game name rainbow gradient flow
+- Music icon rotation wobble
+- Decorator bar wave animation
+- Corner flash effects
+- Global random glitch effect
+
+## 📝 License
+
+MIT License - Free to use and modify
 
 ---
 
