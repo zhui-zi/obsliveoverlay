@@ -3,16 +3,37 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=1920, height=1080, initial-scale=1.0" />
-  <title>OBS Overlay - Cyber Red/Purple</title>
+  <title>OBS Overlay - Cyber Glitch</title>
   <style>
+    /* ╔══════════════════════════════════════════════════════════════════╗
+       ║                    🎮 配置区 - 在此修改内容                        ║
+       ╚══════════════════════════════════════════════════════════════════╝ */
     :root {
-      --deep-red: #4b0610;
-      --neon-red: #ff2d55;
-      --deep-purple: #2b0b4d;
-      --neon-purple: #b14dff;
-      --panel-bg: rgba(20, 6, 30, 0.78);
-      --accent: #ff3b8b;
-      --glow: 0 0 12px rgba(255, 59, 139, 0.8), 0 0 32px rgba(177, 77, 255, 0.6);
+      /* ===== 📝 文字内容配置 ===== */
+      --announcement-text: "没啥好说的，都来我家喝酒吧！";  /* 公告栏文字 */
+      --game-name-text: "cities skylines 2";                        /* 游戏名称 */
+      
+      /* ===== 🎵 音乐模块开关 ===== */
+      /* 显示音乐区: flex  |  隐藏音乐区: none */
+      --music-display: flex;
+      
+      /* ===== 🎨 主题颜色 ===== */
+      --primary-green: #4D7006;
+      --neon-green: #8BC34A;
+      --light-green: #CDDC39;
+      --primary-purple: #462BA5;
+      --neon-purple: #9C6ADE;
+      --light-purple: #B794F6;
+      --panel-bg: rgba(8, 8, 12, 0.98);
+      --panel-bg-solid: rgb(12, 12, 18);
+      --glow-green: 0 0 15px rgba(139, 195, 74, 0.8), 0 0 40px rgba(77, 112, 6, 0.6);
+      --glow-purple: 0 0 15px rgba(156, 106, 222, 0.8), 0 0 40px rgba(70, 43, 165, 0.6);
+      
+      /* ===== 📐 布局尺寸 ===== */
+      /* 21:9 游戏区域: 1920 × 823 */
+      --game-height: 823px;
+      --top-bar-height: 129px;
+      --bottom-bar-height: 128px;
     }
 
     * { box-sizing: border-box; }
@@ -23,11 +44,10 @@
       height: 1080px;
       background: transparent;
       overflow: hidden;
-      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-family: "Consolas", "Fira Code", "Microsoft YaHei", monospace;
       color: #fff;
     }
 
-    /* 主容器 */
     .overlay {
       position: relative;
       width: 1920px;
@@ -35,210 +55,1213 @@
       pointer-events: none;
     }
 
-    /* 顶部区域（120px） */
+    /* ========== 顶部区域 - 透明背景 ========== */
+    .top-section {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--top-bar-height);
+      background: transparent;
+      z-index: 10;
+    }
+
+    /* ========== 底部区域 - 透明背景 ========== */
+    .bottom-section {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: var(--bottom-bar-height);
+      background: transparent;
+      z-index: 10;
+    }
+
+    /* ========== 顶部装饰条 - 透明背景 ========== */
     .top-bar {
       position: absolute;
       top: 0;
       left: 0;
-      width: 1920px;
-      height: 120px;
-      background: linear-gradient(90deg, rgba(75,6,16,0.9), rgba(43,11,77,0.9));
-      border-bottom: 2px solid rgba(255, 59, 139, 0.4);
-      box-shadow: var(--glow);
+      right: 0;
+      height: var(--top-bar-height);
+      background: transparent;
+      border-bottom: 4px solid;
+      border-image: linear-gradient(90deg, var(--neon-green), var(--neon-purple), var(--neon-green)) 1;
       display: flex;
       align-items: center;
-      padding: 0 36px;
-      gap: 24px;
+      padding: 0 30px;
+      gap: 20px;
+      z-index: 20;
     }
 
-    .title-box {
-      flex: 1;
+    /* 左上装饰 */
+    .top-left-deco {
       display: flex;
-      align-items: center;
-      gap: 14px;
+      flex-direction: column;
+      gap: 6px;
     }
 
-    .title-label {
-      padding: 6px 12px;
-      font-size: 12px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      background: rgba(255, 59, 139, 0.2);
-      border: 1px solid rgba(255, 59, 139, 0.6);
-      border-radius: 4px;
-      box-shadow: var(--glow);
+    .deco-bar {
+      height: 5px;
+      background: linear-gradient(90deg, var(--neon-green), transparent);
+      box-shadow: var(--glow-green);
     }
 
-    .game-title {
-      font-size: 28px;
+    .deco-bar:nth-child(1) { width: 120px; }
+    .deco-bar:nth-child(2) { width: 80px; opacity: 0.7; }
+    .deco-bar:nth-child(3) { width: 100px; opacity: 0.5; }
+
+    /* 公告区域 - 固定宽度+文字滚动 */
+    .announcement-area {
+      width: 450px;
+      flex-shrink: 0;
+    }
+
+    .announcement-box {
+      position: relative;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(10px);
+      border: 2px solid var(--neon-green);
+      padding: 12px 30px;
+      padding-left: 110px; /* 为左上角标签留出空间 */
+      font-size: 32px;
       font-weight: 700;
-      text-shadow: 0 0 10px rgba(255, 59, 139, 0.9);
+      color: #fff;
+      text-shadow: 0 0 10px var(--neon-green), 0 2px 4px rgba(0,0,0,0.8);
+      box-shadow: var(--glow-green), 0 4px 15px rgba(0,0,0,0.5);
+      overflow: hidden;
+      white-space: nowrap;
+      clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
     }
 
-    .clock {
-      min-width: 240px;
-      text-align: right;
+    .announcement-text {
+      display: inline-block;
+      animation: marquee-scroll 25s linear infinite;
+    }
+
+    .announcement-text::after {
+      content: attr(data-text);
+      padding-left: 80px;
+    }
+
+    @keyframes marquee-scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .announcement-label {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, var(--neon-green), var(--neon-purple));
+      color: #000;
+      padding: 0 20px;
       font-size: 20px;
-      color: #ffd6f3;
-      text-shadow: 0 0 8px rgba(177, 77, 255, 0.9);
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-shadow: none;
+      display: flex;
+      align-items: center;
+      z-index: 10;
     }
 
-    /* 底部区域（137px） */
+    /* 标签右侧渐变遮罩，让文字平滑出现 */
+    .announcement-label::after {
+      content: '';
+      position: absolute;
+      right: -30px;
+      top: 0;
+      bottom: 0;
+      width: 30px;
+      background: linear-gradient(90deg, rgba(0,0,0,0.7), transparent);
+      pointer-events: none;
+    }
+
+    /* 时钟区域 - 在弹幕面板左侧 */
+    .clock-area {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-left: auto; /* 推到右侧 */
+      margin-right: 340px; /* 为弹幕面板留空间 */
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+      padding: 10px 25px;
+      border: 2px solid var(--neon-purple);
+      box-shadow: var(--glow-purple), 0 4px 15px rgba(0,0,0,0.5);
+      clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+    }
+
+    .time-display {
+      font-size: 40px;
+      font-weight: 700;
+      color: #fff;
+      text-shadow: 0 0 20px var(--neon-purple), 0 2px 4px rgba(0,0,0,0.8);
+      letter-spacing: 3px;
+      font-family: "Consolas", monospace;
+    }
+
+    .live-badge {
+      background: linear-gradient(135deg, #ff3333, #ff6666);
+      color: #fff;
+      padding: 10px 20px;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+      animation: live-pulse 1s ease-in-out infinite;
+      box-shadow: 0 0 20px rgba(255,50,50,0.8), 0 2px 8px rgba(0,0,0,0.5);
+    }
+
+    @keyframes live-pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+
+    /* ========== 游戏区域边框 - 流光效果 ========== */
+    .game-frame {
+      position: absolute;
+      top: var(--top-bar-height);
+      left: 0;
+      right: 0;
+      height: var(--game-height);
+      pointer-events: none;
+      z-index: 5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .beam-svg {
+      width: 1940px;
+      height: 843px;
+      display: block;
+      overflow: visible;
+      position: absolute;
+      top: -10px;
+      left: -10px;
+    }
+
+    /* 流光线条基础样式 */
+    .neon-path {
+      fill: none;
+      stroke-width: 14;
+      stroke-linecap: round;
+      stroke-dasharray: 1500 4000;
+      animation: dash 4s linear infinite;
+    }
+
+    /* 主线条：颜色渐变和发光 */
+    .path-main {
+      stroke: url(#beamGradient);
+      filter: 
+        drop-shadow(0 0 5px #4D7006)
+        drop-shadow(0 0 15px #462BA5)
+        drop-shadow(0 0 30px rgba(70, 43, 165, 0.6));
+      opacity: 1.0;
+    }
+
+    /* 故障线条：重影和闪烁 */
+    .path-glitch {
+      stroke: #ffffff;
+      stroke-width: 6;
+      opacity: 0;
+      mix-blend-mode: overlay;
+      animation: dash 4s linear infinite, glitch-anim 2s infinite steps(1);
+    }
+
+    /* 静态背景线 */
+    .path-bg {
+      stroke: #462BA5;
+      stroke-width: 4;
+      opacity: 0.3;
+    }
+
+    @keyframes dash {
+      to { stroke-dashoffset: -5486; }
+    }
+
+    @keyframes glitch-anim {
+      0% { opacity: 0; transform: translate(0,0); }
+      92% { opacity: 0; transform: translate(0,0); }
+      93% { opacity: 1; transform: translate(-5px, 3px); stroke: #4D7006; stroke-width: 18; filter: brightness(2); }
+      94% { opacity: 0; transform: translate(0,0); }
+      96% { opacity: 0.8; transform: translate(5px, -3px); stroke: #462BA5; }
+      97% { opacity: 0; transform: translate(0,0); }
+      98% { opacity: 1; transform: translate(0, 0); filter: brightness(3); }
+      99% { opacity: 0; }
+      100% { opacity: 0; }
+    }
+
+    /* ========== 底部信息栏 - 透明背景 ========== */
     .bottom-bar {
       position: absolute;
       bottom: 0;
       left: 0;
-      width: 1920px;
-      height: 137px;
-      background: linear-gradient(90deg, rgba(43,11,77,0.92), rgba(75,6,16,0.92));
-      border-top: 2px solid rgba(177, 77, 255, 0.4);
-      box-shadow: var(--glow);
-      padding: 18px 36px;
+      right: 480px; /* 右下角虚拟形象留空 */
+      height: var(--bottom-bar-height);
+      background: transparent;
+      border-top: 4px solid;
+      border-image: linear-gradient(90deg, var(--neon-purple), var(--neon-green)) 1;
       display: flex;
       align-items: center;
+      padding: 0 30px;
+      gap: 30px;
+      z-index: 20;
     }
 
-    .announcement {
+    /* 左侧装饰 */
+    .bottom-left-deco {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .checker-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 14px);
+      gap: 5px;
+    }
+
+    .checker-dot {
+      width: 14px;
+      height: 14px;
+      background: var(--neon-green);
+      animation: checker-blink 2s infinite;
+    }
+
+    .checker-dot:nth-child(2n) { background: var(--neon-purple); animation-delay: 0.5s; }
+
+    @keyframes checker-blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* 游戏信息 */
+    .game-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+      padding: 14px 25px;
+      border: 2px solid var(--neon-green);
+      box-shadow: var(--glow-green), 0 4px 15px rgba(0,0,0,0.5);
+      min-height: 75px;
+      clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+    }
+
+    .game-label {
+      font-size: 16px;
+      letter-spacing: 3px;
+      color: var(--light-purple);
+      text-shadow: var(--glow-purple), 0 2px 4px rgba(0,0,0,0.8);
+    }
+
+    .game-label::before,
+    .game-label::after {
+      content: '◆';
+      margin: 0 10px;
+      color: var(--neon-green);
+    }
+
+    .game-name {
+      font-size: 32px;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--light-green), var(--light-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
+      animation: name-glitch 8s infinite;
+    }
+
+    @keyframes name-glitch {
+      0%, 94%, 100% { transform: translateX(0); filter: none; }
+      95% { transform: translateX(-3px); filter: hue-rotate(90deg); }
+      96% { transform: translateX(3px); filter: hue-rotate(-90deg); }
+      97% { transform: translateX(-2px); }
+    }
+
+    /* 音乐模块 - 通过CSS变量控制显示 */
+    .music-module {
+      display: var(--music-display);
+      align-items: center;
+      gap: 18px;
+      padding: 14px 28px;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+      border: 2px solid var(--neon-purple);
+      box-shadow: var(--glow-purple), 0 4px 15px rgba(0,0,0,0.5);
+      min-width: 240px;
+      min-height: 75px;
+      clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+    }
+
+    .music-icon {
+      font-size: 34px;
+      animation: music-bounce 1s ease-in-out infinite;
+    }
+
+    @keyframes music-bounce {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+    }
+
+    .music-info {
+      display: flex;
+      flex-direction: column;
       flex: 1;
+    }
+
+    .music-label {
+      font-size: 14px;
+      letter-spacing: 2px;
+      color: var(--light-purple);
+      text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+      margin-bottom: 4px;
+    }
+
+    /* 歌名区域留空 - 用于叠加层 */
+    .music-name-area {
+      height: 28px;
+      min-width: 160px;
+      /* 留空区域，可在OBS中放置其他叠加层 */
+    }
+
+    /* ========== 右上角弹幕区 - 顶栏内 ========== */
+    .danmaku-panel {
+      position: absolute;
+      top: 10px; /* 在顶栏内 */
+      right: 25px;
+      width: 300px;
+      height: 380px;
+      z-index: 50;
+      pointer-events: none;
+    }
+
+    .danmaku-frame {
+      position: relative;
+      width: 100%;
       height: 100%;
-      border: 1px dashed rgba(255, 59, 139, 0.6);
-      background: rgba(10, 5, 18, 0.65);
-      padding: 12px 18px;
-      font-size: 18px;
-      line-height: 1.4;
-      color: #ffd6f3;
-      text-shadow: 0 0 6px rgba(255, 59, 139, 0.8);
-      box-shadow: inset 0 0 12px rgba(255, 59, 139, 0.2);
-      border-radius: 6px;
-      pointer-events: auto; /* 允许编辑 */
+      background: rgba(0,0,0,0.65);
+      backdrop-filter: blur(10px);
+      border: 2px solid var(--neon-purple);
+      box-shadow: var(--glow-purple), 0 4px 20px rgba(0,0,0,0.6);
+      clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+      animation: danmaku-glow 3s ease-in-out infinite;
     }
 
-    /* 中间透明区域（21:9，满宽） */
-    .game-window {
+    @keyframes danmaku-glow {
+      0%, 100% { box-shadow: var(--glow-purple), 0 4px 20px rgba(0,0,0,0.6); }
+      50% { box-shadow: 0 0 25px rgba(156,106,222,1), 0 0 50px rgba(70,43,165,0.8), 0 4px 20px rgba(0,0,0,0.6); }
+    }
+
+    .danmaku-header {
       position: absolute;
-      top: 120px;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(90deg, var(--neon-purple), var(--primary-purple));
+      color: #fff;
+      padding: 8px 22px;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+      clip-path: polygon(12px 0, calc(100% - 12px) 0, 100% 100%, 0 100%);
+    }
+
+    /* 弹幕区扫描线效果 */
+    .danmaku-frame::before {
+      content: '';
+      position: absolute;
+      top: 0;
       left: 0;
-      width: 1920px;
-      height: 823px; /* 1920*(9/21)=822.857 -> 823 */
-      border: 2px solid rgba(255, 59, 139, 0.4);
-      box-shadow: 0 0 24px rgba(177, 77, 255, 0.35);
-      pointer-events: none;
-      background: transparent;
-    }
-
-    /* 机能风线条 */
-    .edge-line {
-      position: absolute;
-      top: 118px;
-      left: 40px;
-      width: 200px;
+      right: 0;
       height: 2px;
-      background: linear-gradient(90deg, #ff2d55, transparent);
-      box-shadow: var(--glow);
+      background: linear-gradient(90deg, transparent, var(--neon-purple), transparent);
+      animation: danmaku-scan 2s linear infinite;
     }
 
-    .edge-line.bottom {
-      top: auto;
-      bottom: 137px;
-      left: auto;
-      right: 40px;
-      width: 260px;
-      background: linear-gradient(90deg, transparent, #b14dff);
+    @keyframes danmaku-scan {
+      0% { top: 40px; opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { top: calc(100% - 10px); opacity: 0; }
     }
 
-    /* 扫描线特效 */
-    .scanlines::before {
-      content: "";
+    .danmaku-content {
       position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        to bottom,
-        rgba(255,255,255,0.04),
-        rgba(255,255,255,0.04) 1px,
-        transparent 1px,
-        transparent 4px
-      );
-      pointer-events: none;
-      mix-blend-mode: screen;
-      opacity: 0.35;
+      top: 45px;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
     }
 
-    /* 霓虹粒子 */
-    .particles {
+    .danmaku-corner {
       position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background-image:
-        radial-gradient(circle at 20% 30%, rgba(255,59,139,0.25), transparent 35%),
-        radial-gradient(circle at 80% 70%, rgba(177,77,255,0.25), transparent 35%),
-        radial-gradient(circle at 50% 20%, rgba(255,59,139,0.2), transparent 30%),
-        radial-gradient(circle at 10% 80%, rgba(177,77,255,0.2), transparent 30%);
-      animation: pulse 6s ease-in-out infinite;
+      width: 12px;
+      height: 12px;
+      border: 2px solid var(--light-purple);
     }
 
-    @keyframes pulse {
+    .danmaku-corner.tl { top: 8px; left: 8px; border-right: none; border-bottom: none; }
+    .danmaku-corner.br { bottom: 8px; right: 8px; border-left: none; border-top: none; }
+
+    /* ========== 装饰性元素 ========== */
+    
+    /* 斜线装饰 */
+    .diag-line {
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .diag-line-1 {
+      top: 20px;
+      left: -30px;
+      width: 200px;
+      height: 6px;
+      background: linear-gradient(90deg, var(--neon-green), transparent);
+      transform: rotate(35deg);
+      box-shadow: var(--glow-green);
+      animation: diag-pulse 3s ease-in-out infinite;
+    }
+
+    .diag-line-2 {
+      top: 50px;
+      left: -20px;
+      width: 150px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--neon-purple), transparent);
+      transform: rotate(35deg);
+      box-shadow: var(--glow-purple);
+      animation: diag-pulse 3s ease-in-out infinite 0.5s;
+    }
+
+    .diag-line-3 {
+      bottom: 180px;
+      left: -40px;
+      width: 180px;
+      height: 5px;
+      background: linear-gradient(90deg, var(--neon-green), var(--neon-purple), transparent);
+      transform: rotate(-30deg);
+      box-shadow: var(--glow-green);
+      animation: diag-slide 8s linear infinite;
+    }
+
+    @keyframes diag-pulse {
       0%, 100% { opacity: 0.6; }
       50% { opacity: 1; }
     }
 
-    /* 角标装饰 */
-    .corner {
-      position: absolute;
-      width: 36px;
-      height: 36px;
-      border: 2px solid rgba(255,59,139,0.6);
-      box-shadow: var(--glow);
+    @keyframes diag-slide {
+      0% { transform: rotate(-30deg) translateX(-50px); opacity: 0; }
+      15% { opacity: 1; }
+      85% { opacity: 1; }
+      100% { transform: rotate(-30deg) translateX(50px); opacity: 0; }
     }
-    .corner.tl { top: 8px; left: 8px; border-right: none; border-bottom: none; }
-    .corner.tr { top: 8px; right: 8px; border-left: none; border-bottom: none; }
-    .corner.bl { bottom: 8px; left: 8px; border-right: none; border-top: none; }
-    .corner.br { bottom: 8px; right: 8px; border-left: none; border-top: none; }
+
+    /* 六边形装饰 */
+    .hex-deco {
+      position: absolute;
+      pointer-events: none;
+      opacity: 0.4;
+    }
+
+    .hex-deco::before {
+      content: '⬡';
+      font-size: 45px;
+      color: var(--neon-green);
+      text-shadow: var(--glow-green);
+    }
+
+    .hex-1 { top: 160px; left: 30px; animation: hex-float 5s ease-in-out infinite; }
+    .hex-2 { bottom: 200px; left: 50px; animation: hex-float 5s ease-in-out infinite 1.5s; }
+    .hex-2::before { color: var(--neon-purple); text-shadow: var(--glow-purple); font-size: 35px; }
+    .hex-3 { top: 400px; left: 80px; animation: hex-float 6s ease-in-out infinite 2.5s; }
+    .hex-3::before { font-size: 25px; }
+
+    @keyframes hex-float {
+      0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.3; }
+      50% { transform: translateY(-15px) rotate(30deg); opacity: 0.6; }
+    }
+
+    /* 电路板纹路 */
+    .circuit-line {
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .circuit-line::before {
+      content: '';
+      position: absolute;
+      background: var(--neon-green);
+      box-shadow: var(--glow-green);
+    }
+
+    .circuit-1 {
+      top: var(--top-bar-height);
+      left: 15px;
+    }
+
+    .circuit-1::before {
+      width: 3px;
+      height: 80px;
+    }
+
+    .circuit-1::after {
+      content: '';
+      position: absolute;
+      top: 80px;
+      left: 0;
+      width: 40px;
+      height: 3px;
+      background: var(--neon-green);
+      box-shadow: var(--glow-green);
+    }
+
+    .circuit-2 {
+      bottom: var(--bottom-bar-height);
+      left: 15px;
+    }
+
+    .circuit-2::before {
+      width: 3px;
+      height: 60px;
+      bottom: 0;
+    }
+
+    /* 数据点装饰 */
+    .data-dots {
+      position: absolute;
+      display: flex;
+      gap: 10px;
+      pointer-events: none;
+    }
+
+    .data-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--neon-purple);
+      box-shadow: 0 0 12px var(--neon-purple);
+      animation: dot-blink 1.5s ease-in-out infinite;
+    }
+
+    .data-dot:nth-child(2) { animation-delay: 0.3s; }
+    .data-dot:nth-child(3) { animation-delay: 0.6s; }
+    .data-dot:nth-child(4) { animation-delay: 0.9s; }
+    .data-dot:nth-child(5) { animation-delay: 1.2s; }
+
+    @keyframes dot-blink {
+      0%, 100% { opacity: 0.3; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    .data-dots-1 { top: 155px; right: 360px; }
+    .data-dots-2 { bottom: 160px; left: 80px; }
+    .data-dots-2 .data-dot { background: var(--neon-green); box-shadow: 0 0 12px var(--neon-green); }
+
+    /* 信号波纹 */
+    .signal-wave {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      border: 3px solid var(--neon-purple);
+      border-radius: 50%;
+      opacity: 0;
+      animation: signal-expand 3s ease-out infinite;
+      pointer-events: none;
+    }
+
+    .signal-wave-1 { top: 200px; left: 60px; }
+    .signal-wave-2 { bottom: 250px; left: 80px; animation-delay: 1.5s; border-color: var(--neon-green); }
+    .signal-wave-3 { top: 350px; left: 40px; animation-delay: 2.5s; width: 40px; height: 40px; }
+
+    @keyframes signal-expand {
+      0% { transform: scale(0.3); opacity: 0.8; }
+      100% { transform: scale(2); opacity: 0; }
+    }
+
+    /* 故障块 */
+    .glitch-block {
+      position: absolute;
+      pointer-events: none;
+      background: linear-gradient(90deg, var(--neon-green), var(--neon-purple));
+      opacity: 0;
+      animation: glitch-appear 12s infinite;
+    }
+
+    .glitch-block-1 { top: 180px; left: 150px; width: 60px; height: 6px; }
+    .glitch-block-2 { bottom: 220px; left: 100px; width: 80px; height: 5px; animation-delay: 4s; }
+    .glitch-block-3 { top: 300px; left: 20px; width: 50px; height: 8px; animation-delay: 8s; }
+
+    @keyframes glitch-appear {
+      0%, 97%, 100% { opacity: 0; transform: translateX(0); }
+      97.5% { opacity: 0.7; transform: translateX(-8px); }
+      98% { opacity: 0.5; transform: translateX(10px); }
+      98.5% { opacity: 0.8; transform: translateX(-4px); }
+    }
+
+    /* 能量粒子 */
+    .energy-particle {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--light-green);
+      box-shadow: 0 0 18px var(--neon-green);
+      animation: particle-float 6s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    .particle-1 { left: 100px; top: 250px; }
+    .particle-2 { left: 60px; top: 400px; animation-delay: 2s; background: var(--light-purple); box-shadow: 0 0 18px var(--neon-purple); }
+    .particle-3 { left: 120px; top: 550px; animation-delay: 4s; }
+    .particle-4 { left: 40px; top: 320px; animation-delay: 3s; background: var(--light-purple); box-shadow: 0 0 18px var(--neon-purple); width: 6px; height: 6px; }
+
+    @keyframes particle-float {
+      0%, 100% { transform: translateY(0) translateX(0); opacity: 0.5; }
+      25% { transform: translateY(-20px) translateX(10px); opacity: 1; }
+      50% { transform: translateY(-10px) translateX(-5px); opacity: 0.8; }
+      75% { transform: translateY(-25px) translateX(8px); opacity: 1; }
+    }
+
+    /* 扫描进度条 */
+    .scan-bar {
+      position: absolute;
+      bottom: var(--bottom-bar-height);
+      left: 30px;
+      width: 200px;
+      height: 4px;
+      background: rgba(139,195,74,0.2);
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .scan-bar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, var(--neon-green), transparent);
+      animation: scan-move 3s linear infinite;
+    }
+
+    @keyframes scan-move {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    /* 噪点效果 */
+    .noise-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.02;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23noise)'/%3E%3C/svg%3E");
+      animation: noise-shift 0.3s steps(5) infinite;
+      z-index: 1000;
+    }
+
+    @keyframes noise-shift {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(5px, 5px); }
+    }
+
+    /* RGB分离 */
+    .rgb-shift {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 999;
+      animation: rgb-glitch 15s infinite;
+    }
+
+    @keyframes rgb-glitch {
+      0%, 96%, 100% { box-shadow: none; }
+      97% { box-shadow: -2px 0 0 rgba(255,0,0,0.2), 2px 0 0 rgba(0,255,255,0.2); }
+      98% { box-shadow: 2px 0 0 rgba(255,0,0,0.2), -2px 0 0 rgba(0,255,255,0.2); }
+    }
+
+    /* 角落装饰 */
+    .corner-bracket {
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .corner-bracket::before,
+    .corner-bracket::after {
+      content: '';
+      position: absolute;
+      background: linear-gradient(135deg, var(--neon-green), var(--neon-purple));
+      box-shadow: 0 0 10px var(--neon-green);
+    }
+
+    .corner-bracket.tl { top: calc(var(--top-bar-height) + 10px); left: 10px; }
+    .corner-bracket.tl::before { width: 40px; height: 5px; }
+    .corner-bracket.tl::after { width: 5px; height: 40px; }
+
+    .corner-bracket.bl { bottom: calc(var(--bottom-bar-height) + 10px); left: 10px; }
+    .corner-bracket.bl::before { width: 40px; height: 5px; bottom: 0; }
+    .corner-bracket.bl::after { width: 5px; height: 40px; bottom: 0; }
+
+    /* 二进制数据流 */
+    .binary-stream {
+      position: absolute;
+      font-family: "Consolas", monospace;
+      font-size: 12px;
+      color: var(--neon-green);
+      opacity: 0.25;
+      writing-mode: vertical-rl;
+      pointer-events: none;
+      animation: binary-scroll 12s linear infinite;
+    }
+
+    .binary-1 { left: 8px; top: var(--top-bar-height); }
+    .binary-2 { left: 8px; top: 500px; animation-delay: 6s; color: var(--neon-purple); }
+
+    @keyframes binary-scroll {
+      0% { transform: translateY(-50px); opacity: 0; }
+      10% { opacity: 0.25; }
+      90% { opacity: 0.25; }
+      100% { transform: translateY(100px); opacity: 0; }
+    }
+
+    /* 菱形装饰 */
+    .diamond-deco {
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .diamond-deco::before {
+      content: '◇';
+      font-size: 30px;
+      color: var(--neon-purple);
+      text-shadow: var(--glow-purple);
+      animation: diamond-spin 8s linear infinite;
+    }
+
+    .diamond-1 { top: 500px; left: 25px; }
+    .diamond-2 { bottom: 300px; left: 90px; }
+    .diamond-2::before { font-size: 20px; color: var(--neon-green); text-shadow: var(--glow-green); animation-delay: 2s; }
+
+    @keyframes diamond-spin {
+      0%, 100% { transform: rotate(0deg) scale(1); opacity: 0.4; }
+      50% { transform: rotate(180deg) scale(1.2); opacity: 0.7; }
+    }
+
+    /* 点阵装饰 */
+    .dot-matrix {
+      position: absolute;
+      display: grid;
+      grid-template-columns: repeat(3, 6px);
+      gap: 8px;
+      pointer-events: none;
+      opacity: 0.4;
+    }
+
+    .dot-matrix span {
+      width: 6px;
+      height: 6px;
+      background: var(--neon-green);
+      border-radius: 50%;
+      animation: matrix-blink 2s ease-in-out infinite;
+    }
+
+    .dot-matrix span:nth-child(2) { animation-delay: 0.2s; }
+    .dot-matrix span:nth-child(3) { animation-delay: 0.4s; }
+    .dot-matrix span:nth-child(4) { animation-delay: 0.1s; }
+    .dot-matrix span:nth-child(5) { animation-delay: 0.3s; background: var(--neon-purple); }
+    .dot-matrix span:nth-child(6) { animation-delay: 0.5s; }
+    .dot-matrix span:nth-child(7) { animation-delay: 0.15s; }
+    .dot-matrix span:nth-child(8) { animation-delay: 0.35s; }
+    .dot-matrix span:nth-child(9) { animation-delay: 0.55s; background: var(--neon-purple); }
+
+    @keyframes matrix-blink {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+
+    .dot-matrix-1 { top: 280px; left: 60px; }
+    .dot-matrix-2 { bottom: 350px; left: 35px; }
+
+    /* ========== 顶部装饰特效 ========== */
+    .top-deco-particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--top-bar-height);
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 15;
+    }
+
+    .top-particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: var(--neon-green);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--neon-green);
+      animation: top-particle-float 4s ease-in-out infinite;
+    }
+
+    .top-particle:nth-child(1) { left: 10%; top: 20px; animation-delay: 0s; }
+    .top-particle:nth-child(2) { left: 25%; top: 60px; animation-delay: 0.8s; background: var(--neon-purple); box-shadow: 0 0 10px var(--neon-purple); }
+    .top-particle:nth-child(3) { left: 40%; top: 30px; animation-delay: 1.6s; }
+    .top-particle:nth-child(4) { left: 55%; top: 80px; animation-delay: 2.4s; background: var(--neon-purple); box-shadow: 0 0 10px var(--neon-purple); }
+    .top-particle:nth-child(5) { left: 70%; top: 40px; animation-delay: 3.2s; }
+
+    @keyframes top-particle-float {
+      0%, 100% { transform: translateY(0) scale(1); opacity: 0.6; }
+      50% { transform: translateY(-15px) scale(1.5); opacity: 1; }
+    }
+
+    /* 顶部数据流 */
+    .top-data-stream {
+      position: absolute;
+      top: 0;
+      height: var(--top-bar-height);
+      width: 2px;
+      background: linear-gradient(180deg, var(--neon-green), transparent);
+      animation: data-stream-flow 3s linear infinite;
+      pointer-events: none;
+      z-index: 15;
+    }
+
+    .top-data-stream:nth-child(1) { left: 520px; animation-delay: 0s; }
+    .top-data-stream:nth-child(2) { left: 620px; animation-delay: 1s; background: linear-gradient(180deg, var(--neon-purple), transparent); }
+    .top-data-stream:nth-child(3) { left: 720px; animation-delay: 2s; }
+
+    @keyframes data-stream-flow {
+      0% { transform: translateY(-100%); opacity: 0; }
+      20% { opacity: 1; }
+      80% { opacity: 1; }
+      100% { transform: translateY(100%); opacity: 0; }
+    }
+
+    /* ========== 底部装饰特效 ========== */
+    .bottom-deco-waves {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: var(--bottom-bar-height);
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 15;
+    }
+
+    .wave-line {
+      position: absolute;
+      bottom: 20px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--neon-purple), transparent);
+      animation: wave-flow 4s ease-in-out infinite;
+    }
+
+    .wave-line:nth-child(1) { left: 0; width: 150px; animation-delay: 0s; }
+    .wave-line:nth-child(2) { left: 200px; width: 100px; animation-delay: 0.5s; bottom: 40px; background: linear-gradient(90deg, transparent, var(--neon-green), transparent); }
+    .wave-line:nth-child(3) { left: 350px; width: 120px; animation-delay: 1s; bottom: 30px; }
+    .wave-line:nth-child(4) { left: 520px; width: 80px; animation-delay: 1.5s; bottom: 50px; background: linear-gradient(90deg, transparent, var(--neon-green), transparent); }
+
+    @keyframes wave-flow {
+      0%, 100% { transform: translateX(0) scaleX(1); opacity: 0.5; }
+      50% { transform: translateX(20px) scaleX(1.5); opacity: 1; }
+    }
+
+    /* 底部能量条 */
+    .energy-bar {
+      position: absolute;
+      bottom: 10px;
+      left: 30px;
+      width: 200px;
+      height: 6px;
+      background: rgba(77,112,6,0.3);
+      overflow: hidden;
+      z-index: 15;
+      clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 100%, 4px 100%);
+    }
+
+    .energy-bar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 60%;
+      background: linear-gradient(90deg, var(--neon-green), var(--neon-purple));
+      animation: energy-pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes energy-pulse {
+      0%, 100% { width: 60%; }
+      50% { width: 90%; }
+    }
+
+    /* 底部闪烁指示灯 */
+    .indicator-lights {
+      position: absolute;
+      bottom: 100px;
+      left: 250px;
+      display: flex;
+      gap: 8px;
+      z-index: 15;
+    }
+
+    .indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      animation: indicator-blink 1s ease-in-out infinite;
+    }
+
+    .indicator:nth-child(1) { background: var(--neon-green); box-shadow: 0 0 10px var(--neon-green); animation-delay: 0s; }
+    .indicator:nth-child(2) { background: var(--neon-purple); box-shadow: 0 0 10px var(--neon-purple); animation-delay: 0.2s; }
+    .indicator:nth-child(3) { background: var(--neon-green); box-shadow: 0 0 10px var(--neon-green); animation-delay: 0.4s; }
+    .indicator:nth-child(4) { background: #ff5555; box-shadow: 0 0 10px #ff5555; animation-delay: 0.6s; }
+
+    @keyframes indicator-blink {
+      0%, 100% { opacity: 0.4; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    /* 角落装饰框 */
+    .corner-deco {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      pointer-events: none;
+      z-index: 15;
+    }
+
+    .corner-deco::before,
+    .corner-deco::after {
+      content: '';
+      position: absolute;
+      background: var(--neon-green);
+      box-shadow: 0 0 10px var(--neon-green);
+    }
+
+    .corner-deco.top-left {
+      top: 0;
+      left: 0;
+    }
+    .corner-deco.top-left::before { width: 40px; height: 3px; top: 0; left: 0; }
+    .corner-deco.top-left::after { width: 3px; height: 40px; top: 0; left: 0; }
+
+    .corner-deco.top-right {
+      top: 0;
+      right: 340px;
+    }
+    .corner-deco.top-right::before { width: 40px; height: 3px; top: 0; right: 0; background: var(--neon-purple); box-shadow: 0 0 10px var(--neon-purple); }
+    .corner-deco.top-right::after { width: 3px; height: 40px; top: 0; right: 0; background: var(--neon-purple); box-shadow: 0 0 10px var(--neon-purple); }
+
+    .corner-deco.bottom-left {
+      bottom: 0;
+      left: 0;
+    }
+    .corner-deco.bottom-left::before { width: 40px; height: 3px; bottom: 0; left: 0; background: var(--neon-purple); box-shadow: 0 0 10px var(--neon-purple); }
+    .corner-deco.bottom-left::after { width: 3px; height: 40px; bottom: 0; left: 0; background: var(--neon-purple); box-shadow: 0 0 10px var(--neon-purple); }
+
+    .corner-deco.bottom-right {
+      bottom: 0;
+      right: 480px;
+    }
+    .corner-deco.bottom-right::before { width: 40px; height: 3px; bottom: 0; right: 0; }
+    .corner-deco.bottom-right::after { width: 3px; height: 40px; bottom: 0; right: 0; }
+
+    /* 脉冲环效果 */
+    .pulse-ring {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      border: 2px solid var(--neon-green);
+      border-radius: 50%;
+      animation: pulse-expand 2s ease-out infinite;
+      pointer-events: none;
+      z-index: 15;
+    }
+
+    .pulse-ring-1 { top: 50px; left: 600px; }
+    .pulse-ring-2 { bottom: 50px; left: 700px; animation-delay: 1s; border-color: var(--neon-purple); }
+
+    @keyframes pulse-expand {
+      0% { transform: scale(0.5); opacity: 1; }
+      100% { transform: scale(2); opacity: 0; }
+    }
   </style>
 </head>
 <body>
-  <div class="overlay scanlines">
-    <div class="particles"></div>
+  <div class="overlay">
+    <!-- 噪点和RGB层 -->
+    <div class="noise-overlay"></div>
+    <div class="rgb-shift"></div>
 
-    <!-- 顶部信息条 -->
+    <!-- 顶部不透明背景 -->
+    <div class="top-section"></div>
+    
+    <!-- 底部不透明背景 -->
+    <div class="bottom-section"></div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         📝 顶部信息条 - 公告内容在HTML中修改，或使用CSS变量
+         ═══════════════════════════════════════════════════════════ -->
     <div class="top-bar">
-      <div class="title-box">
-        <div class="title-label">GAME</div>
-        <div class="game-title" id="gameTitle" contenteditable="true">夜之城 · 霓虹突围</div>
+      <!-- 公告区域 - 固定宽度横向滚动 -->
+      <div class="announcement-area">
+        <div class="announcement-box" id="announcement">
+          <!-- ▼▼▼ 修改公告内容：同时修改两处文字保持一致 ▼▼▼ -->
+          <span class="announcement-text" data-text="好说的，都来我家喝酒吧 没啥!">好说的，都来我家喝酒吧 没啥!</span>
+          <!-- ▲▲▲ 修改公告内容：同时修改两处文字保持一致 ▲▲▲ -->
+          <div class="announcement-label">📢 公告</div>
+        </div>
       </div>
-      <div class="clock" id="clock">2026-01-26 21:09</div>
+
+      <!-- 装饰条 -->
+      <div class="top-left-deco">
+        <div class="deco-bar"></div>
+        <div class="deco-bar"></div>
+        <div class="deco-bar"></div>
+      </div>
+
+      <!-- 时钟区域 - 在弹幕面板左侧 -->
+      <div class="clock-area">
+        <div class="time-display" id="clock">21:13</div>
+        <div class="live-badge">LIVE</div>
+      </div>
     </div>
 
-    <!-- 透明游戏区域 -->
-    <div class="game-window"></div>
+    <!-- 游戏区域流光边框 -->
+    <div class="game-frame">
+      <svg class="beam-svg" viewBox="0 0 1940 843">
+        <defs>
+          <linearGradient id="beamGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#4D7006;stop-opacity:1" />
+            <stop offset="50%" style="stop-color:#462BA5;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#4D7006;stop-opacity:1" />
+          </linearGradient>
+        </defs>
+        <!-- 静态背景线 -->
+        <rect class="neon-path path-bg" x="10" y="10" width="1920" height="823" rx="30" ry="30" />
+        <!-- 主流光线 -->
+        <rect class="neon-path path-main" x="10" y="10" width="1920" height="823" rx="30" ry="30" />
+        <!-- 故障闪烁线 -->
+        <rect class="neon-path path-glitch" x="10" y="10" width="1920" height="823" rx="30" ry="30" />
+      </svg>
+    </div>
 
-    <!-- 底部公告栏 -->
+    <!-- 弹幕区域 - 一半在游戏区内，一半在顶栏 -->
+    <div class="danmaku-panel">
+      <div class="danmaku-frame">
+        <div class="danmaku-header">💬 DANMAKU</div>
+        <div class="danmaku-corner tl"></div>
+        <div class="danmaku-corner br"></div>
+        <div class="danmaku-content" id="danmakuArea">
+          <!-- 留空 - 用户自行放置弹幕源 -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         📝 底部信息栏 - 游戏名称在HTML中修改
+         ═══════════════════════════════════════════════════════════ -->
     <div class="bottom-bar">
-      <div class="announcement" id="announcement" contenteditable="true">
-        【公告】欢迎来到直播间！今晚挑战高难度模式，记得点个关注哦～
+      <div class="bottom-left-deco">
+        <div class="checker-grid">
+          <div class="checker-dot"></div>
+          <div class="checker-dot"></div>
+          <div class="checker-dot"></div>
+          <div class="checker-dot"></div>
+          <div class="checker-dot"></div>
+          <div class="checker-dot"></div>
+          <div class="checker-dot"></div>
+          <div class="checker-dot"></div>
+        </div>
+      </div>
+
+      <div class="game-info">
+        <div class="game-label">GAME NAME</div>
+        <div class="game-name" id="gameName"></div>
+      </div>
+
+      <!-- 音乐模块 - 通过CSS变量 --music-display 控制显示/隐藏 -->
+      <!-- 在 :root 中修改 --music-display: flex (显示) 或 none (隐藏) -->
+      <div class="music-module" id="musicModule">
+        <div class="music-icon">🎵</div>
+        <div class="music-info">
+          <div class="music-label">NOW PLAYING</div>
+          <div class="music-name-area" id="musicNameArea">
+            <!-- 歌名区域留空 - 在OBS中叠加其他源显示当前歌曲 -->
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- 装饰线条 -->
-    <div class="edge-line"></div>
-    <div class="edge-line bottom"></div>
+    <!-- 装饰元素已移除，保持游戏区域干净 -->
 
-    <!-- 角标装饰 -->
-    <div class="corner tl"></div>
-    <div class="corner tr"></div>
-    <div class="corner bl"></div>
-    <div class="corner br"></div>
+    <!-- 顶部装饰特效 -->
+    <div class="top-deco-particles">
+      <div class="top-particle"></div>
+      <div class="top-particle"></div>
+      <div class="top-particle"></div>
+      <div class="top-particle"></div>
+      <div class="top-particle"></div>
+    </div>
+    <div class="top-data-stream"></div>
+    <div class="top-data-stream"></div>
+    <div class="top-data-stream"></div>
+
+    <!-- 底部装饰特效 -->
+    <div class="bottom-deco-waves">
+      <div class="wave-line"></div>
+      <div class="wave-line"></div>
+      <div class="wave-line"></div>
+      <div class="wave-line"></div>
+    </div>
+    <div class="energy-bar"></div>
+    <div class="indicator-lights">
+      <div class="indicator"></div>
+      <div class="indicator"></div>
+      <div class="indicator"></div>
+      <div class="indicator"></div>
+    </div>
+
+    <!-- 角落装饰 -->
+    <div class="corner-deco top-left"></div>
+    <div class="corner-deco top-right"></div>
+    <div class="corner-deco bottom-left"></div>
+    <div class="corner-deco bottom-right"></div>
+
+    <!-- 脉冲环 -->
+    <div class="pulse-ring pulse-ring-1"></div>
+    <div class="pulse-ring pulse-ring-2"></div>
   </div>
 
   <script>
-    // 时间实时更新
+    // 时间更新
     function updateClock() {
       const now = new Date();
       const pad = (n) => String(n).padStart(2, "0");
-      const text = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
-      document.getElementById("clock").textContent = text;
+      document.getElementById("clock").textContent = 
+        `${pad(now.getHours())}:${pad(now.getMinutes())}`;
     }
     updateClock();
     setInterval(updateClock, 1000);
+
+    // 从CSS变量读取游戏名称
+    function updateGameName() {
+      const style = getComputedStyle(document.documentElement);
+      const gameName = style.getPropertyValue('--game-name-text').trim().replace(/^"|"$/g, '');
+      document.getElementById('gameName').textContent = gameName;
+    }
+    updateGameName();
   </script>
 </body>
 </html>
