@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1920, height=1080, initial-scale=1.0" />
+  <title>OBS Overlay - Cyber Red/Purple</title>
+  <style>
+    :root {
+      --deep-red: #4b0610;
+      --neon-red: #ff2d55;
+      --deep-purple: #2b0b4d;
+      --neon-purple: #b14dff;
+      --panel-bg: rgba(20, 6, 30, 0.78);
+      --accent: #ff3b8b;
+      --glow: 0 0 12px rgba(255, 59, 139, 0.8), 0 0 32px rgba(177, 77, 255, 0.6);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      width: 1920px;
+      height: 1080px;
+      background: transparent;
+      overflow: hidden;
+      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: #fff;
+    }
+
+    /* 主容器 */
+    .overlay {
+      position: relative;
+      width: 1920px;
+      height: 1080px;
+      pointer-events: none;
+    }
+
+    /* 顶部区域（120px） */
+    .top-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 1920px;
+      height: 120px;
+      background: linear-gradient(90deg, rgba(75,6,16,0.9), rgba(43,11,77,0.9));
+      border-bottom: 2px solid rgba(255, 59, 139, 0.4);
+      box-shadow: var(--glow);
+      display: flex;
+      align-items: center;
+      padding: 0 36px;
+      gap: 24px;
+    }
+
+    .title-box {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .title-label {
+      padding: 6px 12px;
+      font-size: 12px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      background: rgba(255, 59, 139, 0.2);
+      border: 1px solid rgba(255, 59, 139, 0.6);
+      border-radius: 4px;
+      box-shadow: var(--glow);
+    }
+
+    .game-title {
+      font-size: 28px;
+      font-weight: 700;
+      text-shadow: 0 0 10px rgba(255, 59, 139, 0.9);
+    }
+
+    .clock {
+      min-width: 240px;
+      text-align: right;
+      font-size: 20px;
+      color: #ffd6f3;
+      text-shadow: 0 0 8px rgba(177, 77, 255, 0.9);
+    }
+
+    /* 底部区域（137px） */
+    .bottom-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 1920px;
+      height: 137px;
+      background: linear-gradient(90deg, rgba(43,11,77,0.92), rgba(75,6,16,0.92));
+      border-top: 2px solid rgba(177, 77, 255, 0.4);
+      box-shadow: var(--glow);
+      padding: 18px 36px;
+      display: flex;
+      align-items: center;
+    }
+
+    .announcement {
+      flex: 1;
+      height: 100%;
+      border: 1px dashed rgba(255, 59, 139, 0.6);
+      background: rgba(10, 5, 18, 0.65);
+      padding: 12px 18px;
+      font-size: 18px;
+      line-height: 1.4;
+      color: #ffd6f3;
+      text-shadow: 0 0 6px rgba(255, 59, 139, 0.8);
+      box-shadow: inset 0 0 12px rgba(255, 59, 139, 0.2);
+      border-radius: 6px;
+      pointer-events: auto; /* 允许编辑 */
+    }
+
+    /* 中间透明区域（21:9，满宽） */
+    .game-window {
+      position: absolute;
+      top: 120px;
+      left: 0;
+      width: 1920px;
+      height: 823px; /* 1920*(9/21)=822.857 -> 823 */
+      border: 2px solid rgba(255, 59, 139, 0.4);
+      box-shadow: 0 0 24px rgba(177, 77, 255, 0.35);
+      pointer-events: none;
+      background: transparent;
+    }
+
+    /* 机能风线条 */
+    .edge-line {
+      position: absolute;
+      top: 118px;
+      left: 40px;
+      width: 200px;
+      height: 2px;
+      background: linear-gradient(90deg, #ff2d55, transparent);
+      box-shadow: var(--glow);
+    }
+
+    .edge-line.bottom {
+      top: auto;
+      bottom: 137px;
+      left: auto;
+      right: 40px;
+      width: 260px;
+      background: linear-gradient(90deg, transparent, #b14dff);
+    }
+
+    /* 扫描线特效 */
+    .scanlines::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.04),
+        rgba(255,255,255,0.04) 1px,
+        transparent 1px,
+        transparent 4px
+      );
+      pointer-events: none;
+      mix-blend-mode: screen;
+      opacity: 0.35;
+    }
+
+    /* 霓虹粒子 */
+    .particles {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle at 20% 30%, rgba(255,59,139,0.25), transparent 35%),
+        radial-gradient(circle at 80% 70%, rgba(177,77,255,0.25), transparent 35%),
+        radial-gradient(circle at 50% 20%, rgba(255,59,139,0.2), transparent 30%),
+        radial-gradient(circle at 10% 80%, rgba(177,77,255,0.2), transparent 30%);
+      animation: pulse 6s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+
+    /* 角标装饰 */
+    .corner {
+      position: absolute;
+      width: 36px;
+      height: 36px;
+      border: 2px solid rgba(255,59,139,0.6);
+      box-shadow: var(--glow);
+    }
+    .corner.tl { top: 8px; left: 8px; border-right: none; border-bottom: none; }
+    .corner.tr { top: 8px; right: 8px; border-left: none; border-bottom: none; }
+    .corner.bl { bottom: 8px; left: 8px; border-right: none; border-top: none; }
+    .corner.br { bottom: 8px; right: 8px; border-left: none; border-top: none; }
+  </style>
+</head>
+<body>
+  <div class="overlay scanlines">
+    <div class="particles"></div>
+
+    <!-- 顶部信息条 -->
+    <div class="top-bar">
+      <div class="title-box">
+        <div class="title-label">GAME</div>
+        <div class="game-title" id="gameTitle" contenteditable="true">夜之城 · 霓虹突围</div>
+      </div>
+      <div class="clock" id="clock">2026-01-26 21:09</div>
+    </div>
+
+    <!-- 透明游戏区域 -->
+    <div class="game-window"></div>
+
+    <!-- 底部公告栏 -->
+    <div class="bottom-bar">
+      <div class="announcement" id="announcement" contenteditable="true">
+        【公告】欢迎来到直播间！今晚挑战高难度模式，记得点个关注哦～
+      </div>
+    </div>
+
+    <!-- 装饰线条 -->
+    <div class="edge-line"></div>
+    <div class="edge-line bottom"></div>
+
+    <!-- 角标装饰 -->
+    <div class="corner tl"></div>
+    <div class="corner tr"></div>
+    <div class="corner bl"></div>
+    <div class="corner br"></div>
+  </div>
+
+  <script>
+    // 时间实时更新
+    function updateClock() {
+      const now = new Date();
+      const pad = (n) => String(n).padStart(2, "0");
+      const text = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+      document.getElementById("clock").textContent = text;
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+  </script>
+</body>
+</html>
