@@ -20,6 +20,11 @@
       /* ===== 🎵 音乐模块开关 ===== */
       /* 显示音乐区: flex  |  隐藏音乐区: none */
       --music-display: none;
+
+      /* ===== 🌐 个人信息开关 ===== */
+      /* 显示: flex | 隐藏: none */
+      --homepage-display: flex;   /* 个人主页网址 */
+      --copyright-display: flex;  /* 版权声明 */
       
       /* ===== 🎨 主题颜色 ===== */
       --primary-green: #4D7006;
@@ -1436,7 +1441,7 @@
       position: absolute;
       top: 28px;
       right: 830px;
-      display: flex;
+      display: var(--homepage-display);
       align-items: center;
       gap: 8px;
       background: rgba(0,0,0,0.6);
@@ -1466,7 +1471,7 @@
       position: absolute;
       top: 66px;
       right: 830px;
-      display: flex;
+      display: var(--copyright-display);
       align-items: center;
       gap: 8px;
       background: rgba(0,0,0,0.6);
@@ -2023,6 +2028,94 @@
   </div>
 
   <script>
+    // 初始化配置 - 从URL参数读取设置
+    // paramsSource: URLSearchParams 对象 (可选，默认读取当前URL)
+    function initConfiguration(paramsSource) {
+      const params = paramsSource || new URLSearchParams(window.location.search);
+      const root = document.documentElement;
+
+      // Helper: Set CSS Variable
+      const setVar = (name, val) => root.style.setProperty(name, val);
+
+      // 1. 公告文字
+      if (params.has('announcement')) {
+        const text = params.get('announcement');
+        setVar('--announcement-text', `"${text}"`);
+        const el = document.querySelector('.announcement-text');
+        if (el) {
+          el.textContent = text;
+          el.setAttribute('data-text', text);
+        }
+      } else if (!paramsSource) {
+        // 仅在首次加载(非预览更新)且无参数时读取默认值
+        const style = getComputedStyle(root);
+        const text = style.getPropertyValue('--announcement-text').trim().replace(/^"|"$/g, '');
+        const el = document.querySelector('.announcement-text');
+        if (el && text) {
+             el.textContent = text;
+             el.setAttribute('data-text', text);
+        }
+      }
+
+      // 2. 游戏名称
+      if (params.has('game')) {
+        const text = params.get('game');
+        setVar('--game-name-text', `"${text}"`);
+        const el = document.getElementById('gameName');
+        if(el) el.textContent = text;
+      } else if (!paramsSource) {
+        const style = getComputedStyle(root);
+        const gameName = style.getPropertyValue('--game-name-text').trim().replace(/^"|"$/g, '');
+        const el = document.getElementById('gameName');
+        if (el) el.textContent = gameName;
+      }
+
+      // 3. 显示开关
+      const setDisplay = (paramKey, cssVar) => {
+        if (params.has(paramKey)) {
+          const val = params.get(paramKey).toLowerCase();
+          const isShow = (val === 'true' || val === '1' || val === 'on' || val === 'flex');
+          setVar(cssVar, isShow ? 'flex' : 'none');
+        }
+      };
+
+      setDisplay('music', '--music-display');
+      setDisplay('homepage', '--homepage-display');
+      setDisplay('copyright', '--copyright-display');
+
+      // 4. 颜色
+      const updateColor = (hex, type) => {
+          let c = hex.replace('#', '');
+          if (c.length === 3) c = c[0]+c[0]+c[1]+c[1]+c[2]+c[2];
+          const r = parseInt(c.substring(0,2), 16);
+          const g = parseInt(c.substring(2,4), 16);
+          const b = parseInt(c.substring(4,6), 16);
+          
+          if (type === 'green') {
+             setVar('--neon-green', `#${c}`);
+             setVar('--primary-green', `#${c}`);
+             setVar('--glow-green', `0 0 15px rgba(${r}, ${g}, ${b}, 0.8), 0 0 40px rgba(${r}, ${g}, ${b}, 0.4)`);
+             setVar('--light-green', `#${c}`); 
+          } else {
+             setVar('--neon-purple', `#${c}`);
+             setVar('--primary-purple', `#${c}`);
+             setVar('--glow-purple', `0 0 15px rgba(${r}, ${g}, ${b}, 0.8), 0 0 40px rgba(${r}, ${g}, ${b}, 0.4)`);
+             setVar('--light-purple', `#${c}`);
+          }
+      };
+
+      if (params.has('color1')) updateColor(params.get('color1'), 'green');
+      if (params.has('color2')) updateColor(params.get('color2'), 'purple');
+    }
+
+    // 监听来自配置页面的实时预览消息
+    window.addEventListener('message', (event) => {
+      if (event.data && event.data.type === 'updateConfig') {
+        const newParams = new URLSearchParams(event.data.queryString);
+        initConfiguration(newParams);
+      }
+    });
+
     // 时间更新
     function updateClock() {
       const now = new Date();
@@ -2030,16 +2123,12 @@
       document.getElementById("clock").textContent = 
         `${pad(now.getHours())}:${pad(now.getMinutes())}`;
     }
+    
+    // 启动
+    initConfiguration();
     updateClock();
     setInterval(updateClock, 1000);
-
-    // 从CSS变量读取游戏名称
-    function updateGameName() {
-      const style = getComputedStyle(document.documentElement);
-      const gameName = style.getPropertyValue('--game-name-text').trim().replace(/^"|"$/g, '');
-      document.getElementById('gameName').textContent = gameName;
-    }
-    updateGameName();
+    // updateGameName 已被集成到 initConfiguration 中
   </script>
 </body>
 </html>
