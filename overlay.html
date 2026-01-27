@@ -1537,9 +1537,15 @@
     
     body.mode-chat .top-left-deco {
         position: fixed;
-        /* Moved down along with homepage */
-        top: 180px; 
+        /* Moved down below copyright badge (Ends approx 195px) */
+        top: 210px; 
         left: 30px;
+    }
+    
+    /* Move status indicators to right of wide announcement bar */
+    body.mode-chat .status-indicators {
+        left: 660px;
+        top: 35px; /* Align vertical center with announcement */
     }
 
     /* 
