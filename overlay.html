@@ -1499,6 +1499,116 @@
       text-shadow: 0 0 8px var(--neon-green);
     }
 
+    /* =========================================
+       ✨ 16:9模式 侧边填充特效 (默认隐藏)
+       ========================================= */
+    .side-fillers {
+      display: none; /* JS 控制显示 */
+      pointer-events: none;
+      z-index: 4; /* 下层于 main frame */
+    }
+
+    .filler-panel {
+      position: absolute;
+      top: var(--top-bar-height); /* 129px */
+      bottom: var(--bottom-bar-height); /* 128px */
+      width: 230px; /* (1920 - 1460) / 2 */
+      background: rgba(8, 8, 12, 0.4);
+      border-top: 1px solid rgba(255,255,255,0.1);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .filler-left {
+        left: 0;
+        border-right: 2px solid var(--neon-green);
+        box-shadow: inset -10px 0 20px rgba(0,0,0,0.5);
+    }
+
+    .filler-right {
+        right: 0;
+        border-left: 2px solid var(--neon-purple);
+        box-shadow: inset 10px 0 20px rgba(0,0,0,0.5);
+    }
+
+    /* 内部装饰 - 扫描线 */
+    .scan-line-vertical {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 1px;
+        background: rgba(255,255,255,0.1);
+    }
+    .filler-left .scan-line-vertical { right: 20px; }
+    .filler-right .scan-line-vertical { left: 20px; }
+
+    /* 内部装饰 - 柱状图动画 */
+    .bars-container {
+        display: flex;
+        gap: 4px;
+        height: 60%;
+        align-items: center;
+    }
+    .v-bar {
+        width: 10px;
+        background: rgba(255,255,255,0.05);
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+    }
+    .v-bar::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: var(--neon-green);
+        animation: v-bar-anim 2s ease-in-out infinite;
+    }
+    .filler-right .v-bar::after { background: var(--neon-purple); animation-delay: 0.5s; }
+
+    .v-bar:nth-child(1)::after { height: 30%; animation-duration: 1.5s; }
+    .v-bar:nth-child(2)::after { height: 70%; animation-duration: 2.2s; }
+    .v-bar:nth-child(3)::after { height: 50%; animation-duration: 1.8s; }
+
+    @keyframes v-bar-anim {
+        0%, 100% { height: 20%; opacity: 0.5; }
+        50% { height: 80%; opacity: 1; box-shadow: 0 0 10px currentColor; }
+    }
+
+    /* 文字装饰 */
+    .filler-text {
+        font-family: 'Orbitron';
+        font-size: 14px;
+        letter-spacing: 4px;
+        writing-mode: vertical-rl;
+        text-orientation: mixed;
+        color: rgba(255,255,255,0.3);
+        margin-top: 20px;
+        text-shadow: 0 0 5px currentColor;
+    }
+
+    /* 旋转HUD */
+    .hud-circle {
+        width: 120px;
+        height: 120px;
+        border: 1px dashed rgba(255,255,255,0.2);
+        border-radius: 50%;
+        position: absolute;
+        top: 15%;
+        animation: hud-spin 10s linear infinite;
+    }
+    .hud-circle::before {
+        content:''; position:absolute; inset: 10px; border: 1px solid var(--neon-green); border-radius: 50%; border-top-color: transparent; border-bottom-color: transparent;
+        animation: hud-spin 5s linear infinite reverse;
+    }
+    .filler-right .hud-circle::before { border-color: var(--neon-purple); border-top-color: transparent; border-bottom-color: transparent; }
+
+    @keyframes hud-spin { to { transform: rotate(360deg); } }
+
     /* 顶部状态指示器组 */
     .status-indicators {
       position: absolute;
@@ -2027,6 +2137,30 @@
 
     <!-- 底部数据带 -->
     <div class="bottom-ribbon"></div>
+
+    <!-- 16:9 模式填充层 (JS控制显示) -->
+    <div class="side-fillers" id="sideFillers">
+        <div class="filler-panel filler-left">
+            <div class="hud-circle"></div>
+            <div class="scan-line-vertical"></div>
+            <div class="bars-container">
+                <div class="v-bar"></div>
+                <div class="v-bar"></div>
+                <div class="v-bar"></div>
+            </div>
+            <div class="filler-text">SYSTEM MONITOR</div>
+        </div>
+        <div class="filler-panel filler-right">
+            <div class="hud-circle"></div>
+            <div class="scan-line-vertical"></div>
+             <div class="bars-container">
+                <div class="v-bar"></div>
+                <div class="v-bar"></div>
+                <div class="v-bar"></div>
+            </div>
+            <div class="filler-text">NETWORK SECURE</div>
+        </div>
+    </div>
   </div>
 
   <script>
@@ -2074,6 +2208,8 @@
       // option 16:9: width ~1463, centered
       const updateGameRect = (ratio) => {
           const rects = ['rect-bg', 'rect-main', 'rect-glitch'].map(id => document.getElementById(id));
+          const fillers = document.getElementById('sideFillers');
+          
           if (ratio === '16:9') {
               // Target Width: 823 * (16/9) ~= 1463
               // Center in 1940 viewBox
@@ -2082,11 +2218,13 @@
               rects.forEach(r => {
                   if(r) { r.setAttribute('width', w); r.setAttribute('x', x); }
               });
+              if(fillers) fillers.style.display = 'block';
           } else {
               // Reset to default (21:9 like)
               rects.forEach(r => {
                   if(r) { r.setAttribute('width', 1920); r.setAttribute('x', 10); }
               });
+              if(fillers) fillers.style.display = 'none';
           }
       };
 
