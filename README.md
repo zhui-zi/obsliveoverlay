@@ -68,8 +68,6 @@ Attribution to the original author (Keita) is appreciated but not mandatory.
 
 ## <a name="中文说明"></a>中文说明
 
-一个高级的、赛博朋克风格 OBS 覆盖层。具有高度可定制性、动态视觉效果和多种布局模式。专为想要未来感、故障美学外观的主播设计。
-
 ### 主要功能
 
 -   **赛博朋克美学**：故障效果、霓虹发光、数据流和科技感字体。
@@ -125,5 +123,3 @@ Attribution to the original author (Keita) is appreciated but not mandatory.
 -   ✅ **免费使用**：可自由用于个人或商业直播项目。
 -   ✅ **自由修改**：您可以根据需要修改代码以适应您的品牌。
 -   ✅ **开源**：欢迎分支和贡献代码。
-
-虽然不强制，但如果您愿意在使用时注明原作者 (Keita/黑川启太)，我们将不胜感激。
