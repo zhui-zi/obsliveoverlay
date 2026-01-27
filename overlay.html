@@ -1554,39 +1554,63 @@
         position: fixed;
         top: 20px;
         right: 30px;
-        margin: 0; /* Remove margin-right: 420px */
+        margin: 0; 
     }
     
+    /* 
+       Adjust Homepage & Copyright to avoid collision with Clock 
+       Move them below the clock or to the left of the clock?
+       Clock is at right:30px. 
+       Let's stack them vertically below the clock on the right side.
+       Clock height is roughly ~70px with padding.
+    */
     body.mode-chat .homepage-badge {
-        right: 280px; /* Adjust relative to clock */
-        top: 25px;
+        position: fixed;
+        top: 95px;
+        right: 30px; /* Align with clock right edge */
+        width: 200px; /* fixed width for alignment */
+        justify-content: flex-end; /* text aligns to right */
     }
     
     body.mode-chat .copyright-badge {
-        right: 280px;
-        top: 65px;
+        position: fixed;
+        top: 135px;
+        right: 30px;
+        width: 200px;
+        justify-content: flex-end;
     }
 
-    /* Move Game Info (Topic) to Bottom Right */
+    /* Move Game Info (Topic) to Bottom Right - Center Alignment Fixed */
     body.mode-chat .game-info {
         position: fixed;
         bottom: 30px;
         right: 30px;
         left: auto;
-        transform: none; /* If centralized before */
+        transform: none; 
         text-align: right;
-        align-items: flex-end;
+        /* Fix vertical alignment */
+        display: flex;
+        flex-direction: column; 
+        justify-content: center;
+        align-items: flex-end; /* Align right */
+        gap: 5px;
     }
     
     /* Re-align items inside game info for right side */
     body.mode-chat .game-label {
         align-self: flex-end;
+        margin-bottom: 0;
+    }
+    body.mode-chat .game-name {
+        align-self: flex-end;
     }
 
-    /* Danmaku Panel - Move to Right Side Vertical */
+    /* Danmaku Panel - Move to Right Side Vertical 
+       Adjust top position to account for badges 
+    */
     body.mode-chat .danmaku-panel {
         position: fixed;
-        top: 150px;
+        top: 180px; /* Adjusted to fit badges */
         bottom: 150px;
         left: auto;
         right: 30px;
@@ -1597,8 +1621,29 @@
     
     body.mode-chat .danmaku-frame {
         height: 100%;
-        background: rgba(0,0,0,0.4);
+        background: rgba(0,0,0,0.6); /* Increased opacity base */
         border: 1px solid var(--neon-purple);
+    }
+
+    /* =========================================
+       🔍 杂谈模式 高可读性增强 (High Contrast & Blur)
+       ========================================= */
+    body.mode-chat .announcement-box,
+    body.mode-chat .clock-area,
+    body.mode-chat .game-info,
+    body.mode-chat .music-module,
+    body.mode-chat .danmaku-frame,
+    body.mode-chat .homepage-badge,
+    body.mode-chat .copyright-badge {
+        backdrop-filter: blur(20px) contrast(1.1);
+        background: rgba(8, 8, 12, 0.85); /* Darker bg for contrast */
+        box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+    }
+    
+    /* Ensure text readability */
+    body.mode-chat .game-name {
+        font-size: 28px; /* Slightly larger topic text */
+        text-shadow: 0 0 10px var(--neon-green);
     }
 
     /* Hide standard bottom deco in center */
