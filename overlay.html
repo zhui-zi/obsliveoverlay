@@ -2069,20 +2069,18 @@
         }
       }
 
-      // 1.6 宽高比布局 (21:9 vs 16:9)
+      // 1.6 宽高比布局
+      // 用户逻辑：16:9 = 缩窄（有黑边，默认） | 21:9 = 铺满全屏
       if (params.has('ratio')) {
         const ratio = params.get('ratio');
         // SVG 和 game-height 的调整
         const svg = document.querySelector('.beam-svg');
         const paths = document.querySelectorAll('.neon-path');
         
-        if (ratio === '169') {
-          // 16:9 模式：全屏游戏区 (约 1060px 高度，稍微留点边距或贴边)
+        if (ratio === '219') {
+          // 21:9 模式：用户定义为"铺满全屏"
+          // 全屏游戏区
           setVar('--game-height', '1080px');
-          // 移动 frame 到顶部 (虽然 .game-frame top 是 var(--top-bar-height))
-          // 我们可以直接改 top-bar-height? 不，那会影响顶部 UI 的位置。
-          // 实际上 .game-frame 是 absolute top: var(...)
-          // 我们让它覆盖全屏：
           document.querySelector('.game-frame').style.top = '0';
           document.querySelector('.game-frame').style.height = '1080px';
           
@@ -2091,14 +2089,14 @@
               svg.style.height = '1080px';
               // 调整内部 rect
               paths.forEach(p => {
-                  p.setAttribute('height', '1060'); // 1080 - 20 padding
+                  p.setAttribute('height', '1060'); 
                   p.setAttribute('y', '10');
               });
           }
         } else {
-          // 21:9 默认值恢复
+          // 16:9 模式（或其他）：用户定义为"缩窄"（默认823px）
           setVar('--game-height', '823px');
-          document.querySelector('.game-frame').style.top = ''; // reset to css var
+          document.querySelector('.game-frame').style.top = ''; // reset
           document.querySelector('.game-frame').style.height = ''; 
           
           if (svg) {
