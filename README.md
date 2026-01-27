@@ -4,8 +4,6 @@
 
 An advanced, cyberpunk-themed OBS overlay with high customizability, dynamic visual effects, and multiple layout modes. Designed for streamers who want a futuristic, glitch-aesthetic look.
 
-![Overlay Preview](https://via.placeholder.com/800x450?text=Cyber+Glitch+Overlay)
-
 ## <a name="english"></a>English
 
 ### Features
