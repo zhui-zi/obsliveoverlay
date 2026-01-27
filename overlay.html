@@ -1532,31 +1532,33 @@
         position: fixed;
         top: 20px;
         left: 30px;
-        width: 400px;
+        width: 600px;
     }
     
     body.mode-chat .top-left-deco {
         position: fixed;
-        top: 180px; /* Moved down to make space for badges */
+        /* Moved down along with homepage */
+        top: 180px; 
         left: 30px;
     }
 
     /* 
        Left Side: Vertical Stack
-       1. Announcement (Top)
-       2. Homepage (Top)
-       3. Copyright (Top)
+       1. Announcement (Top 20px) -> Height ~70px -> Bottom ~90px
+       Gap 30px
+       2. Homepage (Top 120px)
+       3. Copyright (Top 165px)
        ...
-       4. Audio Visualizer (Bottom)
-       5. Progress Bars (Bottom)
-       6. Music Module (Bottom)
+       4. Audio Visualizer (Bottom ~240px)
+       5. Progress Bars (Bottom 120px) -> Height ~80px -> Top ~200px from bottom
+       6. Music Module (Bottom 30px) -> Height ~70px -> Top ~100px from bottom
     */
 
     body.mode-chat .homepage-badge {
         position: fixed;
         left: 30px;
         right: auto;
-        top: 90px;
+        top: 120px; /* Moved down to separate from Announcement */
         width: auto;
         justify-content: flex-start;
         clip-path: polygon(0 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%);
@@ -1566,7 +1568,7 @@
         position: fixed;
         left: 30px;
         right: auto;
-        top: 135px;
+        top: 165px; /* Maintain gap with homepage */
         width: auto;
         justify-content: flex-start;
     }
@@ -1580,7 +1582,7 @@
     
     body.mode-chat .progress-bars {
         position: fixed;
-        bottom: 110px;
+        bottom: 120px; /* Slightly higher */
         left: 30px;
         right: auto;
         align-items: flex-start;
@@ -1588,7 +1590,7 @@
     
     body.mode-chat .audio-visualizer {
         position: fixed;
-        bottom: 175px;
+        bottom: 240px; /* Moved up to avoid overlap with progress bars */
         left: 30px;
         right: auto;
     }
