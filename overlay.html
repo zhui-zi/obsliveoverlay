@@ -288,9 +288,9 @@
     .path-main {
       stroke: url(#beamGradient);
       filter: 
-        drop-shadow(0 0 5px #4D7006)
-        drop-shadow(0 0 15px #462BA5)
-        drop-shadow(0 0 30px rgba(70, 43, 165, 0.6));
+        drop-shadow(0 0 5px var(--primary-green))
+        drop-shadow(0 0 15px var(--primary-purple))
+        drop-shadow(0 0 30px var(--neon-purple)); 
       opacity: 1.0;
     }
 
@@ -1943,9 +1943,9 @@
       <svg class="beam-svg" viewBox="0 0 1940 843">
         <defs>
           <linearGradient id="beamGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style="stop-color:#4D7006;stop-opacity:1" />
-            <stop offset="50%" style="stop-color:#462BA5;stop-opacity:1" />
-            <stop offset="100%" style="stop-color:#4D7006;stop-opacity:1" />
+            <stop offset="0%" style="stop-color:var(--primary-green);stop-opacity:1" />
+            <stop offset="50%" style="stop-color:var(--primary-purple);stop-opacity:1" />
+            <stop offset="100%" style="stop-color:var(--primary-green);stop-opacity:1" />
           </linearGradient>
         </defs>
         <!-- 静态背景线 -->
