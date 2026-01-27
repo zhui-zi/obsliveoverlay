@@ -2,2133 +2,485 @@
 <html lang="zh">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=1920, height=1080, initial-scale=1.0" />
-  <title>OBS Overlay - Cyber Glitch</title>
-  <!-- 科技风格字体 -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OBS Overlay Configurator</title>
   <style>
-    /* ╔══════════════════════════════════════════════════════════════════╗
-       ║                    🎮 配置区 - 在此修改内容                        ║
-       ╚══════════════════════════════════════════════════════════════════╝ */
     :root {
-      /* ===== 📝 文字内容配置 ===== */
-      --announcement-text: "没啥好说的，都来我家喝酒吧！";  /* 公告栏文字 */
-      --game-name-text: "cities skylines 2";                        /* 游戏名称 */
-      
-      /* ===== 🎵 音乐模块开关 ===== */
-      /* 显示音乐区: flex  |  隐藏音乐区: none */
-      --music-display: none;
-
-      /* ===== 🌐 个人信息开关 ===== */
-      /* 显示: flex | 隐藏: none */
-      --homepage-display: flex;   /* 个人主页网址 */
-      --copyright-display: flex;  /* 版权声明 */
-      
-      /* ===== 🎨 主题颜色 ===== */
-      --primary-green: #4D7006;
-      --neon-green: #8BC34A;
-      --light-green: #CDDC39;
-      --primary-purple: #462BA5;
-      --neon-purple: #9C6ADE;
-      --light-purple: #B794F6;
-      --panel-bg: rgba(8, 8, 12, 0.98);
-      --panel-bg-solid: rgb(12, 12, 18);
-      --glow-green: 0 0 15px rgba(139, 195, 74, 0.8), 0 0 40px rgba(77, 112, 6, 0.6);
-      --glow-purple: 0 0 15px rgba(156, 106, 222, 0.8), 0 0 40px rgba(70, 43, 165, 0.6);
-      
-      /* ===== 📐 布局尺寸 ===== */
-      /* 21:9 游戏区域: 1920 × 823 */
-      --game-height: 823px;
-      --top-bar-height: 129px;
-      --bottom-bar-height: 128px;
+      --bg-color: #121212;
+      --panel-bg: #1e1e1e;
+      --text-color: #e0e0e0;
+      --accent-color: #8BC34A;
+      --border-color: #333;
     }
 
-    * { box-sizing: border-box; }
-
-    html, body {
+    body {
       margin: 0;
-      width: 1920px;
-      height: 1080px;
-      background: transparent;
-      overflow: hidden;
-      font-family: "Consolas", "Fira Code", "Microsoft YaHei", monospace;
-      color: #fff;
-    }
-
-    .overlay {
-      position: relative;
-      width: 1920px;
-      height: 1080px;
-      pointer-events: none;
-    }
-
-    /* ========== 顶部区域 - 透明背景 ========== */
-    .top-section {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: var(--top-bar-height);
-      background: transparent;
-      z-index: 10;
-    }
-
-    /* ========== 底部区域 - 透明背景 ========== */
-    .bottom-section {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: var(--bottom-bar-height);
-      background: transparent;
-      z-index: 10;
-    }
-
-    /* ========== 顶部装饰条 - 透明背景 ========== */
-    .top-bar {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: var(--top-bar-height);
-      background: transparent;
-      border-bottom: 4px solid;
-      border-image: linear-gradient(90deg, var(--neon-green), var(--neon-purple), var(--neon-green)) 1;
+      padding: 0;
+      font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      height: 100vh;
       display: flex;
-      align-items: center;
-      padding: 0 30px;
-      gap: 20px;
-      z-index: 20;
+      overflow: hidden;
     }
 
-    /* 左上装饰 */
-    .top-left-deco {
+    /* 左侧配置面板 */
+    .config-panel {
+      width: 350px;
+      background: var(--panel-bg);
+      border-right: 1px solid var(--border-color);
       display: flex;
       flex-direction: column;
-      gap: 6px;
-    }
-
-    .deco-bar {
-      height: 5px;
-      background: linear-gradient(90deg, var(--neon-green), transparent);
-      box-shadow: var(--glow-green);
-    }
-
-    .deco-bar:nth-child(1) { width: 120px; }
-    .deco-bar:nth-child(2) { width: 80px; opacity: 0.7; }
-    .deco-bar:nth-child(3) { width: 100px; opacity: 0.5; }
-
-    /* 公告区域 - 固定宽度+文字滚动 */
-    .announcement-area {
-      width: 450px;
-      flex-shrink: 0;
-    }
-
-    .announcement-box {
-      position: relative;
-      background: rgba(0,0,0,0.7);
-      backdrop-filter: blur(10px);
-      border: 2px solid var(--neon-green);
-      padding: 12px 30px;
-      padding-left: 110px; /* 为左上角标签留出空间 */
-      font-size: 32px;
-      font-weight: 700;
-      color: #fff;
-      text-shadow: 0 0 10px var(--neon-green), 0 2px 4px rgba(0,0,0,0.8);
-      box-shadow: var(--glow-green), 0 4px 15px rgba(0,0,0,0.5);
-      overflow: hidden;
-      white-space: nowrap;
-      clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
-    }
-
-    .announcement-text {
-      display: inline-block;
-      animation: marquee-scroll 25s linear infinite;
-    }
-
-    .announcement-text::after {
-      content: attr(data-text);
-      padding-left: 80px;
-    }
-
-    @keyframes marquee-scroll {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-
-    .announcement-label {
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      background: linear-gradient(135deg, var(--neon-green), var(--primary-green));
-      color: #fff;
-      padding: 0 18px;
-      font-size: 14px;
-      font-family: 'Orbitron', sans-serif;
-      font-weight: 700;
-      letter-spacing: 3px;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-      display: flex;
-      align-items: center;
+      height: 100%;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.3);
       z-index: 10;
     }
 
-    /* 标签右侧渐变遮罩，让文字平滑出现 */
-    .announcement-label::after {
-      content: '';
-      position: absolute;
-      right: -30px;
-      top: 0;
-      bottom: 0;
-      width: 30px;
-      background: linear-gradient(90deg, rgba(0,0,0,0.7), transparent);
-      pointer-events: none;
+    .panel-header {
+      padding: 20px;
+      border-bottom: 1px solid var(--border-color);
+      background: rgba(0,0,0,0.2);
     }
 
-    /* 时钟区域 - 在弹幕面板左侧 */
-    .clock-area {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      margin-left: auto; /* 推到右侧 */
-      margin-right: 420px; /* 为弹幕面板留空间 */
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(8px);
-      padding: 10px 25px;
-      border: 2px solid var(--neon-purple);
-      box-shadow: var(--glow-purple), 0 4px 15px rgba(0,0,0,0.5);
-      clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
-    }
-
-    .time-display {
-      font-size: 42px;
-      font-weight: 900;
-      color: #fff;
-      text-shadow: 0 0 20px var(--neon-purple), 0 0 40px var(--neon-purple), 0 2px 4px rgba(0,0,0,0.8);
-      letter-spacing: 5px;
-      font-family: 'Orbitron', sans-serif;
-    }
-
-    .live-badge {
+    .panel-header h1 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--accent-color);
       display: flex;
       align-items: center;
       gap: 10px;
-      background: rgba(0,0,0,0.8);
-      border: 2px solid #ff3333;
-      color: #fff;
-      padding: 8px 16px;
-      font-size: 14px;
-      font-weight: 700;
-      font-family: 'Orbitron', sans-serif;
-      letter-spacing: 3px;
-      clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
-      box-shadow: 0 0 15px rgba(255,50,50,0.5), inset 0 0 20px rgba(255,50,50,0.1);
-      animation: live-border-pulse 2s ease-in-out infinite;
     }
 
-    .live-badge::before {
-      content: '';
-      width: 10px;
-      height: 10px;
-      background: #ff3333;
-      border-radius: 50%;
-      box-shadow: 0 0 10px #ff3333, 0 0 20px #ff3333;
-      animation: live-dot-blink 1s ease-in-out infinite;
-    }
-
-    @keyframes live-dot-blink {
-      0%, 100% { opacity: 1; box-shadow: 0 0 10px #ff3333, 0 0 20px #ff3333; }
-      50% { opacity: 0.3; box-shadow: 0 0 5px #ff3333; }
-    }
-
-    @keyframes live-border-pulse {
-      0%, 100% { border-color: #ff3333; box-shadow: 0 0 15px rgba(255,50,50,0.5), inset 0 0 20px rgba(255,50,50,0.1); }
-      50% { border-color: #ff6666; box-shadow: 0 0 25px rgba(255,50,50,0.8), inset 0 0 30px rgba(255,50,50,0.2); }
-    }
-
-    /* ========== 游戏区域边框 - 流光效果 ========== */
-    .game-frame {
-      position: absolute;
-      top: var(--top-bar-height);
-      left: 0;
-      right: 0;
-      height: var(--game-height);
-      pointer-events: none;
-      z-index: 5;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .beam-svg {
-      width: 1940px;
-      height: 843px;
-      display: block;
-      overflow: visible;
-      position: absolute;
-      top: -10px;
-      left: -10px;
-    }
-
-    /* 流光线条基础样式 */
-    .neon-path {
-      fill: none;
-      stroke-width: 14;
-      stroke-linecap: round;
-      stroke-dasharray: 1500 4000;
-      animation: dash 4s linear infinite;
-    }
-
-    /* 主线条：颜色渐变和发光 */
-    .path-main {
-      stroke: url(#beamGradient);
-      filter: 
-        drop-shadow(0 0 5px #4D7006)
-        drop-shadow(0 0 15px #462BA5)
-        drop-shadow(0 0 30px rgba(70, 43, 165, 0.6));
-      opacity: 1.0;
-    }
-
-    /* 故障线条：重影和闪烁 */
-    .path-glitch {
-      stroke: #ffffff;
-      stroke-width: 6;
-      opacity: 0;
-      mix-blend-mode: overlay;
-      animation: dash 4s linear infinite, glitch-anim 2s infinite steps(1);
-    }
-
-    /* 静态背景线 */
-    .path-bg {
-      stroke: #462BA5;
-      stroke-width: 4;
-      opacity: 0.3;
-    }
-
-    @keyframes dash {
-      to { stroke-dashoffset: -5486; }
-    }
-
-    @keyframes glitch-anim {
-      0% { opacity: 0; transform: translate(0,0); }
-      92% { opacity: 0; transform: translate(0,0); }
-      93% { opacity: 1; transform: translate(-5px, 3px); stroke: #4D7006; stroke-width: 18; filter: brightness(2); }
-      94% { opacity: 0; transform: translate(0,0); }
-      96% { opacity: 0.8; transform: translate(5px, -3px); stroke: #462BA5; }
-      97% { opacity: 0; transform: translate(0,0); }
-      98% { opacity: 1; transform: translate(0, 0); filter: brightness(3); }
-      99% { opacity: 0; }
-      100% { opacity: 0; }
-    }
-
-    /* ========== 底部信息栏 - 透明背景 ========== */
-    .bottom-bar {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 480px; /* 右下角虚拟形象留空 */
-      height: var(--bottom-bar-height);
-      background: transparent;
-      border-top: 4px solid;
-      border-image: linear-gradient(90deg, var(--neon-purple), var(--neon-green)) 1;
-      display: flex;
-      align-items: center;
-      padding: 0 30px;
-      gap: 30px;
-      z-index: 20;
-    }
-
-    /* 左侧装饰 */
-    .bottom-left-deco {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-
-    .checker-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 14px);
-      gap: 5px;
-    }
-
-    .checker-dot {
-      width: 14px;
-      height: 14px;
-      background: var(--neon-green);
-      animation: checker-blink 2s infinite;
-    }
-
-    .checker-dot:nth-child(2n) { background: var(--neon-purple); animation-delay: 0.5s; }
-
-    @keyframes checker-blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
-    }
-
-    /* 游戏信息 */
-    .game-info {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(8px);
-      padding: 14px 25px;
-      border: 2px solid var(--neon-green);
-      box-shadow: var(--glow-green), 0 4px 15px rgba(0,0,0,0.5);
-      min-height: 75px;
-      clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
-    }
-
-    .game-label {
-      font-size: 16px;
-      letter-spacing: 3px;
-      color: var(--light-purple);
-      text-shadow: var(--glow-purple), 0 2px 4px rgba(0,0,0,0.8);
-    }
-
-    .game-label::before,
-    .game-label::after {
-      content: '◆';
-      margin: 0 10px;
-      color: var(--neon-green);
-    }
-
-    .game-name {
-      font-size: 32px;
-      font-weight: 700;
-      background: linear-gradient(90deg, var(--light-green), var(--light-purple));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
-      animation: name-glitch 8s infinite;
-    }
-
-    @keyframes name-glitch {
-      0%, 94%, 100% { transform: translateX(0); filter: none; }
-      95% { transform: translateX(-3px); filter: hue-rotate(90deg); }
-      96% { transform: translateX(3px); filter: hue-rotate(-90deg); }
-      97% { transform: translateX(-2px); }
-    }
-
-    /* 音乐模块 - 通过CSS变量控制显示 */
-    .music-module {
-      display: var(--music-display);
-      align-items: center;
-      gap: 18px;
-      padding: 14px 28px;
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(8px);
-      border: 2px solid var(--neon-purple);
-      box-shadow: var(--glow-purple), 0 4px 15px rgba(0,0,0,0.5);
-      min-width: 240px;
-      min-height: 75px;
-      clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
-    }
-
-    .music-icon {
-      font-size: 34px;
-      animation: music-bounce 1s ease-in-out infinite;
-    }
-
-    @keyframes music-bounce {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.15); }
-    }
-
-    .music-info {
-      display: flex;
-      flex-direction: column;
+    .panel-content {
       flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
 
-    .music-label {
-      font-size: 14px;
-      letter-spacing: 2px;
-      color: var(--light-purple);
-      text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-      margin-bottom: 4px;
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
 
-    /* 歌名区域留空 - 用于叠加层 */
-    .music-name-area {
-      height: 28px;
-      min-width: 160px;
-      /* 留空区域，可在OBS中放置其他叠加层 */
+    .form-group label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #aaa;
     }
 
-    /* ========== 右上角弹幕区 - 顶栏内 ========== */
-    .danmaku-panel {
-      position: absolute;
-      top: 10px; /* 在顶栏内 */
-      right: 25px;
-      width: 384px;
-      height: 292px;
-      z-index: 50;
-      pointer-events: none;
-    }
-
-    .danmaku-frame {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.65);
-      backdrop-filter: blur(10px);
-      border: 2px solid var(--neon-purple);
-      box-shadow: var(--glow-purple), 0 4px 20px rgba(0,0,0,0.6);
-      clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
-      animation: danmaku-glow 3s ease-in-out infinite;
-    }
-
-    @keyframes danmaku-glow {
-      0%, 100% { box-shadow: var(--glow-purple), 0 4px 20px rgba(0,0,0,0.6); }
-      50% { box-shadow: 0 0 25px rgba(156,106,222,1), 0 0 50px rgba(70,43,165,0.8), 0 4px 20px rgba(0,0,0,0.6); }
-    }
-
-    .danmaku-header {
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      background: linear-gradient(90deg, var(--neon-purple), var(--primary-purple));
+    .form-control {
+      background: #2b2b2b;
+      border: 1px solid #444;
       color: #fff;
-      padding: 8px 22px;
+      padding: 10px;
+      border-radius: 4px;
       font-size: 14px;
-      font-weight: 700;
-      letter-spacing: 4px;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-      clip-path: polygon(12px 0, calc(100% - 12px) 0, 100% 100%, 0 100%);
+      transition: border-color 0.2s;
     }
 
-    /* 弹幕区扫描线效果 */
-    .danmaku-frame::before {
-      content: '';
+    .form-control:focus {
+      outline: none;
+      border-color: var(--accent-color);
+    }
+
+    textarea.form-control {
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    /* 开关样式 */
+    .toggle-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 0;
+    }
+
+    .toggle-label {
+      font-size: 14px;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
       position: absolute;
+      cursor: pointer;
       top: 0;
       left: 0;
       right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--neon-purple), transparent);
-      animation: danmaku-scan 2s linear infinite;
-    }
-
-    @keyframes danmaku-scan {
-      0% { top: 40px; opacity: 0; }
-      10% { opacity: 1; }
-      90% { opacity: 1; }
-      100% { top: calc(100% - 10px); opacity: 0; }
-    }
-
-    .danmaku-content {
-      position: absolute;
-      top: 40px;
-      left: 12px;
-      width: 360px;
-      height: 240px;
-    }
-
-    .danmaku-corner {
-      position: absolute;
-      width: 12px;
-      height: 12px;
-      border: 2px solid var(--light-purple);
-    }
-
-    .danmaku-corner.tl { top: 8px; left: 8px; border-right: none; border-bottom: none; }
-    .danmaku-corner.br { bottom: 8px; right: 8px; border-left: none; border-top: none; }
-
-    /* ========== 装饰性元素 ========== */
-    
-    /* 斜线装饰 */
-    .diag-line {
-      position: absolute;
-      pointer-events: none;
-    }
-
-    .diag-line-1 {
-      top: 20px;
-      left: -30px;
-      width: 200px;
-      height: 6px;
-      background: linear-gradient(90deg, var(--neon-green), transparent);
-      transform: rotate(35deg);
-      box-shadow: var(--glow-green);
-      animation: diag-pulse 3s ease-in-out infinite;
-    }
-
-    .diag-line-2 {
-      top: 50px;
-      left: -20px;
-      width: 150px;
-      height: 4px;
-      background: linear-gradient(90deg, var(--neon-purple), transparent);
-      transform: rotate(35deg);
-      box-shadow: var(--glow-purple);
-      animation: diag-pulse 3s ease-in-out infinite 0.5s;
-    }
-
-    .diag-line-3 {
-      bottom: 180px;
-      left: -40px;
-      width: 180px;
-      height: 5px;
-      background: linear-gradient(90deg, var(--neon-green), var(--neon-purple), transparent);
-      transform: rotate(-30deg);
-      box-shadow: var(--glow-green);
-      animation: diag-slide 8s linear infinite;
-    }
-
-    @keyframes diag-pulse {
-      0%, 100% { opacity: 0.6; }
-      50% { opacity: 1; }
-    }
-
-    @keyframes diag-slide {
-      0% { transform: rotate(-30deg) translateX(-50px); opacity: 0; }
-      15% { opacity: 1; }
-      85% { opacity: 1; }
-      100% { transform: rotate(-30deg) translateX(50px); opacity: 0; }
-    }
-
-    /* 六边形装饰 */
-    .hex-deco {
-      position: absolute;
-      pointer-events: none;
-      opacity: 0.4;
-    }
-
-    .hex-deco::before {
-      content: '⬡';
-      font-size: 45px;
-      color: var(--neon-green);
-      text-shadow: var(--glow-green);
-    }
-
-    .hex-1 { top: 160px; left: 30px; animation: hex-float 5s ease-in-out infinite; }
-    .hex-2 { bottom: 200px; left: 50px; animation: hex-float 5s ease-in-out infinite 1.5s; }
-    .hex-2::before { color: var(--neon-purple); text-shadow: var(--glow-purple); font-size: 35px; }
-    .hex-3 { top: 400px; left: 80px; animation: hex-float 6s ease-in-out infinite 2.5s; }
-    .hex-3::before { font-size: 25px; }
-
-    @keyframes hex-float {
-      0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.3; }
-      50% { transform: translateY(-15px) rotate(30deg); opacity: 0.6; }
-    }
-
-    /* 电路板纹路 */
-    .circuit-line {
-      position: absolute;
-      pointer-events: none;
-    }
-
-    .circuit-line::before {
-      content: '';
-      position: absolute;
-      background: var(--neon-green);
-      box-shadow: var(--glow-green);
-    }
-
-    .circuit-1 {
-      top: var(--top-bar-height);
-      left: 15px;
-    }
-
-    .circuit-1::before {
-      width: 3px;
-      height: 80px;
-    }
-
-    .circuit-1::after {
-      content: '';
-      position: absolute;
-      top: 80px;
-      left: 0;
-      width: 40px;
-      height: 3px;
-      background: var(--neon-green);
-      box-shadow: var(--glow-green);
-    }
-
-    .circuit-2 {
-      bottom: var(--bottom-bar-height);
-      left: 15px;
-    }
-
-    .circuit-2::before {
-      width: 3px;
-      height: 60px;
       bottom: 0;
+      background-color: #444;
+      transition: .3s;
+      border-radius: 24px;
     }
 
-    /* 数据点装饰 */
-    .data-dots {
+    .slider:before {
       position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: var(--accent-color);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(20px);
+    }
+
+    /* 颜色选择器 */
+    .color-picker-row {
       display: flex;
       gap: 10px;
-      pointer-events: none;
     }
-
-    .data-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: var(--neon-purple);
-      box-shadow: 0 0 12px var(--neon-purple);
-      animation: dot-blink 1.5s ease-in-out infinite;
-    }
-
-    .data-dot:nth-child(2) { animation-delay: 0.3s; }
-    .data-dot:nth-child(3) { animation-delay: 0.6s; }
-    .data-dot:nth-child(4) { animation-delay: 0.9s; }
-    .data-dot:nth-child(5) { animation-delay: 1.2s; }
-
-    @keyframes dot-blink {
-      0%, 100% { opacity: 0.3; transform: scale(0.8); }
-      50% { opacity: 1; transform: scale(1.2); }
-    }
-
-    .data-dots-1 { top: 155px; right: 360px; }
-    .data-dots-2 { bottom: 160px; left: 80px; }
-    .data-dots-2 .data-dot { background: var(--neon-green); box-shadow: 0 0 12px var(--neon-green); }
-
-    /* 信号波纹 */
-    .signal-wave {
-      position: absolute;
-      width: 60px;
-      height: 60px;
-      border: 3px solid var(--neon-purple);
-      border-radius: 50%;
-      opacity: 0;
-      animation: signal-expand 3s ease-out infinite;
-      pointer-events: none;
-    }
-
-    .signal-wave-1 { top: 200px; left: 60px; }
-    .signal-wave-2 { bottom: 250px; left: 80px; animation-delay: 1.5s; border-color: var(--neon-green); }
-    .signal-wave-3 { top: 350px; left: 40px; animation-delay: 2.5s; width: 40px; height: 40px; }
-
-    @keyframes signal-expand {
-      0% { transform: scale(0.3); opacity: 0.8; }
-      100% { transform: scale(2); opacity: 0; }
-    }
-
-    /* 故障块 */
-    .glitch-block {
-      position: absolute;
-      pointer-events: none;
-      background: linear-gradient(90deg, var(--neon-green), var(--neon-purple));
-      opacity: 0;
-      animation: glitch-appear 12s infinite;
-    }
-
-    .glitch-block-1 { top: 180px; left: 150px; width: 60px; height: 6px; }
-    .glitch-block-2 { bottom: 220px; left: 100px; width: 80px; height: 5px; animation-delay: 4s; }
-    .glitch-block-3 { top: 300px; left: 20px; width: 50px; height: 8px; animation-delay: 8s; }
-
-    @keyframes glitch-appear {
-      0%, 97%, 100% { opacity: 0; transform: translateX(0); }
-      97.5% { opacity: 0.7; transform: translateX(-8px); }
-      98% { opacity: 0.5; transform: translateX(10px); }
-      98.5% { opacity: 0.8; transform: translateX(-4px); }
-    }
-
-    /* 能量粒子 */
-    .energy-particle {
-      position: absolute;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--light-green);
-      box-shadow: 0 0 18px var(--neon-green);
-      animation: particle-float 6s ease-in-out infinite;
-      pointer-events: none;
-    }
-
-    .particle-1 { left: 100px; top: 250px; }
-    .particle-2 { left: 60px; top: 400px; animation-delay: 2s; background: var(--light-purple); box-shadow: 0 0 18px var(--neon-purple); }
-    .particle-3 { left: 120px; top: 550px; animation-delay: 4s; }
-    .particle-4 { left: 40px; top: 320px; animation-delay: 3s; background: var(--light-purple); box-shadow: 0 0 18px var(--neon-purple); width: 6px; height: 6px; }
-
-    @keyframes particle-float {
-      0%, 100% { transform: translateY(0) translateX(0); opacity: 0.5; }
-      25% { transform: translateY(-20px) translateX(10px); opacity: 1; }
-      50% { transform: translateY(-10px) translateX(-5px); opacity: 0.8; }
-      75% { transform: translateY(-25px) translateX(8px); opacity: 1; }
-    }
-
-    /* 扫描进度条 */
-    .scan-bar {
-      position: absolute;
-      bottom: var(--bottom-bar-height);
-      left: 30px;
-      width: 200px;
-      height: 4px;
-      background: rgba(139,195,74,0.2);
-      overflow: hidden;
-      pointer-events: none;
-    }
-
-    .scan-bar::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, var(--neon-green), transparent);
-      animation: scan-move 3s linear infinite;
-    }
-
-    @keyframes scan-move {
-      0% { left: -100%; }
-      100% { left: 100%; }
-    }
-
-    /* 噪点效果 */
-    .noise-overlay {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      opacity: 0.02;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23noise)'/%3E%3C/svg%3E");
-      animation: noise-shift 0.3s steps(5) infinite;
-      z-index: 1000;
-    }
-
-    @keyframes noise-shift {
-      0% { transform: translate(0, 0); }
-      100% { transform: translate(5px, 5px); }
-    }
-
-    /* RGB分离 */
-    .rgb-shift {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      z-index: 999;
-      animation: rgb-glitch 15s infinite;
-    }
-
-    @keyframes rgb-glitch {
-      0%, 96%, 100% { box-shadow: none; }
-      97% { box-shadow: -2px 0 0 rgba(255,0,0,0.2), 2px 0 0 rgba(0,255,255,0.2); }
-      98% { box-shadow: 2px 0 0 rgba(255,0,0,0.2), -2px 0 0 rgba(0,255,255,0.2); }
-    }
-
-    /* 角落装饰 */
-    .corner-bracket {
-      position: absolute;
-      pointer-events: none;
-    }
-
-    .corner-bracket::before,
-    .corner-bracket::after {
-      content: '';
-      position: absolute;
-      background: linear-gradient(135deg, var(--neon-green), var(--neon-purple));
-      box-shadow: 0 0 10px var(--neon-green);
-    }
-
-    .corner-bracket.tl { top: calc(var(--top-bar-height) + 10px); left: 10px; }
-    .corner-bracket.tl::before { width: 40px; height: 5px; }
-    .corner-bracket.tl::after { width: 5px; height: 40px; }
-
-    .corner-bracket.bl { bottom: calc(var(--bottom-bar-height) + 10px); left: 10px; }
-    .corner-bracket.bl::before { width: 40px; height: 5px; bottom: 0; }
-    .corner-bracket.bl::after { width: 5px; height: 40px; bottom: 0; }
-
-    /* 二进制数据流 */
-    .binary-stream {
-      position: absolute;
-      font-family: "Consolas", monospace;
-      font-size: 12px;
-      color: var(--neon-green);
-      opacity: 0.25;
-      writing-mode: vertical-rl;
-      pointer-events: none;
-      animation: binary-scroll 12s linear infinite;
-    }
-
-    .binary-1 { left: 8px; top: var(--top-bar-height); }
-    .binary-2 { left: 8px; top: 500px; animation-delay: 6s; color: var(--neon-purple); }
-
-    @keyframes binary-scroll {
-      0% { transform: translateY(-50px); opacity: 0; }
-      10% { opacity: 0.25; }
-      90% { opacity: 0.25; }
-      100% { transform: translateY(100px); opacity: 0; }
-    }
-
-    /* 菱形装饰 */
-    .diamond-deco {
-      position: absolute;
-      pointer-events: none;
-    }
-
-    .diamond-deco::before {
-      content: '◇';
-      font-size: 30px;
-      color: var(--neon-purple);
-      text-shadow: var(--glow-purple);
-      animation: diamond-spin 8s linear infinite;
-    }
-
-    .diamond-1 { top: 500px; left: 25px; }
-    .diamond-2 { bottom: 300px; left: 90px; }
-    .diamond-2::before { font-size: 20px; color: var(--neon-green); text-shadow: var(--glow-green); animation-delay: 2s; }
-
-    @keyframes diamond-spin {
-      0%, 100% { transform: rotate(0deg) scale(1); opacity: 0.4; }
-      50% { transform: rotate(180deg) scale(1.2); opacity: 0.7; }
-    }
-
-    /* 点阵装饰 */
-    .dot-matrix {
-      position: absolute;
-      display: grid;
-      grid-template-columns: repeat(3, 6px);
-      gap: 8px;
-      pointer-events: none;
-      opacity: 0.4;
-    }
-
-    .dot-matrix span {
-      width: 6px;
-      height: 6px;
-      background: var(--neon-green);
-      border-radius: 50%;
-      animation: matrix-blink 2s ease-in-out infinite;
-    }
-
-    .dot-matrix span:nth-child(2) { animation-delay: 0.2s; }
-    .dot-matrix span:nth-child(3) { animation-delay: 0.4s; }
-    .dot-matrix span:nth-child(4) { animation-delay: 0.1s; }
-    .dot-matrix span:nth-child(5) { animation-delay: 0.3s; background: var(--neon-purple); }
-    .dot-matrix span:nth-child(6) { animation-delay: 0.5s; }
-    .dot-matrix span:nth-child(7) { animation-delay: 0.15s; }
-    .dot-matrix span:nth-child(8) { animation-delay: 0.35s; }
-    .dot-matrix span:nth-child(9) { animation-delay: 0.55s; background: var(--neon-purple); }
-
-    @keyframes matrix-blink {
-      0%, 100% { opacity: 0.3; }
-      50% { opacity: 1; }
-    }
-
-    .dot-matrix-1 { top: 280px; left: 60px; }
-    .dot-matrix-2 { bottom: 350px; left: 35px; }
-
-    /* ========== 顶部装饰特效 ========== */
-    .top-deco-particles {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: var(--top-bar-height);
-      pointer-events: none;
-      overflow: hidden;
-      z-index: 15;
-    }
-
-    .top-particle {
-      position: absolute;
-      width: 4px;
-      height: 4px;
-      background: var(--neon-green);
-      border-radius: 50%;
-      box-shadow: 0 0 10px var(--neon-green);
-      animation: top-particle-float 4s ease-in-out infinite;
-    }
-
-    .top-particle:nth-child(1) { left: 10%; top: 20px; animation-delay: 0s; }
-    .top-particle:nth-child(2) { left: 25%; top: 60px; animation-delay: 0.8s; background: var(--neon-purple); box-shadow: 0 0 10px var(--neon-purple); }
-    .top-particle:nth-child(3) { left: 40%; top: 30px; animation-delay: 1.6s; }
-    .top-particle:nth-child(4) { left: 55%; top: 80px; animation-delay: 2.4s; background: var(--neon-purple); box-shadow: 0 0 10px var(--neon-purple); }
-    .top-particle:nth-child(5) { left: 70%; top: 40px; animation-delay: 3.2s; }
-
-    @keyframes top-particle-float {
-      0%, 100% { transform: translateY(0) scale(1); opacity: 0.6; }
-      50% { transform: translateY(-15px) scale(1.5); opacity: 1; }
-    }
-
-    /* 顶部数据流 */
-    .top-data-stream {
-      position: absolute;
-      top: 0;
-      height: var(--top-bar-height);
-      width: 2px;
-      background: linear-gradient(180deg, var(--neon-green), transparent);
-      animation: data-stream-flow 3s linear infinite;
-      pointer-events: none;
-      z-index: 15;
-    }
-
-    .top-data-stream:nth-child(1) { left: 520px; animation-delay: 0s; }
-    .top-data-stream:nth-child(2) { left: 620px; animation-delay: 1s; background: linear-gradient(180deg, var(--neon-purple), transparent); }
-    .top-data-stream:nth-child(3) { left: 720px; animation-delay: 2s; }
-
-    @keyframes data-stream-flow {
-      0% { transform: translateY(-100%); opacity: 0; }
-      20% { opacity: 1; }
-      80% { opacity: 1; }
-      100% { transform: translateY(100%); opacity: 0; }
-    }
-
-    /* ========== 底部装饰特效 ========== */
-    .bottom-deco-waves {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: var(--bottom-bar-height);
-      pointer-events: none;
-      overflow: hidden;
-      z-index: 15;
-    }
-
-    .wave-line {
-      position: absolute;
-      bottom: 20px;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--neon-purple), transparent);
-      animation: wave-flow 4s ease-in-out infinite;
-    }
-
-    .wave-line:nth-child(1) { left: 0; width: 150px; animation-delay: 0s; }
-    .wave-line:nth-child(2) { left: 200px; width: 100px; animation-delay: 0.5s; bottom: 40px; background: linear-gradient(90deg, transparent, var(--neon-green), transparent); }
-    .wave-line:nth-child(3) { left: 350px; width: 120px; animation-delay: 1s; bottom: 30px; }
-    .wave-line:nth-child(4) { left: 520px; width: 80px; animation-delay: 1.5s; bottom: 50px; background: linear-gradient(90deg, transparent, var(--neon-green), transparent); }
-
-    @keyframes wave-flow {
-      0%, 100% { transform: translateX(0) scaleX(1); opacity: 0.5; }
-      50% { transform: translateX(20px) scaleX(1.5); opacity: 1; }
-    }
-
-    /* 底部能量条 */
-    .energy-bar {
-      position: absolute;
-      bottom: 10px;
-      left: 30px;
-      width: 200px;
-      height: 6px;
-      background: rgba(77,112,6,0.3);
-      overflow: hidden;
-      z-index: 15;
-      clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 100%, 4px 100%);
-    }
-
-    .energy-bar::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 100%;
-      width: 60%;
-      background: linear-gradient(90deg, var(--neon-green), var(--neon-purple));
-      animation: energy-pulse 2s ease-in-out infinite;
-    }
-
-    @keyframes energy-pulse {
-      0%, 100% { width: 60%; }
-      50% { width: 90%; }
-    }
-
-    /* 底部闪烁指示灯 */
-    .indicator-lights {
-      position: absolute;
-      bottom: 100px;
-      left: 250px;
+    
+    .color-input-wrapper {
+      flex: 1;
       display: flex;
-      gap: 8px;
-      z-index: 15;
+      align-items: center;
+      gap: 10px;
+      background: #2b2b2b;
+      padding: 5px;
+      border-radius: 4px;
+      border: 1px solid #444;
     }
 
-    .indicator {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      animation: indicator-blink 1s ease-in-out infinite;
-    }
-
-    .indicator:nth-child(1) { background: var(--neon-green); box-shadow: 0 0 10px var(--neon-green); animation-delay: 0s; }
-    .indicator:nth-child(2) { background: var(--neon-purple); box-shadow: 0 0 10px var(--neon-purple); animation-delay: 0.2s; }
-    .indicator:nth-child(3) { background: var(--neon-green); box-shadow: 0 0 10px var(--neon-green); animation-delay: 0.4s; }
-    .indicator:nth-child(4) { background: #ff5555; box-shadow: 0 0 10px #ff5555; animation-delay: 0.6s; }
-
-    @keyframes indicator-blink {
-      0%, 100% { opacity: 0.4; transform: scale(0.8); }
-      50% { opacity: 1; transform: scale(1.2); }
-    }
-
-    /* 角落装饰框 */
-    .corner-deco {
-      position: absolute;
-      width: 60px;
-      height: 60px;
-      pointer-events: none;
-      z-index: 15;
-    }
-
-    .corner-deco::before,
-    .corner-deco::after {
-      content: '';
-      position: absolute;
-      background: var(--neon-green);
-      box-shadow: 0 0 10px var(--neon-green);
-    }
-
-    .corner-deco.top-left {
-      top: 0;
-      left: 0;
-    }
-    .corner-deco.top-left::before { width: 40px; height: 3px; top: 0; left: 0; }
-    .corner-deco.top-left::after { width: 3px; height: 40px; top: 0; left: 0; }
-
-    .corner-deco.top-right {
-      top: 0;
-      right: 420px;
-    }
-    .corner-deco.top-right::before { width: 40px; height: 3px; top: 0; right: 0; background: var(--neon-purple); box-shadow: 0 0 10px var(--neon-purple); }
-    .corner-deco.top-right::after { width: 3px; height: 40px; top: 0; right: 0; background: var(--neon-purple); box-shadow: 0 0 10px var(--neon-purple); }
-
-    .corner-deco.bottom-left {
-      bottom: 0;
-      left: 0;
-    }
-    .corner-deco.bottom-left::before { width: 40px; height: 3px; bottom: 0; left: 0; background: var(--neon-purple); box-shadow: 0 0 10px var(--neon-purple); }
-    .corner-deco.bottom-left::after { width: 3px; height: 40px; bottom: 0; left: 0; background: var(--neon-purple); box-shadow: 0 0 10px var(--neon-purple); }
-
-    .corner-deco.bottom-right {
-      bottom: 0;
-      right: 480px;
-    }
-    .corner-deco.bottom-right::before { width: 40px; height: 3px; bottom: 0; right: 0; }
-    .corner-deco.bottom-right::after { width: 3px; height: 40px; bottom: 0; right: 0; }
-
-    /* 脉冲环效果 */
-    .pulse-ring {
-      position: absolute;
+    input[type="color"] {
       width: 30px;
       height: 30px;
-      border: 2px solid var(--neon-green);
-      border-radius: 50%;
-      animation: pulse-expand 2s ease-out infinite;
-      pointer-events: none;
-      z-index: 15;
-    }
-
-    .pulse-ring-1 { top: 50px; left: 600px; }
-    .pulse-ring-2 { bottom: 50px; left: 700px; animation-delay: 1s; border-color: var(--neon-purple); }
-
-    @keyframes pulse-expand {
-      0% { transform: scale(0.5); opacity: 1; }
-      100% { transform: scale(2); opacity: 0; }
-    }
-
-    /* ========== 额外的酷炫动画效果 ========== */
-
-    /* 公告标签呼吸发光 */
-    .announcement-label {
-      animation: label-breathe 3s ease-in-out infinite;
-    }
-
-    @keyframes label-breathe {
-      0%, 100% { filter: brightness(1); }
-      50% { filter: brightness(1.3); }
-    }
-
-    /* 时钟数字闪烁效果 */
-    .time-display {
-      animation: clock-flicker 4s ease-in-out infinite;
-    }
-
-    @keyframes clock-flicker {
-      0%, 100% { opacity: 1; text-shadow: 0 0 20px var(--neon-purple), 0 2px 4px rgba(0,0,0,0.8); }
-      48% { opacity: 1; }
-      49% { opacity: 0.7; text-shadow: 0 0 40px var(--neon-purple), 0 0 80px var(--neon-purple); }
-      50% { opacity: 1; }
-      96% { opacity: 1; }
-      97% { opacity: 0.5; }
-      98% { opacity: 1; }
-    }
-
-    /* 顶部栏边框渐变流动 */
-    .top-bar {
-      animation: border-flow 4s linear infinite;
-    }
-
-    @keyframes border-flow {
-      0% { border-image: linear-gradient(90deg, var(--neon-green), var(--neon-purple), var(--neon-green)) 1; }
-      33% { border-image: linear-gradient(90deg, var(--neon-purple), var(--neon-green), var(--neon-purple)) 1; }
-      66% { border-image: linear-gradient(90deg, var(--neon-green), var(--neon-purple), var(--neon-green)) 1; }
-      100% { border-image: linear-gradient(90deg, var(--neon-green), var(--neon-purple), var(--neon-green)) 1; }
-    }
-
-    /* 底部栏边框渐变流动 */
-    .bottom-bar {
-      animation: border-flow-reverse 4s linear infinite;
-    }
-
-    @keyframes border-flow-reverse {
-      0% { border-image: linear-gradient(90deg, var(--neon-purple), var(--neon-green)) 1; }
-      50% { border-image: linear-gradient(90deg, var(--neon-green), var(--neon-purple)) 1; }
-      100% { border-image: linear-gradient(90deg, var(--neon-purple), var(--neon-green)) 1; }
-    }
-
-    /* 游戏名称彩虹渐变流动 */
-    .game-name {
-      animation: name-glitch 8s infinite, rainbow-shift 6s linear infinite;
-      background-size: 200% 100%;
-    }
-
-    @keyframes rainbow-shift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    /* 音乐图标旋转+跳动 */
-    .music-icon {
-      animation: music-bounce 1s ease-in-out infinite, music-spin 4s linear infinite;
-      display: inline-block;
-    }
-
-    @keyframes music-spin {
-      0% { transform: rotate(0deg) scale(1); }
-      25% { transform: rotate(5deg) scale(1.1); }
-      50% { transform: rotate(0deg) scale(1); }
-      75% { transform: rotate(-5deg) scale(1.1); }
-      100% { transform: rotate(0deg) scale(1); }
-    }
-
-    /* 弹幕面板边缘发光脉冲 */
-    .danmaku-frame {
-      animation: danmaku-glow 3s ease-in-out infinite, danmaku-border-pulse 2s ease-in-out infinite;
-    }
-
-    @keyframes danmaku-border-pulse {
-      0%, 100% { border-color: var(--neon-purple); }
-      50% { border-color: var(--light-purple); }
-    }
-
-    /* 装饰条波浪动画 */
-    .deco-bar {
-      animation: deco-wave 2s ease-in-out infinite;
-    }
-
-    .deco-bar:nth-child(1) { animation-delay: 0s; }
-    .deco-bar:nth-child(2) { animation-delay: 0.2s; }
-    .deco-bar:nth-child(3) { animation-delay: 0.4s; }
-
-    @keyframes deco-wave {
-      0%, 100% { transform: scaleX(1); opacity: 0.6; }
-      50% { transform: scaleX(1.3); opacity: 1; }
-    }
-
-    /* 棋盘点波浪效果 */
-    .checker-dot {
-      animation: checker-blink 2s infinite, checker-wave 3s ease-in-out infinite;
-    }
-
-    @keyframes checker-wave {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.2); }
-    }
-
-    /* 角落装饰闪烁 */
-    .corner-deco::before,
-    .corner-deco::after {
-      animation: corner-flash 3s ease-in-out infinite;
-    }
-
-    @keyframes corner-flash {
-      0%, 100% { opacity: 0.7; }
-      50% { opacity: 1; filter: brightness(1.5); }
-    }
-
-    /* 数据流光束加强 */
-    .top-data-stream {
-      animation: data-stream-flow 3s linear infinite, stream-glow 1.5s ease-in-out infinite;
-    }
-
-    @keyframes stream-glow {
-      0%, 100% { filter: brightness(1); }
-      50% { filter: brightness(2) blur(1px); }
-    }
-
-    /* 浮动粒子轨迹增强 */
-    .top-particle {
-      animation: top-particle-float 4s ease-in-out infinite, particle-trail 2s linear infinite;
-    }
-
-    @keyframes particle-trail {
-      0%, 100% { filter: blur(0px); }
-      50% { filter: blur(2px); }
-    }
-
-    /* 能量条闪烁 */
-    .energy-bar::after {
-      animation: energy-pulse 2s ease-in-out infinite, energy-flicker 0.5s steps(2) infinite;
-    }
-
-    @keyframes energy-flicker {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.85; }
-    }
-
-    /* 指示灯轨迹效果 */
-    .indicator {
-      animation: indicator-blink 1s ease-in-out infinite, indicator-trail 2s linear infinite;
-    }
-
-    @keyframes indicator-trail {
-      0% { filter: drop-shadow(0 0 2px currentColor); }
-      50% { filter: drop-shadow(0 0 8px currentColor) drop-shadow(0 0 15px currentColor); }
-      100% { filter: drop-shadow(0 0 2px currentColor); }
-    }
-
-    /* 波浪线增强 */
-    .wave-line {
-      animation: wave-flow 4s ease-in-out infinite, wave-pulse 2s ease-in-out infinite;
-    }
-
-    @keyframes wave-pulse {
-      0%, 100% { filter: brightness(1); }
-      50% { filter: brightness(1.8) blur(1px); }
-    }
-
-    /* 脉冲环多层效果 */
-    .pulse-ring::after {
-      content: '';
-      position: absolute;
-      inset: -5px;
-      border: 1px solid inherit;
-      border-radius: 50%;
-      animation: pulse-expand 2s ease-out infinite 0.3s;
-    }
-
-    /* 公告框边框发光脉冲 */
-    .announcement-box {
-      animation: announce-glow 4s ease-in-out infinite;
-    }
-
-    @keyframes announce-glow {
-      0%, 100% { box-shadow: var(--glow-green), 0 4px 15px rgba(0,0,0,0.5); }
-      50% { box-shadow: 0 0 25px rgba(139,195,74,1), 0 0 50px rgba(77,112,6,0.8), 0 4px 15px rgba(0,0,0,0.5); }
-    }
-
-    /* 时钟区域边框脉冲 */
-    .clock-area {
-      animation: clock-border-pulse 3s ease-in-out infinite;
-    }
-
-    @keyframes clock-border-pulse {
-      0%, 100% { border-color: var(--neon-purple); box-shadow: var(--glow-purple), 0 4px 15px rgba(0,0,0,0.5); }
-      50% { border-color: var(--light-purple); box-shadow: 0 0 30px rgba(156,106,222,1), 0 0 60px rgba(70,43,165,0.6), 0 4px 15px rgba(0,0,0,0.5); }
-    }
-
-    /* 游戏信息栏边框脉冲 */
-    .game-info {
-      animation: gameinfo-glow 4s ease-in-out infinite;
-    }
-
-    @keyframes gameinfo-glow {
-      0%, 100% { box-shadow: var(--glow-green), 0 4px 15px rgba(0,0,0,0.5); }
-      50% { box-shadow: 0 0 30px rgba(139,195,74,1), 0 0 60px rgba(77,112,6,0.6), 0 4px 15px rgba(0,0,0,0.5); }
-    }
-
-    /* 音乐模块边框脉冲 */
-    .music-module {
-      animation: music-glow 4s ease-in-out infinite 1s;
-    }
-
-    @keyframes music-glow {
-      0%, 100% { box-shadow: var(--glow-purple), 0 4px 15px rgba(0,0,0,0.5); }
-      50% { box-shadow: 0 0 30px rgba(156,106,222,1), 0 0 60px rgba(70,43,165,0.6), 0 4px 15px rgba(0,0,0,0.5); }
-    }
-
-    /* 随机故障闪烁效果 */
-    .overlay {
-      animation: overlay-glitch 20s infinite;
-    }
-
-    @keyframes overlay-glitch {
-      0%, 99%, 100% { filter: none; }
-      99.1% { filter: hue-rotate(90deg) saturate(1.5); }
-      99.2% { filter: hue-rotate(-90deg); }
-      99.3% { filter: none; }
-      99.5% { filter: brightness(1.3) contrast(1.2); }
-      99.6% { filter: none; }
-    }
-
-    /* ========== 额外装饰特效 - 仅顶部/底部 ========== */
-
-    /* 顶部数据矩阵背景 */
-    .matrix-rain {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: var(--top-bar-height);
-      pointer-events: none;
-      overflow: hidden;
-      z-index: 5;
-    }
-
-    .matrix-column {
-      position: absolute;
-      top: -100%;
-      font-family: 'Orbitron', monospace;
-      font-size: 12px;
-      color: var(--neon-green);
-      opacity: 0.15;
-      writing-mode: vertical-rl;
-      text-shadow: 0 0 5px var(--neon-green);
-      animation: matrix-fall 8s linear infinite;
-    }
-
-    .matrix-column:nth-child(1) { left: 5%; animation-delay: 0s; }
-    .matrix-column:nth-child(2) { left: 15%; animation-delay: 1.5s; color: var(--neon-purple); text-shadow: 0 0 5px var(--neon-purple); }
-    .matrix-column:nth-child(3) { left: 25%; animation-delay: 3s; }
-    .matrix-column:nth-child(4) { left: 35%; animation-delay: 4.5s; color: var(--neon-purple); text-shadow: 0 0 5px var(--neon-purple); }
-    .matrix-column:nth-child(5) { left: 45%; animation-delay: 6s; }
-
-    @keyframes matrix-fall {
-      0% { top: -100%; opacity: 0; }
-      10% { opacity: 0.15; }
-      90% { opacity: 0.15; }
-      100% { top: 100%; opacity: 0; }
-    }
-
-    /* 底部音频波形可视化 */
-    .audio-visualizer {
-      position: absolute;
-      bottom: 25px;
-      right: 780px;
-      display: flex;
-      align-items: flex-end;
-      gap: 4px;
-      height: 50px;
-      z-index: 15;
-    }
-
-    .audio-bar {
-      width: 6px;
-      background: linear-gradient(180deg, var(--neon-purple), var(--neon-green));
-      border-radius: 3px 3px 0 0;
-      box-shadow: 0 0 10px var(--neon-purple);
-      animation: audio-bounce 0.5s ease-in-out infinite;
-    }
-
-    .audio-bar:nth-child(1) { height: 20px; animation-delay: 0s; }
-    .audio-bar:nth-child(2) { height: 35px; animation-delay: 0.1s; }
-    .audio-bar:nth-child(3) { height: 25px; animation-delay: 0.2s; }
-    .audio-bar:nth-child(4) { height: 45px; animation-delay: 0.15s; }
-    .audio-bar:nth-child(5) { height: 30px; animation-delay: 0.25s; }
-    .audio-bar:nth-child(6) { height: 40px; animation-delay: 0.05s; }
-    .audio-bar:nth-child(7) { height: 20px; animation-delay: 0.3s; }
-    .audio-bar:nth-child(8) { height: 50px; animation-delay: 0.12s; }
-
-    @keyframes audio-bounce {
-      0%, 100% { transform: scaleY(1); }
-      50% { transform: scaleY(0.4); }
-    }
-
-    /* 个人主页地址展示 - 时钟左侧上方 */
-    .homepage-badge {
-      position: absolute;
-      top: 28px;
-      right: 830px;
-      display: var(--homepage-display);
-      align-items: center;
-      gap: 8px;
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(8px);
-      padding: 8px 16px;
-      border: 1px solid var(--neon-purple);
-      clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
-      z-index: 25;
-    }
-
-    .homepage-badge::before {
-      content: '🌐';
-      font-size: 12px;
-    }
-
-    .homepage-url {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--light-purple);
-      letter-spacing: 1px;
-      text-shadow: 0 0 8px var(--neon-purple);
-    }
-
-    /* 版权声明 - 主页地址下方 */
-    .copyright-badge {
-      position: absolute;
-      top: 66px;
-      right: 830px;
-      display: var(--copyright-display);
-      align-items: center;
-      gap: 8px;
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(8px);
-      padding: 8px 16px;
-      border: 1px solid var(--neon-green);
-      clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
-      z-index: 25;
-    }
-
-    .copyright-badge::before {
-      content: '©';
-      font-size: 12px;
-      color: var(--neon-green);
-    }
-
-    .copyright-text {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--light-green);
-      letter-spacing: 1px;
-      text-shadow: 0 0 8px var(--neon-green);
-    }
-
-    /* 顶部状态指示器组 */
-    .status-indicators {
-      position: absolute;
-      top: 15px;
-      left: 550px;
-      display: flex;
-      gap: 25px;
-      z-index: 20;
-    }
-
-    .status-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 12px;
-      font-family: 'Orbitron', sans-serif;
-      color: rgba(255,255,255,0.7);
-      letter-spacing: 1px;
-    }
-
-    .status-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      animation: status-pulse 2s ease-in-out infinite;
-    }
-
-    .status-dot.online { background: #00ff88; box-shadow: 0 0 15px #00ff88; }
-    .status-dot.streaming { background: #ff4444; box-shadow: 0 0 15px #ff4444; animation: status-pulse 0.8s ease-in-out infinite; }
-    .status-dot.signal { background: var(--neon-purple); box-shadow: 0 0 15px var(--neon-purple); }
-
-    @keyframes status-pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(0.8); }
-    }
-
-    /* 底部电路板纹路动画 */
-    .circuit-trace {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: var(--bottom-bar-height);
-      pointer-events: none;
-      overflow: hidden;
-      z-index: 5;
-    }
-
-    .circuit-path {
-      position: absolute;
-      background: var(--neon-green);
-      opacity: 0;
-      animation: circuit-flow 6s linear infinite;
-    }
-
-    .circuit-path::after {
-      content: '';
-      position: absolute;
-      width: 8px;
-      height: 8px;
-      background: var(--light-green);
-      border-radius: 50%;
-      box-shadow: 0 0 15px var(--neon-green);
-    }
-
-    .circuit-path-1 {
-      bottom: 80px;
-      left: 0;
-      width: 200px;
-      height: 2px;
-    }
-    .circuit-path-1::after { right: -4px; top: -3px; }
-
-    .circuit-path-2 {
-      bottom: 60px;
-      left: 150px;
-      width: 100px;
-      height: 2px;
-      animation-delay: 2s;
-      background: var(--neon-purple);
-    }
-    .circuit-path-2::after { right: -4px; top: -3px; background: var(--light-purple); box-shadow: 0 0 15px var(--neon-purple); }
-
-    .circuit-path-3 {
-      bottom: 40px;
-      left: 80px;
-      width: 150px;
-      height: 2px;
-      animation-delay: 4s;
-    }
-    .circuit-path-3::after { right: -4px; top: -3px; }
-
-    @keyframes circuit-flow {
-      0% { opacity: 0; clip-path: inset(0 100% 0 0); }
-      10% { opacity: 0.8; }
-      50% { clip-path: inset(0 0 0 0); }
-      90% { opacity: 0.8; clip-path: inset(0 0 0 0); }
-      100% { opacity: 0; clip-path: inset(0 0 0 100%); }
-    }
-
-    /* 浮动的科技图标 */
-    .tech-icons {
-      position: absolute;
-      top: 20px;
-      left: 750px;
-      display: flex;
-      gap: 30px;
-      z-index: 15;
-    }
-
-    .tech-icon {
-      font-size: 24px;
-      opacity: 0.6;
-      animation: tech-float 3s ease-in-out infinite;
-    }
-
-    .tech-icon:nth-child(1) { animation-delay: 0s; }
-    .tech-icon:nth-child(2) { animation-delay: 0.5s; }
-    .tech-icon:nth-child(3) { animation-delay: 1s; }
-
-    @keyframes tech-float {
-      0%, 100% { transform: translateY(0); opacity: 0.4; }
-      50% { transform: translateY(-8px); opacity: 0.8; }
-    }
-
-    /* 底部进度条组 */
-    .progress-bars {
-      position: absolute;
-      bottom: 25px;
-      right: 510px;
+      border: none;
+      background: none;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    /* 底部操作区 */
+    .panel-footer {
+      padding: 20px;
+      border-top: 1px solid var(--border-color);
+      background: rgba(0,0,0,0.2);
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      z-index: 15;
-    }
-
-    .progress-item {
-      display: flex;
-      align-items: center;
       gap: 10px;
     }
 
-    .progress-label {
-      font-size: 10px;
-      font-family: 'Orbitron', sans-serif;
-      color: rgba(255,255,255,0.5);
-      width: 40px;
-      text-align: right;
+    .btn {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      padding: 12px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: background 0.2s;
+      text-decoration: none;
     }
 
-    .progress-track {
-      width: 120px;
-      height: 4px;
-      background: rgba(255,255,255,0.1);
-      overflow: hidden;
-      clip-path: polygon(2px 0, 100% 0, calc(100% - 2px) 100%, 0 100%);
+    .btn-primary {
+      background: var(--accent-color);
+      color: #121212;
     }
 
-    .progress-fill {
+    .btn-primary:hover {
+      background: #7cb342;
+    }
+
+    .btn-secondary {
+      background: #444;
+      color: #fff;
+    }
+
+    .btn-secondary:hover {
+      background: #555;
+    }
+
+    .url-output {
+      font-family: monospace;
+      font-size: 12px;
+      color: #888;
+      word-break: break-all;
+      margin-top: 5px;
+      padding: 5px;
+      background: #111;
+      border-radius: 4px;
+      max-height: 40px;
+      overflow-y: auto;
+    }
+
+    /* 右侧预览 */
+    .preview-area {
+      flex: 1;
+      background: #000;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      background-image: 
+        linear-gradient(45deg, #111 25%, transparent 25%), 
+        linear-gradient(-45deg, #111 25%, transparent 25%), 
+        linear-gradient(45deg, transparent 75%, #111 75%), 
+        linear-gradient(-45deg, transparent 75%, #111 75%);
+      background-size: 20px 20px;
+      background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+      overflow: hidden; /* 防止溢出 */
+      align-items: center;
+      justify-content: center;
+    }
+
+    .preview-container {
+      width: 1920px;
+      height: 1080px;
+      transform-origin: center center;
+      box-shadow: 0 0 50px rgba(0,0,0,0.5);
+    }
+
+    .preview-label {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(0,0,0,0.7);
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    iframe {
+      width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, var(--neon-green), var(--neon-purple));
-      animation: progress-animate 4s ease-in-out infinite;
+      border: none;
     }
 
-    .progress-fill-1 { animation-delay: 0s; }
-    .progress-fill-2 { animation-delay: 1s; }
-    .progress-fill-3 { animation-delay: 2s; }
-
-    @keyframes progress-animate {
-      0%, 100% { width: 30%; }
-      50% { width: 95%; }
-    }
-
-    /* 顶部闪烁的数字码 */
-    .hex-display {
-      position: absolute;
-      top: 35px;
-      left: 950px;
-      font-family: 'Orbitron', monospace;
-      font-size: 11px;
-      color: var(--neon-green);
-      opacity: 0.4;
-      letter-spacing: 2px;
-      animation: hex-flicker 3s steps(1) infinite;
-      z-index: 15;
-    }
-
-    @keyframes hex-flicker {
-      0%, 100% { content: '0xF7A2B9'; opacity: 0.4; }
-      25% { opacity: 0.6; }
-      50% { opacity: 0.3; }
-      75% { opacity: 0.5; }
-    }
-
-    /* 底部旋转的技术环 */
-    .tech-ring {
-      position: absolute;
-      bottom: 35px;
-      right: 690px;
-      width: 60px;
-      height: 60px;
-      border: 2px solid transparent;
-      border-top-color: var(--neon-green);
-      border-right-color: var(--neon-purple);
-      border-radius: 50%;
-      animation: ring-spin 3s linear infinite;
-      z-index: 15;
-    }
-
-    .tech-ring::before {
-      content: '';
-      position: absolute;
-      inset: 8px;
-      border: 2px solid transparent;
-      border-bottom-color: var(--neon-green);
-      border-left-color: var(--neon-purple);
-      border-radius: 50%;
-      animation: ring-spin 2s linear infinite reverse;
-    }
-
-    .tech-ring::after {
-      content: '';
-      position: absolute;
-      inset: 20px;
-      background: radial-gradient(circle, var(--neon-purple) 0%, transparent 70%);
-      border-radius: 50%;
-      animation: ring-pulse 2s ease-in-out infinite;
-    }
-
-    @keyframes ring-spin {
-      to { transform: rotate(360deg); }
-    }
-
-    @keyframes ring-pulse {
-      0%, 100% { opacity: 0.3; transform: scale(0.8); }
-      50% { opacity: 0.8; transform: scale(1.2); }
-    }
-
-    /* 顶部横向数据流 */
-    .data-ribbon {
-      position: absolute;
-      top: 100px;
-      left: 0;
-      right: 420px;
-      height: 3px;
-      overflow: hidden;
-      z-index: 15;
-    }
-
-    .data-ribbon::before {
-      content: '';
-      position: absolute;
-      left: -200px;
-      width: 200px;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, var(--neon-green), var(--neon-purple), transparent);
-      animation: ribbon-flow 4s linear infinite;
-    }
-
-    @keyframes ribbon-flow {
-      to { left: calc(100% + 200px); }
-    }
-
-    /* 底部数据纸带 */
-    .bottom-ribbon {
-      position: absolute;
-      bottom: 105px;
-      left: 0;
-      right: 500px;
-      height: 3px;
-      overflow: hidden;
-      z-index: 15;
-    }
-
-    .bottom-ribbon::before {
-      content: '';
-      position: absolute;
-      right: -200px;
-      width: 200px;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, var(--neon-purple), var(--neon-green), transparent);
-      animation: ribbon-flow-reverse 5s linear infinite;
-    }
-
-    @keyframes ribbon-flow-reverse {
-      to { right: calc(100% + 200px); }
+    /* 响应式调整 */
+    @media (max-width: 900px) {
+      body { flex-direction: column; overflow: auto; }
+      .config-panel { width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--border-color); }
+      .preview-area { height: 500px; min-height: 50vh; }
     }
   </style>
 </head>
 <body>
-  <div class="overlay">
-    <!-- 噪点和RGB层 -->
-    <div class="noise-overlay"></div>
-    <div class="rgb-shift"></div>
 
-    <!-- 顶部不透明背景 -->
-    <div class="top-section"></div>
+  <!-- 左侧控制面板 -->
+  <aside class="config-panel">
+    <div class="panel-header">
+      <h1>⚙️ Overlay Config</h1>
+    </div>
     
-    <!-- 底部不透明背景 -->
-    <div class="bottom-section"></div>
-
-    <!-- ═══════════════════════════════════════════════════════════
-         📝 顶部信息条 - 公告内容在HTML中修改，或使用CSS变量
-         ═══════════════════════════════════════════════════════════ -->
-    <div class="top-bar">
-      <!-- 公告区域 - 固定宽度横向滚动 -->
-      <div class="announcement-area">
-        <div class="announcement-box" id="announcement">
-          <!-- ▼▼▼ 修改公告内容：同时修改两处文字保持一致 ▼▼▼ -->
-          <span class="announcement-text" data-text="好说的，都来我家喝酒吧 没啥!">好说的，都来我家喝酒吧 没啥!</span>
-          <!-- ▲▲▲ 修改公告内容：同时修改两处文字保持一致 ▲▲▲ -->
-          <div class="announcement-label">NOTICE</div>
-        </div>
+    <div class="panel-content">
+      <!-- 文本配置 -->
+      <div class="form-group">
+        <label>公告内容 / Announcement</label>
+        <textarea id="input-announcement" class="form-control">没啥好说的，都来我家喝酒吧！</textarea>
       </div>
 
-      <!-- 装饰条 -->
-      <div class="top-left-deco">
-        <div class="deco-bar"></div>
-        <div class="deco-bar"></div>
-        <div class="deco-bar"></div>
+      <div class="form-group">
+        <label>公告速度 (秒) / Speed: <span id="speed-val">25</span>s</label>
+        <input type="range" id="input-speed" class="form-control" min="5" max="60" value="25" step="1" style="height:auto;">
       </div>
 
-      <!-- 时钟区域 - 在弹幕面板左侧 -->
-      <div class="clock-area">
-        <div class="time-display" id="clock">21:13</div>
-        <div class="live-badge">LIVE</div>
-      </div>
-    </div>
-
-    <!-- 游戏区域流光边框 -->
-    <div class="game-frame">
-      <svg class="beam-svg" viewBox="0 0 1940 843">
-        <defs>
-          <linearGradient id="beamGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style="stop-color:#4D7006;stop-opacity:1" />
-            <stop offset="50%" style="stop-color:#462BA5;stop-opacity:1" />
-            <stop offset="100%" style="stop-color:#4D7006;stop-opacity:1" />
-          </linearGradient>
-        </defs>
-        <!-- 静态背景线 -->
-        <rect class="neon-path path-bg" x="10" y="10" width="1920" height="823" rx="30" ry="30" />
-        <!-- 主流光线 -->
-        <rect class="neon-path path-main" x="10" y="10" width="1920" height="823" rx="30" ry="30" />
-        <!-- 故障闪烁线 -->
-        <rect class="neon-path path-glitch" x="10" y="10" width="1920" height="823" rx="30" ry="30" />
-      </svg>
-    </div>
-
-    <!-- 弹幕区域 - 一半在游戏区内，一半在顶栏 -->
-    <div class="danmaku-panel">
-      <div class="danmaku-frame">
-        <div class="danmaku-header">💬 DANMAKU</div>
-        <div class="danmaku-corner tl"></div>
-        <div class="danmaku-corner br"></div>
-        <div class="danmaku-content" id="danmakuArea">
-          <!-- 留空 - 用户自行放置弹幕源 -->
-        </div>
-      </div>
-    </div>
-
-    <!-- ═══════════════════════════════════════════════════════════
-         📝 底部信息栏 - 游戏名称在HTML中修改
-         ═══════════════════════════════════════════════════════════ -->
-    <div class="bottom-bar">
-      <div class="bottom-left-deco">
-        <div class="checker-grid">
-          <div class="checker-dot"></div>
-          <div class="checker-dot"></div>
-          <div class="checker-dot"></div>
-          <div class="checker-dot"></div>
-          <div class="checker-dot"></div>
-          <div class="checker-dot"></div>
-          <div class="checker-dot"></div>
-          <div class="checker-dot"></div>
-        </div>
+      <div class="form-group">
+        <label>游戏名称 / Game Name</label>
+        <input type="text" id="input-game" class="form-control" value="cities skylines 2">
       </div>
 
-      <div class="game-info">
-        <div class="game-label">GAME NAME</div>
-        <div class="game-name" id="gameName"></div>
+      <!-- 开关配置 -->
+      <div class="toggle-row">
+        <span class="toggle-label">显示音乐模块 (Music)</span>
+        <label class="switch">
+          <input type="checkbox" id="input-music">
+          <span class="slider"></span>
+        </label>
       </div>
 
-      <!-- 音乐模块 - 通过CSS变量 --music-display 控制显示/隐藏 -->
-      <!-- 在 :root 中修改 --music-display: flex (显示) 或 none (隐藏) -->
-      <div class="music-module" id="musicModule">
-        <div class="music-icon">🎵</div>
-        <div class="music-info">
-          <div class="music-label">NOW PLAYING</div>
-          <div class="music-name-area" id="musicNameArea">
-            <!-- 歌名区域留空 - 在OBS中叠加其他源显示当前歌曲 -->
+      <div class="toggle-row">
+        <span class="toggle-label">显示个人主页 (Homepage)</span>
+        <label class="switch">
+          <input type="checkbox" id="input-homepage" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="toggle-row">
+        <span class="toggle-label">显示版权信息 (Copyright)</span>
+        <label class="switch">
+          <input type="checkbox" id="input-copyright" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <!-- 颜色配置 -->
+      <div class="form-group">
+        <label>主题色配置</label>
+        <div class="color-picker-row">
+          <div class="color-input-wrapper">
+            <input type="color" id="input-color1" value="#8BC34A">
+            <span>主色</span>
+          </div>
+          <div class="color-input-wrapper">
+            <input type="color" id="input-color2" value="#9C6ADE">
+            <span>副色</span>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 装饰元素已移除，保持游戏区域干净 -->
-
-    <!-- 顶部装饰特效 -->
-    <div class="top-deco-particles">
-      <div class="top-particle"></div>
-      <div class="top-particle"></div>
-      <div class="top-particle"></div>
-      <div class="top-particle"></div>
-      <div class="top-particle"></div>
+    <div class="panel-footer">
+      <button class="btn btn-primary" id="btn-copy">📋 复制 OBS 浏览器源链接</button>
+      <a href="#" target="_blank" class="btn btn-secondary" id="btn-open">🔗 在新标签页打开完整版</a>
+      <div class="url-output" id="url-preview">...</div>
     </div>
-    <div class="top-data-stream"></div>
-    <div class="top-data-stream"></div>
-    <div class="top-data-stream"></div>
+  </aside>
 
-    <!-- 底部装饰特效 -->
-    <div class="bottom-deco-waves">
-      <div class="wave-line"></div>
-      <div class="wave-line"></div>
-      <div class="wave-line"></div>
-      <div class="wave-line"></div>
+  <!-- 右侧预览 -->
+  <main class="preview-area" id="preview-area">
+    <div class="preview-label">Live Preview (1920x1080)</div>
+    <div class="preview-container" id="preview-container">
+      <iframe id="preview-frame" src="overlay.html" scrolling="no"></iframe>
     </div>
-    <div class="energy-bar"></div>
-    <div class="indicator-lights">
-      <div class="indicator"></div>
-      <div class="indicator"></div>
-      <div class="indicator"></div>
-      <div class="indicator"></div>
-    </div>
-
-    <!-- 角落装饰 -->
-    <div class="corner-deco top-left"></div>
-    <div class="corner-deco top-right"></div>
-    <div class="corner-deco bottom-left"></div>
-    <div class="corner-deco bottom-right"></div>
-
-    <!-- 个人主页地址 -->
-    <div class="homepage-badge">
-      <span class="homepage-url">https://keita.cc</span>
-    </div>
-
-    <!-- 版权声明 -->
-    <div class="copyright-badge">
-      <span class="copyright-text">Kurokawa Keita</span>
-    </div>
-
-    <!-- 脉冲环 -->
-    <div class="pulse-ring pulse-ring-1"></div>
-    <div class="pulse-ring pulse-ring-2"></div>
-
-    <!-- 顶部数据矩阵 -->
-    <div class="matrix-rain">
-      <div class="matrix-column">01100101</div>
-      <div class="matrix-column">11010010</div>
-      <div class="matrix-column">00111001</div>
-      <div class="matrix-column">10101110</div>
-      <div class="matrix-column">01001011</div>
-    </div>
-
-    <!-- 顶部状态指示器 -->
-    <div class="status-indicators">
-      <div class="status-item">
-        <div class="status-dot online"></div>
-        <span>ONLINE</span>
-      </div>
-      <div class="status-item">
-        <div class="status-dot streaming"></div>
-        <span>REC</span>
-      </div>
-      <div class="status-item">
-        <div class="status-dot signal"></div>
-        <span>SIGNAL</span>
-      </div>
-    </div>
-
-    <!-- 顶部科技图标 -->
-    <div class="tech-icons">
-      <span class="tech-icon">⚡</span>
-      <span class="tech-icon">◈</span>
-      <span class="tech-icon">⬡</span>
-    </div>
-
-    <!-- 顶部十六进制显示 -->
-    <div class="hex-display">0xF7A2B9C4</div>
-
-    <!-- 顶部数据带 -->
-    <div class="data-ribbon"></div>
-
-    <!-- 底部音频可视化 -->
-    <div class="audio-visualizer">
-      <div class="audio-bar"></div>
-      <div class="audio-bar"></div>
-      <div class="audio-bar"></div>
-      <div class="audio-bar"></div>
-      <div class="audio-bar"></div>
-      <div class="audio-bar"></div>
-      <div class="audio-bar"></div>
-      <div class="audio-bar"></div>
-    </div>
-
-    <!-- 底部电路板纹路 -->
-    <div class="circuit-trace">
-      <div class="circuit-path circuit-path-1"></div>
-      <div class="circuit-path circuit-path-2"></div>
-      <div class="circuit-path circuit-path-3"></div>
-    </div>
-
-    <!-- 底部进度条组 -->
-    <div class="progress-bars">
-      <div class="progress-item">
-        <span class="progress-label">CPU</span>
-        <div class="progress-track">
-          <div class="progress-fill progress-fill-1"></div>
-        </div>
-      </div>
-      <div class="progress-item">
-        <span class="progress-label">GPU</span>
-        <div class="progress-track">
-          <div class="progress-fill progress-fill-2"></div>
-        </div>
-      </div>
-      <div class="progress-item">
-        <span class="progress-label">MEM</span>
-        <div class="progress-track">
-          <div class="progress-fill progress-fill-3"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 底部技术环 -->
-    <div class="tech-ring"></div>
-
-    <!-- 底部数据带 -->
-    <div class="bottom-ribbon"></div>
-  </div>
+  </main>
 
   <script>
-    // 初始化配置 - 从URL参数读取设置
-    // paramsSource: URLSearchParams 对象 (可选，默认读取当前URL)
-    function initConfiguration(paramsSource) {
-      const params = paramsSource || new URLSearchParams(window.location.search);
-      const root = document.documentElement;
+    // 定义配置项与DOM元素的映射
+    const inputs = {
+      announcement: document.getElementById('input-announcement'),
+      speed: document.getElementById('input-speed'),
+      game: document.getElementById('input-game'),
+      music: document.getElementById('input-music'),
+      homepage: document.getElementById('input-homepage'),
+      copyright: document.getElementById('input-copyright'),
+      color1: document.getElementById('input-color1'),
+      color2: document.getElementById('input-color2')
+    };
 
-      // Helper: Set CSS Variable
-      const setVar = (name, val) => root.style.setProperty(name, val);
+    const frame = document.getElementById('preview-frame');
+    const container = document.getElementById('preview-container');
+    const area = document.getElementById('preview-area');
+    const urlPreview = document.getElementById('url-preview');
+    const btnOpen = document.getElementById('btn-open');
+    const btnCopy = document.getElementById('btn-copy');
+    const speedVal = document.getElementById('speed-val');
 
-      // 1. 公告文字
-      if (params.has('announcement')) {
-        const text = params.get('announcement');
-        setVar('--announcement-text', `"${text}"`);
-        const el = document.querySelector('.announcement-text');
-        if (el) {
-          el.textContent = text;
-          el.setAttribute('data-text', text);
-        }
-      } else if (!paramsSource) {
-        // 仅在首次加载(非预览更新)且无参数时读取默认值
-        const style = getComputedStyle(root);
-        const text = style.getPropertyValue('--announcement-text').trim().replace(/^"|"$/g, '');
-        const el = document.querySelector('.announcement-text');
-        if (el && text) {
-             el.textContent = text;
-             el.setAttribute('data-text', text);
-        }
-      }
+    // 自动缩放预览
+    function resizePreview() {
+      if (!container || !area) return;
+      const targetW = 1920;
+      const targetH = 1080;
+      const availableW = area.clientWidth - 40; // padding
+      const availableH = area.clientHeight - 40;
 
-      // 2. 游戏名称
-      if (params.has('game')) {
-        const text = params.get('game');
-        setVar('--game-name-text', `"${text}"`);
-        const el = document.getElementById('gameName');
-        if(el) el.textContent = text;
-      } else if (!paramsSource) {
-        const style = getComputedStyle(root);
-        const gameName = style.getPropertyValue('--game-name-text').trim().replace(/^"|"$/g, '');
-        const el = document.getElementById('gameName');
-        if (el) el.textContent = gameName;
-      }
+      const scale = Math.min(
+        availableW / targetW, 
+        availableH / targetH
+      );
 
-      // 3. 显示开关
-      const setDisplay = (paramKey, cssVar) => {
-        if (params.has(paramKey)) {
-          const val = params.get(paramKey).toLowerCase();
-          const isShow = (val === 'true' || val === '1' || val === 'on' || val === 'flex');
-          setVar(cssVar, isShow ? 'flex' : 'none');
-        }
-      };
+      container.style.transform = `scale(${scale})`;
+      // 保持居中不需要额外margin，因为flex center + transform-origin center
+    }
+    window.addEventListener('resize', resizePreview);
+    // 初始调用
+    setTimeout(resizePreview, 100);
 
-      setDisplay('music', '--music-display');
-      setDisplay('homepage', '--homepage-display');
-      setDisplay('copyright', '--copyright-display');
+    // 生成QueryString
+    function getQueryString() {
+      const params = new URLSearchParams();
+      
+      params.set('announcement', inputs.announcement.value);
+      params.set('speed', inputs.speed.value);
+      params.set('game', inputs.game.value);
+      
+      // Checkbox处理
+      params.set('music', inputs.music.checked);
+      params.set('homepage', inputs.homepage.checked);
+      params.set('copyright', inputs.copyright.checked);
 
-      // 4. 颜色
-      const updateColor = (hex, type) => {
-          let c = hex.replace('#', '');
-          if (c.length === 3) c = c[0]+c[0]+c[1]+c[1]+c[2]+c[2];
-          const r = parseInt(c.substring(0,2), 16);
-          const g = parseInt(c.substring(2,4), 16);
-          const b = parseInt(c.substring(4,6), 16);
-          
-          if (type === 'green') {
-             setVar('--neon-green', `#${c}`);
-             setVar('--primary-green', `#${c}`);
-             setVar('--glow-green', `0 0 15px rgba(${r}, ${g}, ${b}, 0.8), 0 0 40px rgba(${r}, ${g}, ${b}, 0.4)`);
-             setVar('--light-green', `#${c}`); 
-          } else {
-             setVar('--neon-purple', `#${c}`);
-             setVar('--primary-purple', `#${c}`);
-             setVar('--glow-purple', `0 0 15px rgba(${r}, ${g}, ${b}, 0.8), 0 0 40px rgba(${r}, ${g}, ${b}, 0.4)`);
-             setVar('--light-purple', `#${c}`);
-          }
-      };
+      // Color处理
+      params.set('color1', inputs.color1.value);
+      params.set('color2', inputs.color2.value);
 
-      if (params.has('color1')) updateColor(params.get('color1'), 'green');
-      if (params.has('color2')) updateColor(params.get('color2'), 'purple');
+      return params.toString();
     }
 
-    // 监听来自配置页面的实时预览消息
-    window.addEventListener('message', (event) => {
-      if (event.data && event.data.type === 'updateConfig') {
-        const newParams = new URLSearchParams(event.data.queryString);
-        initConfiguration(newParams);
-      }
+    // 更新逻辑
+    function update() {
+      // Update UI labels
+      speedVal.textContent = inputs.speed.value;
+
+      const qs = getQueryString();
+      const baseUrl = window.location.href.replace('index.html', 'overlay.html').split('?')[0]; 
+      // 注意：这里假设最终部署后 config.html 会变成 index.html，而原来的 index.html 变成 overlay.html
+      // 为了本地开发也能用，我们检测文件名
+      let targetFile = 'overlay.html';
+      
+      // 构建完整URL用于复制
+      // 如果当前是根目录或 index.html，则目标也是相对路径
+      const cleanPath = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
+      const fullUrl = `${window.location.protocol}//${window.location.host}${cleanPath}${targetFile}?${qs}`;
+      
+      // 更新预览框
+      frame.contentWindow.postMessage({
+        type: 'updateConfig',
+        queryString: qs
+      }, '*');
+
+      // 更新底部链接显示
+      urlPreview.textContent = fullUrl;
+      btnOpen.href = fullUrl;
+    }
+
+    // 绑定事件
+    Object.values(inputs).forEach(input => {
+      input.addEventListener('input', update);
+      input.addEventListener('change', update); // check boxes
     });
 
-    // 时间更新
-    function updateClock() {
-      const now = new Date();
-      const pad = (n) => String(n).padStart(2, "0");
-      document.getElementById("clock").textContent = 
-        `${pad(now.getHours())}:${pad(now.getMinutes())}`;
-    }
+    // 复制按钮
+    btnCopy.addEventListener('click', () => {
+      const url = btnOpen.href;
+      navigator.clipboard.writeText(url).then(() => {
+        const originalText = btnCopy.textContent;
+        btnCopy.textContent = "✅ 已复制！";
+        setTimeout(() => btnCopy.textContent = originalText, 2000);
+      });
+    });
+
+    // 初始化执行一次
+    // 等待一小会确保 iframe 加载 (虽然 postMessage 无需 load，但预览第一眼还是要的)
+    // 实际上我们可以先让 iframe 加载默认参数，或者页面加载后立即触发一次 update
+    // 但 iframe 本身 src="index.html" 会自己跑一次默认逻辑。
+    // 我们只需在页面加载后把当前 input 的值推过去覆盖默认即可。
     
-    // 启动
-    initConfiguration();
-    updateClock();
-    setInterval(updateClock, 1000);
-    // updateGameName 已被集成到 initConfiguration 中
+    frame.onload = () => {
+       update();
+    };
+    
+    // 如果 onload 已过 (本地测试快的时候)，也调用一次
+    setTimeout(update, 500);
+
   </script>
 </body>
 </html>
