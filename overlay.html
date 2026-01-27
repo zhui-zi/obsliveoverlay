@@ -1500,6 +1500,134 @@
     }
 
     /* =========================================
+       🎙️ 杂谈模式 (Chat Mode) 布局重组
+       ========================================= */
+    body.mode-chat .game-frame { display: none; }
+    
+    /* 隐藏中间装饰 */
+    body.mode-chat .top-data-stream,
+    body.mode-chat .hex-display { display: none; }
+    
+    /* 移除顶栏底栏的连贯背景/边框 */
+    body.mode-chat .top-bar {
+        border-bottom: none;
+        background: transparent;
+        justify-content: space-between; /* 元素推向两端 */
+    }
+    
+    body.mode-chat .bottom-bar {
+        border-top: none;
+        background: transparent;
+        /* Bottom bar default is flex. We need to split items. */
+    }
+
+    /* 
+       Chat Layout Grid 
+       Left: Announcement (Top), Music (Bottom), Decor
+       Right: Clock(Top), Topic (Bottom), Danmaku
+    */
+
+    /* Left Side Adjustments */
+    body.mode-chat .announcement-area {
+        position: fixed;
+        top: 20px;
+        left: 30px;
+        width: 400px;
+    }
+    
+    body.mode-chat .top-left-deco {
+        position: fixed;
+        top: 90px;
+        left: 30px;
+    }
+
+    body.mode-chat .music-module {
+        position: fixed;
+        bottom: 30px;
+        left: 30px;
+        right: auto; /* reset default if any */
+        /* Make sure it's visible if hidden by variable, we might want to force check visibility or let user decide */
+    }
+
+    /* Right Side Adjustments */
+    body.mode-chat .clock-area {
+        position: fixed;
+        top: 20px;
+        right: 30px;
+        margin: 0; /* Remove margin-right: 420px */
+    }
+    
+    body.mode-chat .homepage-badge {
+        right: 280px; /* Adjust relative to clock */
+        top: 25px;
+    }
+    
+    body.mode-chat .copyright-badge {
+        right: 280px;
+        top: 65px;
+    }
+
+    /* Move Game Info (Topic) to Bottom Right */
+    body.mode-chat .game-info {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        left: auto;
+        transform: none; /* If centralized before */
+        text-align: right;
+        align-items: flex-end;
+    }
+    
+    /* Re-align items inside game info for right side */
+    body.mode-chat .game-label {
+        align-self: flex-end;
+    }
+
+    /* Danmaku Panel - Move to Right Side Vertical */
+    body.mode-chat .danmaku-panel {
+        position: fixed;
+        top: 150px;
+        bottom: 150px;
+        left: auto;
+        right: 30px;
+        width: 350px;
+        height: auto;
+        z-index: 20;
+    }
+    
+    body.mode-chat .danmaku-frame {
+        height: 100%;
+        background: rgba(0,0,0,0.4);
+        border: 1px solid var(--neon-purple);
+    }
+
+    /* Hide standard bottom deco in center */
+    body.mode-chat .bottom-left-deco { display: none; }
+    
+    /* Add a vertical separator line for visual weight */
+    body.mode-chat::before {
+        content: '';
+        position: absolute;
+        top: 100px;
+        bottom: 100px;
+        left: 500px;
+        width: 2px;
+        background: linear-gradient(to bottom, transparent, var(--neon-green), transparent);
+        opacity: 0.5;
+    }
+    
+    body.mode-chat::after {
+        content: '';
+        position: absolute;
+        top: 100px;
+        bottom: 100px;
+        right: 500px;
+        width: 2px;
+        background: linear-gradient(to bottom, transparent, var(--neon-purple), transparent);
+        opacity: 0.5;
+    }
+
+    /* =========================================
        ✨ 16:9模式 侧边填充特效 (默认隐藏)
        ========================================= */
     .side-fillers {
@@ -2203,36 +2331,56 @@
         }
       }
 
-      // 1.6 画面比例配置 (Game Aspect Ratio)
-      // default: 21:9 (full width 1920)
-      // option 16:9: width ~1463, centered
-      const updateGameRect = (ratio) => {
+      // 1.6 画面布局配置 (Layout Mode)
+      // options: 21:9 (default), 16:9, chat
+      const updateLayout = (mode) => {
+          const body = document.body;
           const rects = ['rect-bg', 'rect-main', 'rect-glitch'].map(id => document.getElementById(id));
           const fillers = document.getElementById('sideFillers');
+          const gameLabel = document.querySelector('.game-label');
+
+          // Reset base states
+          body.classList.remove('mode-chat');
+          if(fillers) fillers.style.display = 'none';
+          if(gameLabel) gameLabel.textContent = 'GAME NAME';
           
-          if (ratio === '16:9') {
+          // Show/Reset Frame (hidden in CSS for mode-chat, but here reset attributes)
+          rects.forEach(r => { if(r) { r.style.display = 'block'; } });
+
+          if (mode === 'chat') {
+              // Chat Mode Logic
+              body.classList.add('mode-chat');
+              if(gameLabel) gameLabel.textContent = 'CHAT TOPIC';
+              // Frame hidden by CSS
+          } else if (mode === '16:9') {
+              // 16:9 Logic
               // Target Width: 823 * (16/9) ~= 1463
-              // Center in 1940 viewBox
               const w = 1463;
-              const x = (1940 - w) / 2; // 238.5
+              const x = (1940 - w) / 2;
               rects.forEach(r => {
-                  if(r) { r.setAttribute('width', w); r.setAttribute('x', x); }
+                  if(r) { 
+                      r.setAttribute('width', w); 
+                      r.setAttribute('x', x); 
+                      r.style.display = 'block';
+                  }
               });
               if(fillers) fillers.style.display = 'block';
           } else {
-              // Reset to default (21:9 like)
+              // Default 21:9 Logic
               rects.forEach(r => {
-                  if(r) { r.setAttribute('width', 1920); r.setAttribute('x', 10); }
+                  if(r) { 
+                      r.setAttribute('width', 1920); 
+                      r.setAttribute('x', 10); 
+                      r.style.display = 'block';
+                  }
               });
-              if(fillers) fillers.style.display = 'none';
           }
       };
 
       if (params.has('ratio')) {
-          updateGameRect(params.get('ratio'));
+          updateLayout(params.get('ratio'));
       } else if (!paramsSource) {
-          // Default
-          updateGameRect('21:9');
+          updateLayout('21:9');
       }
 
       // 2. 游戏名称
