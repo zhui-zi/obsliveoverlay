@@ -9,22 +9,17 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
   <style>
-    /* ╔══════════════════════════════════════════════════════════════════╗
-       ║                    🎮 配置区 - 在此修改内容                        ║
-       ╚══════════════════════════════════════════════════════════════════╝ */
     :root {
       /* ===== 📝 文字内容配置 ===== */
-      --announcement-text: "没啥好说的，都来我家喝酒吧！";  /* 公告栏文字 */
-      --game-name-text: "cities skylines 2";                        /* 游戏名称 */
+      --announcement-text: "没啥好说的，都来我家喝酒吧！";
+      --game-name-text: "cities skylines 2";
       
       /* ===== 🎵 音乐模块开关 ===== */
-      /* 显示音乐区: flex  |  隐藏音乐区: none */
       --music-display: none;
 
       /* ===== 🌐 个人信息开关 ===== */
-      /* 显示: flex | 隐藏: none */
-      --homepage-display: flex;   /* 个人主页网址 */
-      --copyright-display: flex;  /* 版权声明 */
+      --homepage-display: flex;
+      --copyright-display: flex;
       
       /* ===== 🎨 主题颜色 ===== */
       --primary-green: #4D7006;
@@ -280,7 +275,13 @@
       fill: none;
       stroke-width: 14;
       stroke-linecap: round;
-      stroke-dasharray: 1500 4000;
+      /* 
+         使用 pathLength="100" 归一化路径长度 
+         25: 线条长度 (25%)
+         75: 间隔长度 (75%)
+         加起来正好 100，配合 dash 动画偏移 -100 实现完美无缝循环
+      */
+      stroke-dasharray: 25 75;
       animation: dash 4s linear infinite;
     }
 
@@ -308,10 +309,11 @@
       stroke: #462BA5;
       stroke-width: 4;
       opacity: 0.3;
+      stroke-dasharray: none; /* 背景线不需要断开 */
     }
 
     @keyframes dash {
-      to { stroke-dashoffset: -5486; }
+      to { stroke-dashoffset: -100; }
     }
 
     @keyframes glitch-anim {
@@ -386,6 +388,7 @@
 
     .game-label {
       font-size: 16px;
+      font-family: 'Orbitron', sans-serif;
       letter-spacing: 3px;
       color: var(--light-purple);
       text-shadow: var(--glow-purple), 0 2px 4px rgba(0,0,0,0.8);
@@ -499,6 +502,7 @@
       color: #fff;
       padding: 8px 22px;
       font-size: 14px;
+      font-family: 'Orbitron', sans-serif;
       font-weight: 700;
       letter-spacing: 4px;
       text-shadow: 0 2px 4px rgba(0,0,0,0.5);
@@ -1438,65 +1442,61 @@
       50% { transform: scaleY(0.4); }
     }
 
-    /* 个人主页地址展示 - 时钟左侧上方 */
+    /* 个人信息卡片组容器 */
+    .info-card-group {
+      position: absolute;
+      top: 25px;
+      right: 830px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      z-index: 25;
+      /* 通过 stretch 让宽度自动对齐到最宽的那个 */
+      align-items: stretch; 
+    }
+
+    /* 通用卡片样式 - 替代 clip-path 以避免边框裁切问题 */
+    .info-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+      padding: 8px 20px;
+      /* 使用 box-shadow 模拟内部边框，避免被裁切 */
+      box-shadow: inset 0 0 0 1px var(--card-color);
+      /* 小倒角 */
+      border-radius: 4px;
+      /* 只有右下角大切角，使用 mask 或 visual trick? 
+         为了简单且不裁切边框，我们使用 border-radius 和 ::after 装饰 
+         或者改回 clip-path 但增加 padding 
+         改用线性代数: clip-path 在某些渲染下确实会吃掉 1px border. 
+         这里我们改用 bevel 风格，不使用 clip-path 裁切边框 
+      */
+      border-right: 3px solid var(--card-color); /*以此作为主要视觉特征*/
+      min-width: 180px;
+    }
+
     .homepage-badge {
-      position: absolute;
-      top: 28px;
-      right: 830px;
       display: var(--homepage-display);
-      align-items: center;
-      gap: 8px;
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(8px);
-      padding: 8px 16px;
-      border: 1px solid var(--neon-purple);
-      clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
-      z-index: 25;
+      --card-color: var(--neon-purple);
     }
 
-    .homepage-badge::before {
-      content: '🌐';
-      font-size: 12px;
-    }
-
-    .homepage-url {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--light-purple);
-      letter-spacing: 1px;
-      text-shadow: 0 0 8px var(--neon-purple);
-    }
-
-    /* 版权声明 - 主页地址下方 */
     .copyright-badge {
-      position: absolute;
-      top: 66px;
-      right: 830px;
       display: var(--copyright-display);
-      align-items: center;
-      gap: 8px;
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(8px);
-      padding: 8px 16px;
-      border: 1px solid var(--neon-green);
-      clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
-      z-index: 25;
+      --card-color: var(--neon-green);
     }
+    
+    .homepage-badge::before { content: '🌐'; font-size: 14px; }
+    .copyright-badge::before { content: '©'; font-size: 18px; color: var(--neon-green); line-height: 1; }
 
-    .copyright-badge::before {
-      content: '©';
-      font-size: 12px;
-      color: var(--neon-green);
-    }
-
-    .copyright-text {
+    .homepage-url, .copyright-text {
       font-family: 'Orbitron', sans-serif;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 600;
-      color: var(--light-green);
       letter-spacing: 1px;
-      text-shadow: 0 0 8px var(--neon-green);
+      color: #fff;
+      text-shadow: 0 0 5px var(--card-color);
     }
 
     /* =========================================
@@ -1645,7 +1645,7 @@
         bottom: 130px;
         left: auto;
         right: 30px;
-        width: 350px;
+        width: 480px; /* Increased from 350px */
         height: auto;
         z-index: 20;
     }
@@ -2230,16 +2230,11 @@
     <!-- 底部不透明背景 -->
     <div class="bottom-section"></div>
 
-    <!-- ═══════════════════════════════════════════════════════════
-         📝 顶部信息条 - 公告内容在HTML中修改，或使用CSS变量
-         ═══════════════════════════════════════════════════════════ -->
     <div class="top-bar">
       <!-- 公告区域 - 固定宽度横向滚动 -->
       <div class="announcement-area">
         <div class="announcement-box" id="announcement">
-          <!-- ▼▼▼ 修改公告内容：同时修改两处文字保持一致 ▼▼▼ -->
           <span class="announcement-text" data-text="好说的，都来我家喝酒吧 没啥!">好说的，都来我家喝酒吧 没啥!</span>
-          <!-- ▲▲▲ 修改公告内容：同时修改两处文字保持一致 ▲▲▲ -->
           <div class="announcement-label">NOTICE</div>
         </div>
       </div>
@@ -2271,9 +2266,9 @@
         <!-- 静态背景线 -->
         <rect id="rect-bg" class="neon-path path-bg" x="10" y="10" width="1920" height="823" rx="30" ry="30" />
         <!-- 主流光线 -->
-        <rect id="rect-main" class="neon-path path-main" x="10" y="10" width="1920" height="823" rx="30" ry="30" />
+        <rect id="rect-main" class="neon-path path-main" x="10" y="10" width="1920" height="823" rx="30" ry="30" pathLength="100" />
         <!-- 故障闪烁线 -->
-        <rect id="rect-glitch" class="neon-path path-glitch" x="10" y="10" width="1920" height="823" rx="30" ry="30" />
+        <rect id="rect-glitch" class="neon-path path-glitch" x="10" y="10" width="1920" height="823" rx="30" ry="30" pathLength="100" />
       </svg>
     </div>
 
@@ -2284,14 +2279,11 @@
         <div class="danmaku-corner tl"></div>
         <div class="danmaku-corner br"></div>
         <div class="danmaku-content" id="danmakuArea">
-          <!-- 留空 - 用户自行放置弹幕源 -->
+          <!-- 弹幕容器 -->
         </div>
       </div>
     </div>
 
-    <!-- ═══════════════════════════════════════════════════════════
-         📝 底部信息栏 - 游戏名称在HTML中修改
-         ═══════════════════════════════════════════════════════════ -->
     <div class="bottom-bar">
       <div class="bottom-left-deco">
         <div class="checker-grid">
@@ -2311,14 +2303,13 @@
         <div class="game-name" id="gameName"></div>
       </div>
 
-      <!-- 音乐模块 - 通过CSS变量 --music-display 控制显示/隐藏 -->
-      <!-- 在 :root 中修改 --music-display: flex (显示) 或 none (隐藏) -->
+      <!-- 音乐模块 -->
       <div class="music-module" id="musicModule">
         <div class="music-icon">🎵</div>
         <div class="music-info">
           <div class="music-label">NOW PLAYING</div>
           <div class="music-name-area" id="musicNameArea">
-            <!-- 歌名区域留空 - 在OBS中叠加其他源显示当前歌曲 -->
+            <!-- 歌名区域留空 -->
           </div>
         </div>
       </div>
@@ -2359,14 +2350,14 @@
     <div class="corner-deco bottom-left"></div>
     <div class="corner-deco bottom-right"></div>
 
-    <!-- 个人主页地址 -->
-    <div class="homepage-badge">
-      <span class="homepage-url">https://keita.cc</span>
-    </div>
-
-    <!-- 版权声明 -->
-    <div class="copyright-badge">
-      <span class="copyright-text">Kurokawa Keita</span>
+    <!-- 个人信息组 (主页 + 版权) -->
+    <div class="info-card-group">
+      <div class="info-card homepage-badge">
+        <span class="homepage-url">https://keita.cc</span>
+      </div>
+      <div class="info-card copyright-badge">
+        <span class="copyright-text">Kurokawa Keita</span>
+      </div>
     </div>
 
     <!-- 脉冲环 -->
@@ -2561,9 +2552,9 @@
               // Frame hidden by CSS
           } else if (mode === '16:9') {
               // 16:9 Logic
-              // Target Width: 823 * (16/9) ~= 1463
               const w = 1463;
               const x = (1940 - w) / 2;
+              
               rects.forEach(r => {
                   if(r) { 
                       r.setAttribute('width', w); 

@@ -367,6 +367,13 @@
       <button class="btn btn-primary" id="btn-copy">📋 复制 OBS 浏览器源链接</button>
       <a href="#" target="_blank" class="btn btn-secondary" id="btn-open">🔗 在新标签页打开完整版</a>
       <div class="url-output" id="url-preview">...</div>
+      
+      <div style="margin-top: 15px; font-size: 12px; text-align: center; color: #666; font-family: 'Segoe UI', sans-serif;">
+        <a href="https://github.com/zhui-zi/obsliveoverlay/blob/main/LICENSE" target="_blank" style="color: #888; text-decoration: none; border-bottom: 1px dashed #888;">MIT License</a>
+        | 
+        <a href="https://github.com/zhui-zi/obsliveoverlay" target="_blank" style="color: #888; text-decoration: none; border-bottom: 1px dashed #888;">GitHub</a><br>
+        <span style="font-style: italic; opacity: 0.8;">Made with 💚💜 for streamers</span>
+      </div>
     </div>
   </aside>
 
@@ -451,15 +458,21 @@
       speedVal.textContent = inputs.speed.value;
 
       const qs = getQueryString();
-      const baseUrl = window.location.href.replace('index.html', 'overlay.html').split('?')[0]; 
-      // 注意：这里假设最终部署后 config.html 会变成 index.html，而原来的 index.html 变成 overlay.html
-      // 为了本地开发也能用，我们检测文件名
-      let targetFile = 'overlay.html';
-      
+
       // 构建完整URL用于复制
-      // 如果当前是根目录或 index.html，则目标也是相对路径
-      const cleanPath = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
-      const fullUrl = `${window.location.protocol}//${window.location.host}${cleanPath}${targetFile}?${qs}`;
+      // 获取当前路径的基础目录
+      let path = window.location.pathname;
+      // 如果路径指向特定文件（如 index.html），则去掉文件名
+      if (path.endsWith('.html')) {
+        path = path.substring(0, path.lastIndexOf('/'));
+      }
+      // 确保路径以 / 结尾
+      if (!path.endsWith('/')) {
+        path += '/';
+      }
+      
+      const targetFile = 'overlay.html';
+      const fullUrl = `${window.location.protocol}//${window.location.host}${path}${targetFile}?${qs}`;
       
       // 更新预览框
       frame.contentWindow.postMessage({
