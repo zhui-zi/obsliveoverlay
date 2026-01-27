@@ -235,7 +235,7 @@
     .preview-area {
       flex: 1;
       background: #000;
-      display: flex;
+      display: flex; /* flex-direction: column is default or inherited, but let's be safe */
       flex-direction: column;
       position: relative;
       background-image: 
@@ -244,24 +244,22 @@
         linear-gradient(45deg, transparent 75%, #111 75%), 
         linear-gradient(-45deg, transparent 75%, #111 75%);
       background-size: 20px 20px;
-      /* 确保内容不溢出，用绝对定位+JS控制缩放 */
       overflow: hidden; 
+      align-items: center;
+      justify-content: center;
     }
 
     .preview-container {
+      width: 1920px;
+      height: 1080px;
+      /* Absolute positioning ensures it doesn't affect parent flow size, solving shrink issues */
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 1920px;
-      height: 1080px;
       transform-origin: center center;
       box-shadow: 0 0 50px rgba(0,0,0,0.5);
-      /* 初始隐藏，计算好再显示 */
-      visibility: hidden;
-    }
-    
-    .preview-container.ready {
-      visibility: visible;
+      /* Initial transformation will be set by JS */
+      transform: translate(-50%, -50%) scale(0.5); 
     }
 
     .preview-label {
@@ -301,14 +299,6 @@
     <div class="panel-content">
       <!-- 文本配置 -->
       <div class="form-group">
-        <label>布局模式 / Layout Mode</label>
-        <select id="input-ratio" class="form-control">
-          <option value="169" selected>Standard (16:9 - 默认遮罩)</option>
-          <option value="219">Immersive (21:9 - 铺满全屏)</option>
-        </select>
-      </div>
-
-      <div class="form-group">
         <label>公告内容 / Announcement</label>
         <textarea id="input-announcement" class="form-control">没啥好说的，都来我家喝酒吧！</textarea>
       </div>
@@ -316,6 +306,14 @@
       <div class="form-group">
         <label>公告速度 (秒) / Speed: <span id="speed-val">25</span>s</label>
         <input type="range" id="input-speed" class="form-control" min="5" max="60" value="25" step="1" style="height:auto;">
+      </div>
+
+      <div class="form-group">
+        <label>画面比例 / Aspect Ratio</label>
+        <select id="input-ratio" class="form-control">
+            <option value="21:9">21:9 (全宽铺满 / Full Width)</option>
+            <option value="16:9">16:9 (标准居中 / Centered)</option>
+        </select>
       </div>
 
       <div class="form-group">
@@ -382,9 +380,9 @@
   <script>
     // 定义配置项与DOM元素的映射
     const inputs = {
-      ratio: document.getElementById('input-ratio'),
       announcement: document.getElementById('input-announcement'),
       speed: document.getElementById('input-speed'),
+      ratio: document.getElementById('input-ratio'),
       game: document.getElementById('input-game'),
       music: document.getElementById('input-music'),
       homepage: document.getElementById('input-homepage'),
@@ -406,35 +404,32 @@
       if (!container || !area) return;
       const targetW = 1920;
       const targetH = 1080;
-      // 留出 40px 的边距
-      const padding = 40;
-      const availableW = area.clientWidth - padding;
-      const availableH = area.clientHeight - padding;
-
-      if (availableW <= 0 || availableH <= 0) return;
+      
+      // Get dimensions of the preview area
+      const availableW = area.clientWidth - 40; // padding
+      const availableH = area.clientHeight - 40;
 
       const scale = Math.min(
         availableW / targetW, 
         availableH / targetH
       );
 
-      // transform: translate(-50%, -50%) 配合 absolute top:50% left:50% 居中
-      // 同时应用 scale
+      // Apply translate(-50%, -50%) first to center, then scale
       container.style.transform = `translate(-50%, -50%) scale(${scale})`;
-      container.classList.add('ready');
     }
     window.addEventListener('resize', resizePreview);
     // 初始调用
     setTimeout(resizePreview, 100);
-    setInterval(resizePreview, 1000); // 兜底检查，以防 resize 事件漏掉或 layout 延迟改变
+    // 额外调用一次，以防万一
+    window.onload = resizePreview;
 
     // 生成QueryString
     function getQueryString() {
       const params = new URLSearchParams();
       
-      params.set('ratio', inputs.ratio.value);
       params.set('announcement', inputs.announcement.value);
       params.set('speed', inputs.speed.value);
+      params.set('ratio', inputs.ratio.value);
       params.set('game', inputs.game.value);
       
       // Checkbox处理

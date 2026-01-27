@@ -1839,11 +1839,11 @@
           </linearGradient>
         </defs>
         <!-- 静态背景线 -->
-        <rect class="neon-path path-bg" x="10" y="10" width="1920" height="823" rx="30" ry="30" />
+        <rect id="rect-bg" class="neon-path path-bg" x="10" y="10" width="1920" height="823" rx="30" ry="30" />
         <!-- 主流光线 -->
-        <rect class="neon-path path-main" x="10" y="10" width="1920" height="823" rx="30" ry="30" />
+        <rect id="rect-main" class="neon-path path-main" x="10" y="10" width="1920" height="823" rx="30" ry="30" />
         <!-- 故障闪烁线 -->
-        <rect class="neon-path path-glitch" x="10" y="10" width="1920" height="823" rx="30" ry="30" />
+        <rect id="rect-glitch" class="neon-path path-glitch" x="10" y="10" width="1920" height="823" rx="30" ry="30" />
       </svg>
     </div>
 
@@ -2069,45 +2069,32 @@
         }
       }
 
-      // 1.6 宽高比布局
-      // 用户逻辑：16:9 = 缩窄（有黑边，默认） | 21:9 = 铺满全屏
+      // 1.6 画面比例配置 (Game Aspect Ratio)
+      // default: 21:9 (full width 1920)
+      // option 16:9: width ~1463, centered
+      const updateGameRect = (ratio) => {
+          const rects = ['rect-bg', 'rect-main', 'rect-glitch'].map(id => document.getElementById(id));
+          if (ratio === '16:9') {
+              // Target Width: 823 * (16/9) ~= 1463
+              // Center in 1940 viewBox
+              const w = 1463;
+              const x = (1940 - w) / 2; // 238.5
+              rects.forEach(r => {
+                  if(r) { r.setAttribute('width', w); r.setAttribute('x', x); }
+              });
+          } else {
+              // Reset to default (21:9 like)
+              rects.forEach(r => {
+                  if(r) { r.setAttribute('width', 1920); r.setAttribute('x', 10); }
+              });
+          }
+      };
+
       if (params.has('ratio')) {
-        const ratio = params.get('ratio');
-        // SVG 和 game-height 的调整
-        const svg = document.querySelector('.beam-svg');
-        const paths = document.querySelectorAll('.neon-path');
-        
-        if (ratio === '219') {
-          // 21:9 模式：用户定义为"铺满全屏"
-          // 全屏游戏区
-          setVar('--game-height', '1080px');
-          document.querySelector('.game-frame').style.top = '0';
-          document.querySelector('.game-frame').style.height = '1080px';
-          
-          if (svg) {
-              svg.setAttribute('viewBox', '0 0 1940 1100');
-              svg.style.height = '1080px';
-              // 调整内部 rect
-              paths.forEach(p => {
-                  p.setAttribute('height', '1060'); 
-                  p.setAttribute('y', '10');
-              });
-          }
-        } else {
-          // 16:9 模式（或其他）：用户定义为"缩窄"（默认823px）
-          setVar('--game-height', '823px');
-          document.querySelector('.game-frame').style.top = ''; // reset
-          document.querySelector('.game-frame').style.height = ''; 
-          
-          if (svg) {
-              svg.setAttribute('viewBox', '0 0 1940 843');
-              svg.style.height = '843px';
-              paths.forEach(p => {
-                  p.setAttribute('height', '823');
-                  p.setAttribute('y', '10');
-              });
-          }
-        }
+          updateGameRect(params.get('ratio'));
+      } else if (!paramsSource) {
+          // Default
+          updateGameRect('21:9');
       }
 
       // 2. 游戏名称
