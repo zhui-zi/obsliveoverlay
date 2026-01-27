@@ -72,9 +72,9 @@ Attribution to the original author (Keita) is appreciated but not mandatory.
 
 -   **赛博朋克美学**：故障效果、霓虹发光、数据流和科技感字体。
 -   **多种布局模式**：
-    -   **21:9 (带鱼屏)**：专为超宽屏游戏设计的全宽覆盖层。
-    -   **16:9 (标准)**：居中的 16:9 游戏窗口，两侧带有 "赛博填充层" (Side Fillers) 以填补黑边。
-    -   **杂谈模式 (Just Chatting)**：专用的聊天布局，拥有更大的摄像头/内容区域，垂直数据堆栈，并优化了文字可读性。
+    -   **21:9**：专为超宽屏游戏设计的全宽覆盖层。
+    -   **16:9**：居中的 16:9 游戏窗口，两侧带有装饰以填补空白。
+    -   **杂谈模式**：专用的杂谈布局，拥有更大的展示区域。
 -   **可视化配置页面**：无需修改代码即可轻松定制。
     -   实时预览修改效果。
     -   开关模块（音乐、版权、主页）。
@@ -86,7 +86,7 @@ Attribution to the original author (Keita) is appreciated but not mandatory.
 ### 使用指南
 
 1.  **部署 (推荐)**：
-    -   将此仓库部署到 **Cloudflare Pages** (或 GitHub Pages / Netlify)。
+    -   将此仓库部署到 Cloudflare Pages （或 GitHub Pages / Netlify）。
     -   这样可以确保你在任何设备上都有一个稳定的 URL 在 OBS 中使用。
 
 2.  **配置**：
@@ -121,5 +121,4 @@ Attribution to the original author (Keita) is appreciated but not mandatory.
 
 本项目采用 [MIT 许可证](LICENSE)。
 -   ✅ **免费使用**：可自由用于个人或商业直播项目。
--   ✅ **自由修改**：您可以根据需要修改代码以适应您的品牌。
--   ✅ **开源**：欢迎分支和贡献代码。
+-   ✅ **自由修改**：您可以根据需要修改代码以适应您的形象。
