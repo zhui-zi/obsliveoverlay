@@ -1537,16 +1537,60 @@
     
     body.mode-chat .top-left-deco {
         position: fixed;
-        top: 90px;
+        top: 180px; /* Moved down to make space for badges */
         left: 30px;
+    }
+
+    /* 
+       Left Side: Vertical Stack
+       1. Announcement (Top)
+       2. Homepage (Top)
+       3. Copyright (Top)
+       ...
+       4. Audio Visualizer (Bottom)
+       5. Progress Bars (Bottom)
+       6. Music Module (Bottom)
+    */
+
+    body.mode-chat .homepage-badge {
+        position: fixed;
+        left: 30px;
+        right: auto;
+        top: 90px;
+        width: auto;
+        justify-content: flex-start;
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%);
+    }
+
+    body.mode-chat .copyright-badge {
+        position: fixed;
+        left: 30px;
+        right: auto;
+        top: 135px;
+        width: auto;
+        justify-content: flex-start;
     }
 
     body.mode-chat .music-module {
         position: fixed;
         bottom: 30px;
         left: 30px;
-        right: auto; /* reset default if any */
-        /* Make sure it's visible if hidden by variable, we might want to force check visibility or let user decide */
+        right: auto;
+    }
+    
+    body.mode-chat .progress-bars {
+        position: fixed;
+        bottom: 110px;
+        left: 30px;
+        right: auto;
+        align-items: flex-start;
+    }
+    
+    body.mode-chat .audio-visualizer {
+        position: fixed;
+        bottom: 175px;
+        left: 30px;
+        right: auto;
     }
 
     /* Right Side Adjustments */
@@ -1555,29 +1599,6 @@
         top: 20px;
         right: 30px;
         margin: 0; 
-    }
-    
-    /* 
-       Adjust Homepage & Copyright to avoid collision with Clock 
-       Move them below the clock or to the left of the clock?
-       Clock is at right:30px. 
-       Let's stack them vertically below the clock on the right side.
-       Clock height is roughly ~70px with padding.
-    */
-    body.mode-chat .homepage-badge {
-        position: fixed;
-        top: 95px;
-        right: 30px; /* Align with clock right edge */
-        width: 200px; /* fixed width for alignment */
-        justify-content: flex-end; /* text aligns to right */
-    }
-    
-    body.mode-chat .copyright-badge {
-        position: fixed;
-        top: 135px;
-        right: 30px;
-        width: 200px;
-        justify-content: flex-end;
     }
 
     /* Move Game Info (Topic) to Bottom Right - Center Alignment Fixed */
@@ -1606,12 +1627,14 @@
     }
 
     /* Danmaku Panel - Move to Right Side Vertical 
-       Adjust top position to account for badges 
+       Adjust top position to account for Clock and Topic 
+       Clock ~80px height. Topic ~100px height.
+       Let's stretch it in between.
     */
     body.mode-chat .danmaku-panel {
         position: fixed;
-        top: 180px; /* Adjusted to fit badges */
-        bottom: 150px;
+        top: 130px; 
+        bottom: 130px;
         left: auto;
         right: 30px;
         width: 350px;
@@ -1634,12 +1657,21 @@
     body.mode-chat .music-module,
     body.mode-chat .danmaku-frame,
     body.mode-chat .homepage-badge,
-    body.mode-chat .copyright-badge {
+    body.mode-chat .copyright-badge,
+    body.mode-chat .progress-bars { /* Added progress bars backdrop */
         backdrop-filter: blur(20px) contrast(1.1);
         background: rgba(8, 8, 12, 0.85); /* Darker bg for contrast */
         box-shadow: 0 4px 20px rgba(0,0,0,0.6);
     }
     
+    /* Progress bars specific style in chat mode to look like a panel */
+    body.mode-chat .progress-bars {
+        padding: 10px 15px;
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 4px;
+        gap: 12px;
+    }
+
     /* Ensure text readability */
     body.mode-chat .game-name {
         font-size: 28px; /* Slightly larger topic text */
