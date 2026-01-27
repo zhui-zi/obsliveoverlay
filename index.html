@@ -244,17 +244,24 @@
         linear-gradient(45deg, transparent 75%, #111 75%), 
         linear-gradient(-45deg, transparent 75%, #111 75%);
       background-size: 20px 20px;
-      background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
-      overflow: hidden; /* 防止溢出 */
-      align-items: center;
-      justify-content: center;
+      /* 确保内容不溢出，用绝对定位+JS控制缩放 */
+      overflow: hidden; 
     }
 
     .preview-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
       width: 1920px;
       height: 1080px;
       transform-origin: center center;
       box-shadow: 0 0 50px rgba(0,0,0,0.5);
+      /* 初始隐藏，计算好再显示 */
+      visibility: hidden;
+    }
+    
+    .preview-container.ready {
+      visibility: visible;
     }
 
     .preview-label {
@@ -293,6 +300,14 @@
     
     <div class="panel-content">
       <!-- 文本配置 -->
+      <div class="form-group">
+        <label>布局模式 / Layout Mode</label>
+        <select id="input-ratio" class="form-control">
+          <option value="219" selected>Cinematic (21:9 - 默认)</option>
+          <option value="169">Fullscreen (16:9 - 全屏)</option>
+        </select>
+      </div>
+
       <div class="form-group">
         <label>公告内容 / Announcement</label>
         <textarea id="input-announcement" class="form-control">没啥好说的，都来我家喝酒吧！</textarea>
@@ -367,6 +382,7 @@
   <script>
     // 定义配置项与DOM元素的映射
     const inputs = {
+      ratio: document.getElementById('input-ratio'),
       announcement: document.getElementById('input-announcement'),
       speed: document.getElementById('input-speed'),
       game: document.getElementById('input-game'),
@@ -390,25 +406,33 @@
       if (!container || !area) return;
       const targetW = 1920;
       const targetH = 1080;
-      const availableW = area.clientWidth - 40; // padding
-      const availableH = area.clientHeight - 40;
+      // 留出 40px 的边距
+      const padding = 40;
+      const availableW = area.clientWidth - padding;
+      const availableH = area.clientHeight - padding;
+
+      if (availableW <= 0 || availableH <= 0) return;
 
       const scale = Math.min(
         availableW / targetW, 
         availableH / targetH
       );
 
-      container.style.transform = `scale(${scale})`;
-      // 保持居中不需要额外margin，因为flex center + transform-origin center
+      // transform: translate(-50%, -50%) 配合 absolute top:50% left:50% 居中
+      // 同时应用 scale
+      container.style.transform = `translate(-50%, -50%) scale(${scale})`;
+      container.classList.add('ready');
     }
     window.addEventListener('resize', resizePreview);
     // 初始调用
     setTimeout(resizePreview, 100);
+    setInterval(resizePreview, 1000); // 兜底检查，以防 resize 事件漏掉或 layout 延迟改变
 
     // 生成QueryString
     function getQueryString() {
       const params = new URLSearchParams();
       
+      params.set('ratio', inputs.ratio.value);
       params.set('announcement', inputs.announcement.value);
       params.set('speed', inputs.speed.value);
       params.set('game', inputs.game.value);
