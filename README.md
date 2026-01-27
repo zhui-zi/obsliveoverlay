@@ -57,6 +57,15 @@ The overlay is controlled entirely via URL parameters, making it stateless and e
 | `color1`       | Primary Neon Color (Green replacement)           | `?color1=00ff00`           |
 | `color2`       | Secondary Neon Color (Purple replacement)        | `?color2=ff00ff`           |
 
+### License & Usage
+
+This project is licensed under the [MIT License](LICENSE).
+-   ✅ **Free to use** for personal or commercial streaming.
+-   ✅ **Modifiable** to fit your brand.
+-   ✅ **Open Source**.
+
+Attribution to the original author (Keita) is appreciated but not mandatory.
+
 ---
 
 ## <a name="中文说明"></a>中文说明
@@ -111,3 +120,12 @@ The overlay is controlled entirely via URL parameters, making it stateless and e
 | `copyright`    | 显示版权信息 (`true`/`false`)                   | `?copyright=false`         |
 | `color1`       | 主霓虹色 (替换绿色)                             | `?color1=00ff00`           |
 | `color2`       | 副霓虹色 (替换紫色)                             | `?color2=ff00ff`           |
+
+### 许可证与使用权限
+
+本项目采用 [MIT 许可证](LICENSE)。
+-   ✅ **免费使用**：可自由用于个人或商业直播项目。
+-   ✅ **自由修改**：您可以根据需要修改代码以适应您的品牌。
+-   ✅ **开源**：欢迎分支和贡献代码。
+
+虽然不强制，但如果您愿意在使用时注明原作者 (Keita/黑川启太)，我们将不胜感激。
