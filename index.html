@@ -318,7 +318,7 @@
       </div>
 
       <div class="form-group">
-        <label>游戏名称 / Game Name</label>
+        <label id="label-game">游戏名称 / Game Name</label>
         <input type="text" id="input-game" class="form-control" value="cities skylines 2">
       </div>
 
@@ -456,6 +456,14 @@
     function update() {
       // Update UI labels
       speedVal.textContent = inputs.speed.value;
+
+      // Update Game Label based on Mode
+      const gameLabel = document.getElementById('label-game');
+      if (inputs.ratio.value === 'chat') {
+        gameLabel.textContent = '聊天话题 / Chat Topic';
+      } else {
+        gameLabel.textContent = '游戏名称 / Game Name';
+      }
 
       const qs = getQueryString();
 
