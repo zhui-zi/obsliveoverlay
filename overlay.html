@@ -2237,17 +2237,63 @@
       --glow-pink: 0 0 5px #ff00de, 0 0 10px #ff00de, 0 0 20px #ff00de, 0 0 40px #ff00de;
       --glow-blue: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 20px #00ffff;
       
-      /* 字体：使用 Google Fonts 的 Pacifico 或类似手写体作为装饰 */
-      --font-neon: "Pacifico", "Brush Script MT", cursive;
-      --font-ui: "Montserrat", sans-serif;
+      /* 字体：更换为通用字体 */
+      --font-neon: "Verdana", "Segoe UI", sans-serif;
+      --font-ui: "Microsoft YaHei", "Segoe UI", sans-serif;
     }
-
-    /* 引入 Google Fonts (需要翻墙，如果本地网络不支持可能需要替换) */
-    @import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Montserrat:wght@300;400;600&display=swap');
 
     [data-theme="neon"] body {
       font-family: var(--font-ui);
-      background: radial-gradient(circle at center, #2e003e 0%, #0d0015 100%);
+      background: transparent !important;
+    }
+
+    /* 移除全屏光效背景 */
+    [data-theme="neon"] .overlay::before {
+        display: none;
+    }
+    
+    /* 
+       🛠️ 修正 16:9 边框问题 
+    */
+    [data-theme="neon"] .game-frame::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0; 
+        border: 4px solid #fff;
+        border-radius: 30px;
+        box-shadow: 
+            0 0 10px #fff,
+            0 0 20px #9D00FF,
+            0 0 40px #9D00FF,
+            inset 0 0 10px #9D00FF;
+        pointer-events: none;
+        z-index: 5;
+    }
+
+    /* 修复 Chat Mode 元素位置和样式 */
+    [data-theme="neon"] body.mode-chat .top-left-deco,
+    [data-theme="neon"] body.mode-chat .corner-deco,
+    [data-theme="neon"] .corner-deco {
+      display: none !important;
+    }
+
+    [data-theme="neon"] body.mode-chat .game-label {
+        color: #00ffff;
+        font-family: var(--font-ui);
+        text-shadow: 0 0 10px #00ffff;
+    }
+
+    [data-theme="neon"] body.mode-chat .homepage-badge,
+    [data-theme="neon"] body.mode-chat .copyright-badge {
+         width: auto;
+         max-width: 300px;
+         position: fixed;
+         left: 40px; 
+         right: auto;
+    }
+    
+    [data-theme="neon"] body.mode-chat .homepage-badge { bottom: 80px; }
+    [data-theme="neon"] body.mode-chat .copyright-badge { bottom: 30px; }
     }
 
     /* 隐藏所有旧的赛博装饰 */
