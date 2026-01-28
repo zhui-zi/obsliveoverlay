@@ -2267,8 +2267,7 @@
     [data-theme="neon"] .rgb-shift,
     [data-theme="neon"] .top-deco-particles,
     [data-theme="neon"] .checker-grid,
-    [data-theme="neon"] .game-frame svg line, 
-    [data-theme="neon"] .game-frame svg rect, 
+    [data-theme="neon"] .game-frame svg,
     [data-theme="neon"] .danmaku-corner,
     /* 新增隐藏项 */
     [data-theme="neon"] .status-indicators,
@@ -2280,6 +2279,16 @@
     [data-theme="neon"] .hex-display,
     [data-theme="neon"] .tech-ring {
       display: none !important;
+    }
+
+    [data-theme="neon"] body {
+      font-family: var(--font-ui);
+      background: transparent !important; /* 透明背景 */
+    }
+
+    /* 移除全屏光效背景，方便用户自定义 */
+    [data-theme="neon"] .overlay::before {
+        display: none;
     }
 
     /* 重构 Top Bar: 使用绝对定位放置元素，不再依赖原有 flex 结构 */
@@ -2312,7 +2321,7 @@
             0 0 10px #fff,
             0 0 20px #ff00de,
             inset 0 0 15px #ff00de;
-        padding: 15px 50px; /* 增大内边距 */
+        padding: 15px 30px; /* 调整内边距 */
         backdrop-filter: blur(5px);
         display: flex;
         align-items: center;
@@ -2320,6 +2329,7 @@
     }
 
     [data-theme="neon"] .announcement-label {
+        position: static !important; /* 修复重叠问题：从绝对定位改为静态流式布局 */
         background: none;
         color: #ff00de;
         font-family: var(--font-neon);
@@ -2331,6 +2341,11 @@
         margin: 0;
         box-shadow: none;
         white-space: nowrap;
+        display: block;
+    }
+
+    [data-theme="neon"] .announcement-label::after {
+        display: none; /* 移除原来的遮罩 */
     }
 
     [data-theme="neon"] .announcement-text {
@@ -2339,6 +2354,45 @@
         font-size: 24px; /* 增大字体 */
         color: #fff;
         text-shadow: 0 0 5px rgba(255,255,255,0.8);
+        padding-left: 0 !important; /* 移除旧的内边距 */
+    }
+
+    /* 个人主页与版权信息 (Neon Style) */
+    [data-theme="neon"] .homepage-badge,
+    [data-theme="neon"] .copyright-badge {
+        position: fixed;
+        left: 40px;
+        background: rgba(20, 0, 20, 0.6);
+        border: 1px solid var(--neon-purple);
+        border-radius: 20px;
+        padding: 8px 16px;
+        box-shadow: 0 0 10px rgba(157, 0, 255, 0.3);
+        backdrop-filter: blur(5px);
+        display: flex !important; /* Ensure flex layout */
+        align-items: center;
+        gap: 10px;
+    }
+    
+    [data-theme="neon"] .homepage-badge {
+        bottom: 80px; /* 调整位置 */
+    }
+
+    [data-theme="neon"] .copyright-badge {
+        bottom: 30px; /* 调整位置 */
+        border-color: var(--neon-green);
+    }
+    
+    [data-theme="neon"] .homepage-badge::before,
+    [data-theme="neon"] .copyright-badge::before {
+         text-shadow: 0 0 10px currentColor;
+    }
+
+    [data-theme="neon"] .homepage-url, 
+    [data-theme="neon"] .copyright-text {
+        font-family: var(--font-ui);
+        font-weight: 500;
+        text-shadow: none;
+        letter-spacing: 0.5px;
     }
 
     /* 时钟：改为复古霓虹数字 */
