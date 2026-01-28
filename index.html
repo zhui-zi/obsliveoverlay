@@ -297,6 +297,15 @@
     </div>
     
     <div class="panel-content">
+      <!-- 风格选择 -->
+      <div class="form-group">
+        <label>视觉风格 / Theme Style</label>
+        <select id="input-style" class="form-control">
+          <option value="cyber">赛博故障 / Cyber Glitch</option>
+          <option value="neon">霓虹暧昧 / Neon Ambiance</option>
+        </select>
+      </div>
+
       <!-- 文本配置 -->
       <div class="form-group">
         <label>公告内容 / Announcement</label>
@@ -396,6 +405,7 @@
   <script>
     // 定义配置项与DOM元素的映射
     const inputs = {
+      style: document.getElementById('input-style'),
       announcement: document.getElementById('input-announcement'),
       speed: document.getElementById('input-speed'),
       ratio: document.getElementById('input-ratio'),
@@ -444,6 +454,7 @@
     function getQueryString() {
       const params = new URLSearchParams();
       
+      params.set('theme', inputs.style.value);
       params.set('announcement', inputs.announcement.value);
       params.set('speed', inputs.speed.value);
       params.set('ratio', inputs.ratio.value);

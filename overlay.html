@@ -2221,6 +2221,143 @@
     @keyframes ribbon-flow-reverse {
       to { right: calc(100% + 200px); }
     }
+
+    /* =========================================
+       🎨 新增：霓虹暧昧风格 (Neon Ambiance)
+       ========================================= */
+    :root[data-theme="neon"] {
+      --primary-green: #FF00FF; /* Hot Pink */
+      --neon-green: #FF66CC;    /* Soft Pink */
+      --light-green: #FFCCEF;   /* White Pink */
+      --primary-purple: #9D00FF;/* Electric Purple */
+      --neon-purple: #CC00FF;   /* Bright Purple */
+      --light-purple: #E066FF;  /* Light Purple */
+      --panel-bg: rgba(20, 0, 20, 0.4); /* Transparent dark pinkish bg */
+      --panel-bg-solid: rgb(30, 0, 30);
+      
+      --glow-green: 0 0 10px #FF00FF, 0 0 20px #FF00FF, 0 0 40px #FF00FF;
+      --glow-purple: 0 0 10px #9D00FF, 0 0 20px #9D00FF, 0 0 40px #9D00FF;
+      
+      --glass-blur: blur(10px);
+      --border-radius-lg: 20px;
+      --border-radius-sm: 8px;
+    }
+
+    [data-theme="neon"] .top-bar {
+      border-bottom: none;
+      background: linear-gradient(180deg, rgba(255,0,255,0.1) 0%, rgba(0,0,0,0) 100%);
+      box-shadow: 0 5px 20px rgba(255, 0, 255, 0.2);
+    }
+
+    [data-theme="neon"] .announcement-box {
+      background: rgba(255, 0, 255, 0.1);
+      border: 1px solid rgba(255, 0, 255, 0.3);
+      border-radius: var(--border-radius-lg);
+      backdrop-filter: var(--glass-blur);
+      box-shadow: var(--glow-green);
+    }
+    
+    [data-theme="neon"] .announcement-label {
+      background: #FF00FF;
+      color: #fff;
+      border-radius: var(--border-radius-sm);
+      box-shadow: 0 0 10px #FF00FF;
+    }
+
+    [data-theme="neon"] .time-display {
+      font-family: 'Orbitron', sans-serif;
+      text-shadow: 
+        0 0 5px #fff,
+        0 0 10px #fff,
+        0 0 20px #ff00de,
+        0 0 30px #ff00de,
+        0 0 40px #ff00de;
+      color: #fff;
+      background: none;
+      border: none;
+    }
+    
+    [data-theme="neon"] .live-badge {
+      background: #ff0055;
+      box-shadow: 0 0 10px #ff0055;
+      border-radius: 4px;
+    }
+
+    /* 游戏区域边框 - 更圆润，更亮 */
+    [data-theme="neon"] .game-frame .path-main {
+      filter: drop-shadow(0 0 10px #FF00FF) drop-shadow(0 0 30px #9D00FF);
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    
+    [data-theme="neon"] .game-frame rect {
+      rx: 30px; /* More rounded */
+      ry: 30px;
+    }
+    
+    /* 弹幕区 */
+    [data-theme="neon"] .danmaku-frame {
+      border: 2px solid rgba(255, 100, 255, 0.5);
+      background: rgba(40, 0, 40, 0.6);
+      backdrop-filter: blur(15px);
+      border-radius: 20px;
+      box-shadow: 
+        0 0 20px rgba(255, 0, 255, 0.2),
+        inset 0 0 20px rgba(255, 0, 255, 0.1);
+      clip-path: none; /*移除赛博切角*/
+    }
+    
+    [data-theme="neon"] .danmaku-header {
+      color: #fff;
+      text-shadow: 0 0 10px #ff66cc;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    [data-theme="neon"] .danmaku-corner {
+      display: none; /* Hide cyber corners */
+    }
+
+    /* 底部条 */
+    [data-theme="neon"] .bottom-bar {
+      border-top: none;
+      background: linear-gradient(0deg, rgba(157, 0, 255, 0.1) 0%, rgba(0,0,0,0) 100%);
+    }
+
+    [data-theme="neon"] .game-info, 
+    [data-theme="neon"] .music-module {
+      background: rgba(20, 0, 30, 0.6);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(157, 0, 255, 0.3);
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(157, 0, 255, 0.2);
+    }
+    
+    [data-theme="neon"] .game-label,
+    [data-theme="neon"] .music-label {
+      color: #E066FF;
+      text-shadow: 0 0 5px #E066FF;
+    }
+
+    /* 隐藏部分赛博装饰 */
+    [data-theme="neon"] .top-left-deco,
+    [data-theme="neon"] .bottom-left-deco,
+    [data-theme="neon"] .energy-bar,
+    [data-theme="neon"] .indicator-lights,
+    [data-theme="neon"] .top-data-stream {
+      display: none;
+    }
+
+    /* 新增背景光晕 (通过伪元素或现有元素改造) */
+    [data-theme="neon"] .overlay::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: 
+        radial-gradient(circle at 10% 20%, rgba(255, 0, 255, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(0, 255, 255, 0.1) 0%, transparent 40%);
+      pointer-events: none;
+      z-index: -1;
+    }
   </style>
 </head>
 <body>
@@ -2500,6 +2637,19 @@
     function initConfiguration(paramsSource) {
       const params = paramsSource || new URLSearchParams(window.location.search);
       const root = document.documentElement;
+
+      // 0. 主题设置
+      if (params.has('theme')) {
+        const theme = params.get('theme');
+        if (theme === 'neon') {
+          root.setAttribute('data-theme', 'neon');
+        } else {
+          root.removeAttribute('data-theme');
+        }
+      } else if (paramsSource) {
+        // 如果是实时更新且没传theme, 则恢复默认
+        root.removeAttribute('data-theme');
+      }
 
       // Helper: Set CSS Variable
       const setVar = (name, val) => root.style.setProperty(name, val);
