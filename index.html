@@ -347,6 +347,14 @@
         </label>
       </div>
 
+      <div class="toggle-row">
+        <span class="toggle-label">显示流光特效 (Neon Flow)</span>
+        <label class="switch">
+          <input type="checkbox" id="input-neon" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
       <!-- 颜色配置 -->
       <div class="form-group">
         <label>主题色配置</label>
@@ -395,6 +403,7 @@
       music: document.getElementById('input-music'),
       homepage: document.getElementById('input-homepage'),
       copyright: document.getElementById('input-copyright'),
+      neon: document.getElementById('input-neon'),
       color1: document.getElementById('input-color1'),
       color2: document.getElementById('input-color2')
     };
@@ -443,6 +452,7 @@
       // Checkbox处理
       params.set('music', inputs.music.checked);
       params.set('homepage', inputs.homepage.checked);
+      params.set('neon', inputs.neon.checked);
       params.set('copyright', inputs.copyright.checked);
 
       // Color处理

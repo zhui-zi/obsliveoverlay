@@ -38,6 +38,9 @@
       --game-height: 823px;
       --top-bar-height: 129px;
       --bottom-bar-height: 128px;
+      
+      /* ===== ✨ 流光特效开关 ===== */
+      --neon-visibility: visible;
     }
 
     * { box-sizing: border-box; }
@@ -293,6 +296,7 @@
         drop-shadow(0 0 15px var(--primary-purple))
         drop-shadow(0 0 30px var(--neon-purple)); 
       opacity: 1.0;
+      visibility: var(--neon-visibility);
     }
 
     /* 故障线条：重影和闪烁 */
@@ -302,6 +306,7 @@
       opacity: 0;
       mix-blend-mode: overlay;
       animation: dash 4s linear infinite, glitch-anim 2s infinite steps(1);
+      visibility: var(--neon-visibility);
     }
 
     /* 静态背景线 */
@@ -2604,6 +2609,13 @@
       };
 
       setDisplay('music', '--music-display');
+      
+      // Neon Flow
+      if (params.has('neon')) {
+          const val = params.get('neon').toLowerCase();
+          const isShow = (val === 'true' || val === '1' || val === 'on');
+          setVar('--neon-visibility', isShow ? 'visible' : 'hidden');
+      }
       setDisplay('homepage', '--homepage-display');
       setDisplay('copyright', '--copyright-display');
 
