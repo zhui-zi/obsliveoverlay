@@ -2226,138 +2226,314 @@
        🎨 新增：霓虹暧昧风格 (Neon Ambiance)
        ========================================= */
     :root[data-theme="neon"] {
-      --primary-green: #FF00FF; /* Hot Pink */
-      --neon-green: #FF66CC;    /* Soft Pink */
-      --light-green: #FFCCEF;   /* White Pink */
-      --primary-purple: #9D00FF;/* Electric Purple */
-      --neon-purple: #CC00FF;   /* Bright Purple */
-      --light-purple: #E066FF;  /* Light Purple */
-      --panel-bg: rgba(20, 0, 20, 0.4); /* Transparent dark pinkish bg */
-      --panel-bg-solid: rgb(30, 0, 30);
+      --primary-green: #FF00FF;
+      --neon-green: #FF66CC;
+      --light-green: #FFCCEF;
+      --primary-purple: #9D00FF;
+      --neon-purple: #CC00FF;
+      --light-purple: #E066FF;
+      --panel-bg: transparent; 
       
-      --glow-green: 0 0 10px #FF00FF, 0 0 20px #FF00FF, 0 0 40px #FF00FF;
-      --glow-purple: 0 0 10px #9D00FF, 0 0 20px #9D00FF, 0 0 40px #9D00FF;
+      --glow-pink: 0 0 5px #ff00de, 0 0 10px #ff00de, 0 0 20px #ff00de, 0 0 40px #ff00de;
+      --glow-blue: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 20px #00ffff;
       
-      --glass-blur: blur(10px);
-      --border-radius-lg: 20px;
-      --border-radius-sm: 8px;
+      /* 字体：使用 Google Fonts 的 Pacifico 或类似手写体作为装饰 */
+      --font-neon: "Pacifico", "Brush Script MT", cursive;
+      --font-ui: "Montserrat", sans-serif;
     }
 
-    [data-theme="neon"] .top-bar {
-      border-bottom: none;
-      background: linear-gradient(180deg, rgba(255,0,255,0.1) 0%, rgba(0,0,0,0) 100%);
-      box-shadow: 0 5px 20px rgba(255, 0, 255, 0.2);
+    /* 引入 Google Fonts (需要翻墙，如果本地网络不支持可能需要替换) */
+    @import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Montserrat:wght@300;400;600&display=swap');
+
+    [data-theme="neon"] body {
+      font-family: var(--font-ui);
+      background: radial-gradient(circle at center, #2e003e 0%, #0d0015 100%);
     }
 
-    [data-theme="neon"] .announcement-box {
-      background: rgba(255, 0, 255, 0.1);
-      border: 1px solid rgba(255, 0, 255, 0.3);
-      border-radius: var(--border-radius-lg);
-      backdrop-filter: var(--glass-blur);
-      box-shadow: var(--glow-green);
-    }
-    
-    [data-theme="neon"] .announcement-label {
-      background: #FF00FF;
-      color: #fff;
-      border-radius: var(--border-radius-sm);
-      box-shadow: 0 0 10px #FF00FF;
-    }
-
-    [data-theme="neon"] .time-display {
-      font-family: 'Orbitron', sans-serif;
-      text-shadow: 
-        0 0 5px #fff,
-        0 0 10px #fff,
-        0 0 20px #ff00de,
-        0 0 30px #ff00de,
-        0 0 40px #ff00de;
-      color: #fff;
-      background: none;
-      border: none;
-    }
-    
-    [data-theme="neon"] .live-badge {
-      background: #ff0055;
-      box-shadow: 0 0 10px #ff0055;
-      border-radius: 4px;
-    }
-
-    /* 游戏区域边框 - 更圆润，更亮 */
-    [data-theme="neon"] .game-frame .path-main {
-      filter: drop-shadow(0 0 10px #FF00FF) drop-shadow(0 0 30px #9D00FF);
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-    
-    [data-theme="neon"] .game-frame rect {
-      rx: 30px; /* More rounded */
-      ry: 30px;
-    }
-    
-    /* 弹幕区 */
-    [data-theme="neon"] .danmaku-frame {
-      border: 2px solid rgba(255, 100, 255, 0.5);
-      background: rgba(40, 0, 40, 0.6);
-      backdrop-filter: blur(15px);
-      border-radius: 20px;
-      box-shadow: 
-        0 0 20px rgba(255, 0, 255, 0.2),
-        inset 0 0 20px rgba(255, 0, 255, 0.1);
-      clip-path: none; /*移除赛博切角*/
-    }
-    
-    [data-theme="neon"] .danmaku-header {
-      color: #fff;
-      text-shadow: 0 0 10px #ff66cc;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    }
-    
-    [data-theme="neon"] .danmaku-corner {
-      display: none; /* Hide cyber corners */
-    }
-
-    /* 底部条 */
-    [data-theme="neon"] .bottom-bar {
-      border-top: none;
-      background: linear-gradient(0deg, rgba(157, 0, 255, 0.1) 0%, rgba(0,0,0,0) 100%);
-    }
-
-    [data-theme="neon"] .game-info, 
-    [data-theme="neon"] .music-module {
-      background: rgba(20, 0, 30, 0.6);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(157, 0, 255, 0.3);
-      border-radius: 15px;
-      box-shadow: 0 0 15px rgba(157, 0, 255, 0.2);
-    }
-    
-    [data-theme="neon"] .game-label,
-    [data-theme="neon"] .music-label {
-      color: #E066FF;
-      text-shadow: 0 0 5px #E066FF;
-    }
-
-    /* 隐藏部分赛博装饰 */
+    /* 隐藏所有旧的赛博装饰 */
+    [data-theme="neon"] .top-section,
+    [data-theme="neon"] .bottom-section,
+    [data-theme="neon"] .top-bar, /* 直接重写 top-bar 布局 */
+    [data-theme="neon"] .top-ribbon,
+    [data-theme="neon"] .bottom-ribbon,
     [data-theme="neon"] .top-left-deco,
     [data-theme="neon"] .bottom-left-deco,
     [data-theme="neon"] .energy-bar,
     [data-theme="neon"] .indicator-lights,
-    [data-theme="neon"] .top-data-stream {
-      display: none;
+    [data-theme="neon"] .top-data-stream,
+    [data-theme="neon"] .bottom-deco-waves,
+    [data-theme="neon"] .noise-overlay,
+    [data-theme="neon"] .rgb-shift,
+    [data-theme="neon"] .top-deco-particles,
+    [data-theme="neon"] .checker-grid,
+    [data-theme="neon"] .game-frame svg line, 
+    [data-theme="neon"] .game-frame svg rect, 
+    [data-theme="neon"] .danmaku-corner {
+      display: none !important;
     }
 
-    /* 新增背景光晕 (通过伪元素或现有元素改造) */
-    [data-theme="neon"] .overlay::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: 
-        radial-gradient(circle at 10% 20%, rgba(255, 0, 255, 0.15) 0%, transparent 40%),
-        radial-gradient(circle at 90% 80%, rgba(0, 255, 255, 0.1) 0%, transparent 40%);
+    /* 重构 Top Bar: 使用绝对定位放置元素，不再依赖原有 flex 结构 */
+    [data-theme="neon"] .top-bar {
+      display: block !important;
+      border: none;
+      background: none;
+      height: 100%; /* 覆盖整个顶部区域 */
       pointer-events: none;
-      z-index: -1;
     }
+
+    /* 公告栏：改为霓虹灯牌样式 */
+    [data-theme="neon"] .announcement-area {
+      position: absolute;
+      top: 30px; 
+      left: 50%;
+      transform: translateX(-50%);
+      width: auto;
+      background: none;
+      border: none;
+      box-shadow: none;
+    }
+
+    [data-theme="neon"] .announcement-box {
+        background: rgba(0,0,0,0.6);
+        border: 2px solid #fff;
+        border-radius: 50px;
+        box-shadow: 
+            0 0 5px #fff,
+            0 0 10px #fff,
+            0 0 20px #ff00de,
+            inset 0 0 10px #ff00de;
+        padding: 10px 40px;
+        backdrop-filter: blur(5px);
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    [data-theme="neon"] .announcement-label {
+        background: none;
+        color: #ff00de;
+        font-family: var(--font-neon);
+        font-size: 24px;
+        text-shadow: 
+            0 0 5px #ff00de,
+            0 0 10px #ff00de;
+        padding: 0;
+        margin: 0;
+        box-shadow: none;
+    }
+
+    [data-theme="neon"] .announcement-text {
+        font-family: var(--font-ui);
+        font-weight: 600;
+        font-size: 18px;
+        color: #fff;
+        text-shadow: 0 0 5px rgba(255,255,255,0.8);
+    }
+
+    /* 时钟：改为复古霓虹数字 */
+    [data-theme="neon"] .clock-area {
+        position: absolute;
+        top: 40px;
+        right: 60px;
+        background: none;
+        border: none;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0;
+    }
+
+    [data-theme="neon"] .time-display {
+        font-family: var(--font-neon); /* 或者一种比较圆润的数字字体 */
+        font-size: 64px;
+        line-height: 1;
+        color: #fff;
+        text-shadow: 
+            0 0 5px #fff,
+            0 0 10px #fff,
+            0 0 20px #00ffff,
+            0 0 40px #00ffff,
+            0 0 80px #00ffff;
+        background: none;
+        border: none;
+        padding: 0;
+        letter-spacing: 2px;
+    }
+
+    [data-theme="neon"] .live-badge {
+        font-family: var(--font-ui);
+        background: none;
+        border: 2px solid #ff0055;
+        color: #ff0055;
+        box-shadow: 0 0 10px #ff0055, inset 0 0 5px #ff0055;
+        text-shadow: 0 0 5px #ff0055;
+        padding: 2px 8px;
+        font-weight: 900;
+        letter-spacing: 1px;
+        margin-top: 5px;
+        border-radius: 4px;
+        animation: neon-flicker 3s infinite alternate;
+    }
+
+    /* 游戏边框：完全重写，不使用原来的 SVG rect，改用 CSS border-image 或 box-shadow */
+    [data-theme="neon"] .game-frame {
+        /* 使用伪元素制造发光边框 */
+        overflow: visible;
+    }
+    
+    [data-theme="neon"] .game-frame::before {
+        content: '';
+        position: absolute;
+        top: 20px; left: 20px; right: 20px; bottom: 20px; /* 稍微内缩 */
+        border: 4px solid #fff;
+        border-radius: 30px;
+        box-shadow: 
+            0 0 10px #fff,
+            0 0 20px #9D00FF,
+            0 0 40px #9D00FF,
+            inset 0 0 10px #9D00FF;
+        pointer-events: none;
+        z-index: 5;
+    }
+
+    /* 也可以添加一个角落的霓虹装饰 */
+    [data-theme="neon"] .game-frame::after {
+        content: 'LIVE HOUSE';
+        position: absolute;
+        top: -10px;
+        left: 60px;
+        background: #0d0015;
+        color: #FF00FF;
+        font-family: var(--font-neon);
+        font-size: 32px;
+        padding: 0 20px;
+        text-shadow: 0 0 10px #FF00FF, 0 0 20px #FF00FF;
+        z-index: 6;
+        transform: rotate(-5deg);
+    }
+    
+    /* 弹幕区：玻璃拟态 + 霓虹边框 */
+    [data-theme="neon"] .danmaku-panel {
+        /* 调整位置以适应新风格 */
+    }
+
+    [data-theme="neon"] .danmaku-frame {
+        border: 2px solid rgba(255,255,255,0.5);
+        background: rgba(20, 0, 20, 0.4);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        box-shadow: 
+            0 0 15px rgba(255, 0, 222, 0.4),
+            inset 0 0 20px rgba(255, 0, 255, 0.1);
+        display: flex;
+        flex-direction: column;
+    }
+
+    [data-theme="neon"] .danmaku-header {
+        font-family: var(--font-neon);
+        font-size: 28px;
+        color: #fff;
+        text-shadow: 0 0 10px #ff66cc, 0 0 20px #ff66cc;
+        border-bottom: 2px solid rgba(255, 102, 204, 0.3);
+        padding: 15px;
+        text-align: center;
+        background: none;
+        clip-path: none;
+    }
+    
+    /* 替换"DANMAKU"文字为更有氛围的 */
+    [data-theme="neon"] .danmaku-header {
+        visibility: hidden; /* Hide original text */
+        position: relative;
+    }
+    
+    [data-theme="neon"] .danmaku-header::after {
+        content: 'Chat Room';
+        visibility: visible;
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
+    }
+
+    /* 底部条：改为悬浮式卡片 */
+    [data-theme="neon"] .bottom-bar {
+        border: none;
+        background: none;
+        display: flex;
+        justify-content: flex-end; /* 靠右排列 */
+        padding-right: 50px;
+        padding-bottom: 30px;
+        gap: 30px;
+        align-items: flex-end;
+    }
+
+    [data-theme="neon"] .game-info, 
+    [data-theme="neon"] .music-module {
+        position: relative;
+        background: rgba(0, 0, 0, 0.6);
+        border: 2px solid #00ffff;
+        border-radius: 15px;
+        padding: 10px 20px;
+        box-shadow: 
+            0 0 10px rgba(0, 255, 255, 0.5),
+            inset 0 0 10px rgba(0, 255, 255, 0.2);
+        max-width: 300px;
+        backdrop-filter: blur(10px);
+        transform: skewX(-5deg); /* 稍微倾斜一点 */
+    }
+
+    [data-theme="neon"] .game-label,
+    [data-theme="neon"] .music-label {
+        font-family: var(--font-ui);
+        color: #00ffff;
+        text-shadow: 0 0 5px #00ffff;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 5px;
+    }
+
+    [data-theme="neon"] .game-name,
+    [data-theme="neon"] .music-name-area {
+        font-family: var(--font-ui);
+        font-weight: 600;
+        color: #fff;
+        text-shadow: 0 0 5px #fff;
+        font-size: 16px;
+    }
+    
+    [data-theme="neon"] .music-icon {
+        display: none; /* 移除原有图标 */
+    }
+
+    /* 氛围背景灯 */
+    [data-theme="neon"] .overlay::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        /* 模拟酒吧灯光 */
+        background: 
+            radial-gradient(circle at 10% 10%, rgba(255, 0, 222, 0.2) 0%, transparent 40%),
+            radial-gradient(circle at 90% 20%, rgba(0, 255, 255, 0.2) 0%, transparent 40%),
+            radial-gradient(circle at 50% 90%, rgba(138, 43, 226, 0.2) 0%, transparent 50%);
+        z-index: -1;
+        animation: bg-pulse 10s infinite alternate;
+    }
+    
+    @keyframes neon-flicker {
+        0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+            opacity: 1;
+        }
+        20%, 24%, 55% {
+            opacity: 0.5;
+        }
+    }
+    
+    @keyframes bg-pulse {
+        0% { opacity: 0.7; }
+        100% { opacity: 1; filter: hue-rotate(20deg); }
+    }
+    
   </style>
 </head>
 <body>
