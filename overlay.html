@@ -2253,9 +2253,10 @@
     /* 隐藏所有旧的赛博装饰 */
     [data-theme="neon"] .top-section,
     [data-theme="neon"] .bottom-section,
-    [data-theme="neon"] .top-bar, /* 直接重写 top-bar 布局 */
+    [data-theme="neon"] .top-bar, 
     [data-theme="neon"] .top-ribbon,
     [data-theme="neon"] .bottom-ribbon,
+    [data-theme="neon"] .data-ribbon,
     [data-theme="neon"] .top-left-deco,
     [data-theme="neon"] .bottom-left-deco,
     [data-theme="neon"] .energy-bar,
@@ -2268,7 +2269,16 @@
     [data-theme="neon"] .checker-grid,
     [data-theme="neon"] .game-frame svg line, 
     [data-theme="neon"] .game-frame svg rect, 
-    [data-theme="neon"] .danmaku-corner {
+    [data-theme="neon"] .danmaku-corner,
+    /* 新增隐藏项 */
+    [data-theme="neon"] .status-indicators,
+    [data-theme="neon"] .side-fillers,
+    [data-theme="neon"] .chat-left-deco,
+    [data-theme="neon"] .circuit-trace,
+    [data-theme="neon"] .tech-icons,
+    [data-theme="neon"] .progress-bars,
+    [data-theme="neon"] .hex-display,
+    [data-theme="neon"] .tech-ring {
       display: none !important;
     }
 
@@ -2281,13 +2291,14 @@
       pointer-events: none;
     }
 
-    /* 公告栏：改为霓虹灯牌样式 */
+    /* 公告栏：调整位置到左上角，增大尺寸，避免遮挡时间 */
     [data-theme="neon"] .announcement-area {
       position: absolute;
       top: 30px; 
-      left: 50%;
-      transform: translateX(-50%);
+      left: 40px; /* 移至左侧 */
+      transform: none; /* 取消居中 */
       width: auto;
+      max-width: 60%; /* 限制最大宽度 */
       background: none;
       border: none;
       box-shadow: none;
@@ -2295,37 +2306,37 @@
 
     [data-theme="neon"] .announcement-box {
         background: rgba(0,0,0,0.6);
-        border: 2px solid #fff;
-        border-radius: 50px;
+        border: 3px solid #fff; /* 加粗边框 */
+        border-radius: 60px;
         box-shadow: 
-            0 0 5px #fff,
             0 0 10px #fff,
             0 0 20px #ff00de,
-            inset 0 0 10px #ff00de;
-        padding: 10px 40px;
+            inset 0 0 15px #ff00de;
+        padding: 15px 50px; /* 增大内边距 */
         backdrop-filter: blur(5px);
         display: flex;
         align-items: center;
-        gap: 15px;
+        gap: 20px;
     }
 
     [data-theme="neon"] .announcement-label {
         background: none;
         color: #ff00de;
         font-family: var(--font-neon);
-        font-size: 24px;
+        font-size: 32px; /* 增大字体 */
         text-shadow: 
             0 0 5px #ff00de,
             0 0 10px #ff00de;
         padding: 0;
         margin: 0;
         box-shadow: none;
+        white-space: nowrap;
     }
 
     [data-theme="neon"] .announcement-text {
         font-family: var(--font-ui);
-        font-weight: 600;
-        font-size: 18px;
+        font-weight: 700;
+        font-size: 24px; /* 增大字体 */
         color: #fff;
         text-shadow: 0 0 5px rgba(255,255,255,0.8);
     }
