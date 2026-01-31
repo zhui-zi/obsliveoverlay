@@ -26,13 +26,57 @@ function initConfiguration(paramsSource) {
     }
   }
 
-  // 1.5 公告速度
-  if (params.has('speed')) {
-    const speed = params.get('speed');
-    const el = document.querySelector('.announcement-text');
-    if (el) {
-      el.style.setProperty('--scroll-speed', `${speed}s`);
-    }
+  /**
+   * 1.5 公告速度优化 (Smart Scroll Speed)
+   * 之前的逻辑是固定时间跑完全程，导致长文本飞快。
+   * 新逻辑: 基于文本长度动态计算时间，保持视觉速度恒定。
+   * 基准: 设定 params.speed 为 "滚动 500px 长度所需的时间".
+   */
+  const updateMarqueeSpeed = () => {
+      const el = document.querySelector('.announcement-text');
+      if (!el) return;
+
+      // 获取用户设置的基础速度 (默认 25s)
+      let baseSpeed = 25;
+      if (params.has('speed')) {
+          baseSpeed = parseFloat(params.get('speed'));
+      }
+
+      // 等待下一帧以确保内容已渲染并能获取宽度
+      requestAnimationFrame(() => {
+          // scrollWidth 包含 ::after 伪元素的内容吗？
+          // marquee scroll 是 translateX(-50%)，意味着全程跑完一半的宽度
+          // 我们需要衡量单段文本的宽度。
+          // 更好的方法是测量 offsetWidth 并除以 2 (因为 ::after 复制了一份)
+          // 但考虑到 padding 等因素，我们直接用 scrollWidth / 2 近似视作“行程距离”
+          
+          let totalWidth = el.offsetWidth; 
+          // 如果 offsetWidth 还没渲染出来 (例如 display:none)，则给个保底
+          if (totalWidth < 100) totalWidth = 500; 
+
+          // 假设基准宽度为 600px (约20个中文字)
+          const refWidth = 600;
+          
+          // 行程距离 (translateX -50%)
+          const distance = totalWidth / 2;
+          
+          // 计算实际时长: UserTime * (ActualDist / RefDist)
+          // 限制最小倍率为 0.5，避免极短文本太慢（虽然通常不会）
+          const factor = Math.max(0.5, distance / refWidth);
+          const realDuration = baseSpeed * factor;
+
+          el.style.setProperty('--scroll-speed', `${realDuration}s`);
+      });
+  };
+
+  if (params.has('speed') || params.has('announcement')) {
+      // 这里的调用可能获取不到宽度(因为还在init中)，所以用 setTimeout 延后一点
+      setTimeout(updateMarqueeSpeed, 100);
+      // 同时也监听可能的图片加载或字体加载
+      window.addEventListener('load', updateMarqueeSpeed);
+  } else {
+     // 默认情况
+     setTimeout(updateMarqueeSpeed, 100);
   }
 
   // 1.6 画面布局配置 (Layout Mode)
@@ -172,6 +216,16 @@ window.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'updateConfig') {
     const newParams = new URLSearchParams(event.data.queryString);
     initConfiguration(newParams);
+    
+    // 配置更新后，可能文字变了，需要重新计算速度
+    // 给一点时间让DOM更新
+    setTimeout(() => {
+        // 由于 initConfiguration 内部已经包含了 updateMarqueeSpeed 的逻辑 (尽管是 setTimeout)，
+        // 但那是基于 params.has 的条件。
+        // 为了保险，我们可以再次显式触发一次逻辑，或者依赖 initConfiguration 内部的改进
+        // 为了方便，我们在 initConfiguration 外部访问不到 updateMarqueeSpeed。
+        // 但 initConfiguration 中每次执行都会重新定义并执行它。
+    }, 200);
   }
 });
 
