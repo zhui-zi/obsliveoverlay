@@ -589,7 +589,15 @@
       stroke-width: 4;
       opacity: 0.3;
       stroke-dasharray: none; /* 背景线不需要断开 */
+      transition: opacity 0.3s;
     }
+
+    /* 当霓虹开启时，隐藏静态背景线 */
+    body.neon-enabled .path-bg { opacity: 0; }
+
+    /* 当霓虹开启时，隐藏上下栏的大横线边框 */
+    body.neon-enabled .top-bar { border-bottom: none; }
+    body.neon-enabled .bottom-bar { border-top: none; }
 
     @keyframes dash {
       to { stroke-dashoffset: -100; }
@@ -2125,45 +2133,6 @@
         right: 0;
         border-left: 2px solid var(--neon-purple);
         box-shadow: inset 10px 0 20px rgba(0,0,0,0.5);
-    }
-
-    /* === 数据流 (Matrix Rain) === */
-    .filler-matrix {
-        position: absolute;
-        top: 0; left: 0; right: 0; bottom: 0;
-        overflow: hidden;
-        opacity: 0.4; /* Increased visibility */
-        z-index: 1;
-        pointer-events: none;
-    }
-
-    .filler-matrix::before {
-        content: "10 01 11 00 10 10 01 00 11 10 01 11 00 10 10 01 00 11 10 01 11 00 10 10 01 00 11 10 01 11 00 10 10 01 00 11 10 01 11 00 10 10 01 00 11 10 01 11 00 10 10 01 00 11 10 01 11 00 10 10 01 00 11 10 01 11 00 10 10 01 00 11 10 01 11 00 10 10 01 00 11 10 01 11 00 10 10 01 00 11 10 01 11 00 10 10 01 00 11 10 01 11 00 10 10 01 00 11 10 01 11 00 10 10 01 00 11 10 01 11 00 10 10 01 00 11 10 01 11 00 10 10 01 00 11 10 01 11 00 10 10 01 00 11 10 01 11 00 10 10 01 00 11 10 01 11 00 10 10 01 00 11";
-        position: absolute;
-        top: -100%;
-        left: 0;
-        width: 100%;
-        height: 200%;
-        font-family: 'Share Tech Mono', monospace;
-        font-size: 14px;
-        line-height: 20px;
-        word-break: break-all;
-        color: var(--neon-green);
-        text-shadow: 0 0 5px var(--neon-green);
-        animation: matrixRain 10s linear infinite;
-        white-space: pre-wrap;
-    }
-    
-    .filler-right .filler-matrix::before {
-        color: var(--neon-purple);
-        text-shadow: 0 0 5px var(--neon-purple);
-        animation-duration: 12s;
-        animation-delay: -5s;
-    }
-
-    @keyframes matrixRain {
-        0% { transform: translateY(0); }
-        100% { transform: translateY(50%); }
     }
 
     /* 内部装饰 - 扫描线 */

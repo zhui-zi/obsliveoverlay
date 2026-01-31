@@ -9,10 +9,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
   
-  <!-- Dynamic Style Loader -->
-  <link rel="stylesheet" href="./src/styles/main.css" id="style-cyberpunk">
-  <link rel="stylesheet" href="./src/styles/liquid.css" id="style-liquid" disabled>
-  <!-- Laplace Chat Custom Theme (Loaded dynamically for chat sources) -->
+  <!-- Style Loader -->
+  <link rel="stylesheet" href="./src/styles/main.css">
   <link rel="stylesheet" href="laplace-cyberpunk.css">
 </head>
 <body>
@@ -263,7 +261,6 @@
     <!-- 16:9 模式填充层 (JS控制显示) -->
     <div class="side-fillers" id="sideFillers">
         <div class="filler-panel filler-left">
-            <div class="filler-matrix"></div>
             <div class="hud-circle"></div>
             <div class="scan-line-vertical"></div>
             <div class="bars-container">
@@ -274,7 +271,6 @@
             <div class="filler-text">SYSTEM MONITOR</div>
         </div>
         <div class="filler-panel filler-right">
-            <div class="filler-matrix"></div>
             <div class="hud-circle"></div>
             <div class="scan-line-vertical"></div>
              <div class="bars-container">
@@ -304,55 +300,6 @@
     </div>
   </div>
 
-  <!-- =========================================
-       Liquid Glass Style Root (iOS 26)
-       ========================================= -->
-  <div id="liquid-root" class="overlay">
-       <!-- Content injected by liquid.js -->
-  </div>
-
-  <!-- Bootloader -->
-  <script type="module">
-      const params = new URLSearchParams(window.location.search);
-      const style = params.get('style') || 'cyberpunk';
-      
-      const cyberLink = document.getElementById('style-cyberpunk');
-      const liquidLink = document.getElementById('style-liquid');
-      const cyberRoot = document.getElementById('cyber-root');
-      const liquidRoot = document.getElementById('liquid-root');
-      
-      if (style === 'liquid') {
-          // Switch to Liquid Mode
-          console.log('[Bootloader] Switching to Liquid Style...');
-          cyberLink.disabled = true;
-          liquidLink.disabled = false;
-          
-          document.body.classList.add('style-liquid');
-          
-          // Hide Cyber Root / Show Liquid Root
-          if(cyberRoot) cyberRoot.style.display = 'none';
-          if(liquidRoot) liquidRoot.style.display = 'block';
-
-          // Load Liquid JS
-          import('./src/scripts/liquid.js').then(module => {
-              module.initLiquidStyle();
-          }).catch(err => console.error('Failed to load liquid.js', err));
-          
-      } else {
-          // Default Cyberpunk
-          console.log('[Bootloader] Initializing Cyberpunk Style...');
-          liquidLink.disabled = true;
-          cyberLink.disabled = false;
-          
-          document.body.classList.remove('style-liquid');
-          
-          // Show Cyber Root / Hide Liquid Root
-          if(cyberRoot) cyberRoot.style.display = 'block';
-          if(liquidRoot) liquidRoot.style.display = 'none';
-          
-          // Load Cyber JS
-          import('./src/scripts/overlay.js');
-      }
-  </script>
+  <script type="module" src="./src/scripts/overlay.js"></script>
 </body>
 </html>
