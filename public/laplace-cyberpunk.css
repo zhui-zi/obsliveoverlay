@@ -1,0 +1,233 @@
+@charset "utf-8";
+
+/* =========================================
+   ObTemplates: "Liquid Cyber" V4.1 (Unified)
+   Theme: Frameless, Ethereal, Liquid Gradient
+   Fixes: Standardized typography & spacing
+   ========================================= */
+
+@layer template {
+    
+    /* define variables for consistency */
+    :root {
+        --base-font-size: 14px;
+        --base-spacing: 8px; /* Reduced from 20px */
+        --avatar-size: 28px;
+        --liquid-primary: 139, 195, 74;   /* #8BC34A Green */
+        --liquid-secondary: 156, 106, 222; /* #9C6ADE Purple */
+    }
+
+    /* 
+       1. GLOBAL RESET & CONTAINER 
+       --------------------------- 
+    */
+    .log-container {
+        font-family: "Segoe UI", "Roboto", "Helvetica Neue", sans-serif;
+        display: flex; /* Kept for column layout capability */
+        flex-direction: column;
+        /* gap removed to rely on margin for better compatibility */
+        padding: 10px;
+        overflow: hidden;
+    }
+
+    /* 
+       2. UNIFIED EVENT CARD 
+       --------------------- 
+       Applies to ALL events (chat, like, enter, etc.) equal sizing and spacing.
+    */
+    .event {
+        position: relative;
+        font-size: var(--base-font-size);
+        line-height: 1.5;
+        color: rgba(255, 255, 255, 0.95);
+        
+        /* Cyber-Glass Background (Dark -> Use Accent Purple) */
+        background: linear-gradient(
+            95deg, 
+            rgba(10, 15, 20, 0.85) 0%, 
+            rgba(20, 30, 40, 0.7) 60%, 
+            rgba(var(--liquid-secondary), 0.15) 100%
+        );
+        backdrop-filter: blur(8px);
+        
+        /* Neon Borders & Glow (Use Primary Green) */
+        border-left: 4px solid rgb(var(--liquid-primary));
+        border-top: 1px solid rgba(255, 255, 255, 0.15);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+        box-shadow: 
+            0 5px 15px rgba(0,0,0,0.3), /* Depth Shadow */
+            inset 0 0 20px rgba(var(--liquid-primary), 0.05), /* Inner Glow */
+            0 0 10px rgba(var(--liquid-secondary), 0.2); /* Outer Glow */
+
+        padding: 12px 16px;
+        border-radius: 2px 12px 12px 4px; /* Tech-angular corners */
+        
+        /* Spacing: Forced vertical separation */
+        margin-top: 0 !important;
+        margin-bottom: 8px !important; /* Reduced from 20px */
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        
+        /* Animations: Enter + Continuous Pulse */
+        animation: 
+            liquid-reveal 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards,
+            cyber-breathe 4s ease-in-out infinite alternate;
+        
+        transform-origin: left center;
+        width: fit-content;
+        max-width: 90%;
+        overflow: hidden; /* For scanline clip */
+    }
+
+    /* Scanline / Sheen Animation (Accent Purple) */
+    .event::after {
+        content: "";
+        position: absolute;
+        top: -50%; left: -50%; right: -50%; bottom: -50%;
+        background: linear-gradient(
+            60deg,
+            transparent 40%,
+            rgba(255, 255, 255, 0.1) 45%, 
+            rgba(var(--liquid-secondary), 0.4) 50%,
+            rgba(255, 255, 255, 0.1) 55%, 
+            transparent 60%
+        );
+        transform: translateX(-100%) rotate(25deg);
+        animation: scan-sheen 8s infinite ease-in-out;
+        pointer-events: none;
+        mix-blend-mode: overlay;
+    }
+
+    /* Tech Deco Corner (Bottom Right Accent Purple) */
+    .event::before {
+        content: "";
+        position: absolute;
+        bottom: 0px; right: 0px;
+        width: 12px; height: 12px;
+        border-bottom: 2px solid rgba(var(--liquid-secondary), 0.7);
+        border-right: 2px solid rgba(var(--liquid-secondary), 0.7);
+        border-radius: 0 0 8px 0;
+        opacity: 0.8;
+    }
+
+    @keyframes liquid-reveal {
+        0% { opacity: 0; transform: translateX(-30px) skewX(10deg); filter: blur(10px); }
+        100% { opacity: 1; transform: translateX(0) skewX(0); filter: blur(0); }
+    }
+
+    @keyframes cyber-breathe {
+        0% { border-left-color: rgba(var(--liquid-primary), 0.4); box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 0 5px rgba(var(--liquid-primary), 0.1); }
+        100% { border-left-color: rgba(var(--liquid-primary), 1.0); box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 0 20px rgba(var(--liquid-primary), 0.4); }
+    }
+
+    @keyframes scan-sheen {
+        0% { transform: translateX(-150%) rotate(25deg); }
+        10% { transform: translateX(150%) rotate(25deg); } /* Quick sweep */
+        100% { transform: translateX(150%) rotate(25deg); } /* Long cooldown */
+    }
+
+    /* 
+       3. TEXT LAYOUT (Unified)
+       ------------------------
+       Forces Name and Message to sit together nicely without weird breaks.
+    */
+    /* Layout: Avatar | Name Message */
+    .event-wrap {
+        display: flex;
+        align-items: center; /* Changed from flex-start to center for better vertical alignment */
+        gap: 10px;
+        width: 100%;
+    }
+
+    .avatar-icon {
+        width: var(--avatar-size) !important;
+        height: var(--avatar-size) !important;
+        border-radius: 50%;
+        object-fit: cover;
+        flex-shrink: 0;
+        border: 1px solid rgba(var(--liquid-primary), 0.5); /* Primary Border */
+        box-shadow: 0 0 8px rgba(var(--liquid-primary), 0.3); /* Primary Glow */
+        margin-top: 0; /* Reset margin */
+    }
+
+    .content-wrap {
+        display: block; /* Use standard block for text wrapping */
+        flex: 1;
+        overflow-wrap: break-word; /* Ensure long words don't break layout */
+    }
+
+    /* Username Styling */
+    .username {
+        font-weight: 700;
+        color: rgb(var(--liquid-primary)); /* Match Primary Green theme */
+        text-shadow: 0 0 10px rgba(var(--liquid-primary), 0.4);
+        margin-right: 6px;
+        font-size: var(--base-font-size); /* Same size as text */
+        display: inline; /* Keep on same line as message if possible */
+    }
+
+    /* Message Text Styling */
+    .message-text {
+        color: #fff;
+        font-weight: 400;
+        display: inline; /* Unwrap to flow after username */
+    }
+    
+    /* Emote sizing fix */
+    .message-text img.emote {
+        height: 1.4em;
+        vertical-align: middle;
+        margin: 0 2px;
+    }
+
+    /* 
+       4. VARIANTS (System Events)
+       ---------------------------
+       Only change colors vs icons, NOT sizes or spacing.
+    */
+
+    /* System messages (Like/Follow/Enter) usually don't have message text, just metadata */
+    
+    /* Like (Gift) */
+    .event[data-event-id="gift"],
+    .event[data-event-id="like"] {
+        border-left-color: #ff4d88;
+        background: linear-gradient(95deg, rgba(255, 77, 136, 0.15) 0%, rgba(20, 25, 30, 0.5) 60%, transparent 100%);
+    }
+    .event[data-event-id="gift"] .username,
+    .event[data-event-id="like"] .username {
+        color: #ff99bb;
+        text-shadow: 0 0 10px rgba(255, 77, 136, 0.4);
+    }
+
+    /* Follow / Join / Subscribe */
+    .event[data-event-id="follow"],
+    .event[data-event-id="join"], 
+    .event[data-event-id="subscribe"] {
+        border-left-color: #ffd700;
+        background: linear-gradient(95deg, rgba(255, 215, 0, 0.15) 0%, rgba(20, 25, 30, 0.5) 60%, transparent 100%);
+    }
+    .event[data-event-id="follow"] .username,
+    .event[data-event-id="join"] .username {
+        color: #ffed85;
+        text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+    }
+
+    /* 
+       5. BADGES & EXTRAS 
+       ------------------
+    */
+    .badge-icon {
+        height: 14px;
+        vertical-align: -2px; /* Fixed alignment to match text baseline */
+        margin-right: 4px;
+        filter: drop-shadow(0 0 2px rgba(255,255,255,0.5));
+    }
+
+    /* Force all text elements to inherit size to prevent overrides */
+    .event span, 
+    .event div, 
+    .event p {
+        font-size: inherit;
+    }
+}

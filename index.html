@@ -26,16 +26,16 @@
         </div>
 
         <div class="form-group">
-          <label id="label-game">游戏名 Game</label>
-          <input type="text" id="input-game" class="form-control">
-        </div>
-
-        <div class="form-group">
             <label>
                 滚动速度 Speed 
                 <span class="form-value-label" id="val-speed">25s</span>
             </label>
             <input type="range" id="input-speed" min="5" max="60" step="1">
+        </div>
+
+        <div class="form-group">
+          <label id="label-game">游戏名 Game</label>
+          <input type="text" id="input-game" class="form-control">
         </div>
       </div>
 
@@ -125,6 +125,7 @@
             </div>
 
             <button class="reset-btn" id="btn-reset-colors">↺ Reset Defaults</button>
+            <button class="copy-css-btn" id="btn-copy-css">📋 复制弹幕样式 (Copy CSS)</button>
         </div>
       </div>
 
@@ -135,7 +136,7 @@
       <div id="url-text" class="url-container" title="Browser Source URL">...</div>
       
       <button class="btn btn-primary" id="btn-copy">
-        📄 Copy URL
+        📄 复制 OBS 链接 (URL)
       </button>
       
       <button class="btn btn-secondary" id="btn-open">
@@ -156,5 +157,41 @@
   <div id="toast" class="toast">Message</div>
 
   <script type="module" src="src/scripts/config.js"></script>
+  <script>
+    document.getElementById('btn-copy-css').addEventListener('click', function() {
+        // Simple heuristic: If file protocol, we need to go into public/
+        // If http (Vite), public files are served at root.
+        let path = 'laplace-cyberpunk.css';
+        if (window.location.protocol === 'file:') {
+            path = 'public/laplace-cyberpunk.css';
+        }
+        
+        const fullUrl = new URL(path, window.location.href).href;
+        
+        navigator.clipboard.writeText(fullUrl).then(() => {
+            showToast('✅ 样式链接已复制 (CSS Copied)');
+        }).catch(err => {
+            // Fallback
+            const ta = document.createElement('textarea');
+            ta.value = fullUrl;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            showToast('✅ 样式链接已复制 (CSS Copied)');
+        });
+    });
+
+    function showToast(msg) {
+        const el = document.getElementById('toast');
+        if(el) {
+            el.textContent = msg;
+            el.classList.add('show');
+            setTimeout(() => el.classList.remove('show'), 2000);
+        } else {
+            alert(msg);
+        }
+    }
+  </script>
 </body>
 </html>

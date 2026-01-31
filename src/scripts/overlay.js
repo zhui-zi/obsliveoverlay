@@ -167,6 +167,12 @@ function initConfiguration(paramsSource) {
       const isShow = (val === 'true' || val === '1' || val === 'on');
       setVar('--neon-visibility', isShow ? 'visible' : 'hidden');
       
+      if (isShow) {
+        document.body.classList.add('neon-enabled');
+      } else {
+        document.body.classList.remove('neon-enabled');
+      }
+      
       // Control 3D Background Visibility via CSS var if needed, or JS
       const bg = document.getElementById('three-bg');
       if (bg) bg.style.display = isShow ? 'block' : 'none';

@@ -1,293 +1,305 @@
-/**
- * config.js
- * Logic for the OBS Overlay Configurator
- */
+// Cyber Configurator Script
 
-// --- State Management ---
-const CONFIG_KEY_PREFIX = 'obs_overlay_';
-const DEFAULTS = {
+const iframe = document.getElementById('preview-frame');
+const urlDisplay = document.getElementById('url-text');
+const LOCAL_STORAGE_KEY = 'cyber_config_v2';
+
+// Default Configuration
+const defaults = {
     announcement: "没啥好说的，都来我家喝酒吧！",
+    game: "Cities Skylines 2", 
+    chatTopic: "Just Chatting / 杂谈", // Separate storage for chat
     speed: 25,
-    ratio: 'chat',
-    game: '周末杂谈',
+    ratio: 'chat', // Default to Chat
     music: false,
     homepage: false,
     copyright: false,
     neon: true,
-    flowType: 'beam',
+    flowType: 'glow', // Default to Glow
     color1: '#8BC34A',
     color2: '#9C6ADE'
 };
 
-// UI Elements Map
-const ui = {
-    inputs: {
-        announcement: document.getElementById('input-announcement'),
-        speed: document.getElementById('input-speed'),
-        ratio: document.getElementById('input-ratio'),
-        game: document.getElementById('input-game'),
-        flowType: document.getElementById('input-flow-type'),
-        music: document.getElementById('input-music'),
-        homepage: document.getElementById('input-homepage'),
-        copyright: document.getElementById('input-copyright'),
-        neon: document.getElementById('input-neon'),
-        color1: document.getElementById('color-picker-1'),
-        color2: document.getElementById('color-picker-2')
-    },
-    labels: {
-        speed: document.getElementById('val-speed'),
-        color1: document.getElementById('val-color1'),
-        color2: document.getElementById('val-color2'),
-        gameGroup: document.getElementById('label-game')
-    },
-    sections: {
-        flowType: document.getElementById('row-flow-type'),
-        neon: document.getElementById('row-neon')
-    },
-    preview: {
-        frame: document.getElementById('preview-frame'),
-        container: document.getElementById('preview-container'),
-        area: document.getElementById('preview-area'),
-        urlText: document.getElementById('url-text')
-    },
-    actions: {
-        copy: document.getElementById('btn-copy'),
-        open: document.getElementById('btn-open'),
-        resetColors: document.getElementById('btn-reset-colors')
-    },
-    toast: document.getElementById('toast')
+// Current State
+let currentState = { ...defaults };
+
+// DOM Elements
+const inputs = {
+    announcement: document.getElementById('input-announcement'),
+    game: document.getElementById('input-game'),
+    speed: document.getElementById('input-speed'),
+    ratio: document.getElementById('input-ratio'),
+    music: document.getElementById('input-music'),
+    homepage: document.getElementById('input-homepage'),
+    copyright: document.getElementById('input-copyright'),
+    neon: document.getElementById('input-neon'),
+    flowType: document.getElementById('input-flow-type'),
+    color1: document.getElementById('color-picker-1'),
+    color2: document.getElementById('color-picker-2')
 };
 
-/**
- * Initialize the Configurator
- */
+// Label for dynamic text "Game" vs "Topic"
+const gameLabel = document.getElementById('label-game');
+
+const labels = {
+    speed: document.getElementById('val-speed'),
+    color1: document.getElementById('val-color1'),
+    color2: document.getElementById('val-color2')
+};
+
+const btns = {
+    resetColors: document.getElementById('btn-reset-colors'),
+    copy: document.getElementById('btn-copy'),
+    open: document.getElementById('btn-open')
+};
+
+// Initialize
 function init() {
-    loadConfig();
-    setupEventListeners();
-    updateUI();
+    // Load from LocalStorage
+    loadSettings();
+
+    // Set initial values
+    inputs.announcement.value = currentState.announcement;
+    inputs.speed.value = currentState.speed;
+    inputs.ratio.value = currentState.ratio;
     
-    // Initial resize
-    setTimeout(resizePreview, 100);
-    window.addEventListener('resize', resizePreview);
-}
+    // Initial Text Logic
+    updateGameInputMode();
+    
+    inputs.music.checked = currentState.music;
+    inputs.homepage.checked = currentState.homepage;
+    inputs.copyright.checked = currentState.copyright;
+    inputs.neon.checked = currentState.neon;
+    inputs.flowType.value = currentState.flowType;
 
-/**
- * Load configuration from LocalStorage or fallback to defaults
- */
-function loadConfig() {
-    Object.keys(DEFAULTS).forEach(key => {
-        const saved = localStorage.getItem(CONFIG_KEY_PREFIX + key);
-        const el = ui.inputs[key];
-        
-        if (!el) return;
+    inputs.color1.value = currentState.color1;
+    inputs.color2.value = currentState.color2;
 
-        if (saved !== null) {
-            if (el.type === 'checkbox') {
-                el.checked = (saved === 'true');
-            } else {
-                el.value = saved;
-            }
-        } else {
-            // Apply defaults if no saved data
-            if (el.type === 'checkbox') {
-                el.checked = DEFAULTS[key];
-            } else {
-                el.value = DEFAULTS[key];
-            }
+    updateUI();
+    updatePreview();
+
+    // Attach Listeners
+    Object.values(inputs).forEach(el => {
+        // Special handler for game input to sync state
+        if (el === inputs.game) {
+             el.addEventListener('input', (e) => {
+                 if (currentState.ratio === 'chat') {
+                     currentState.chatTopic = e.target.value;
+                 } else {
+                     currentState.game = e.target.value;
+                 }
+                 saveSettings();
+                 updatePreview();
+             });
+        } 
+        // Special handler for ratio change
+        else if (el === inputs.ratio) {
+            el.addEventListener('change', (e) => {
+                currentState.ratio = e.target.value;
+                updateGameInputMode();
+                handleInput(); 
+            });
+        }
+        else {
+            el.addEventListener('input', handleInput);
+            el.addEventListener('change', handleInput);
         }
     });
 
-    // Validations for visual state (color styling etc)
-    updateColorPreviews();
+    btns.resetColors.addEventListener('click', resetColors);
+    btns.copy.addEventListener('click', copyURL);
+    btns.open.addEventListener('click', openFullscreen);
 }
 
-/**
- * Save current state to LocalStorage
- */
-function saveConfig() {
-    Object.keys(ui.inputs).forEach(key => {
-        const el = ui.inputs[key];
-        if (!el) return;
-        
-        const val = el.type === 'checkbox' ? el.checked : el.value;
-        localStorage.setItem(CONFIG_KEY_PREFIX + key, val);
-    });
+function loadSettings() {
+    try {
+        const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+        if (saved) {
+            const parsed = JSON.parse(saved);
+            currentState = { ...defaults, ...parsed };
+        }
+    } catch(e) {
+        console.error("Failed to load settings", e);
+    }
 }
 
-/**
- * Attach listeners
- */
-function setupEventListeners() {
-    // Inputs
-    Object.values(ui.inputs).forEach(el => {
-        if(!el) return;
-        el.addEventListener('input', () => handleInput(el));
-        el.addEventListener('change', () => handleInput(el, true));
-    });
+function saveSettings() {
+    // For game/topic, we need to ensure we save the raw values, not just what's in input
+    // The currentState object is the source of truth for saving.
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(currentState));
+}
 
-    // Buttons
-    ui.actions.copy.addEventListener('click', copyURL);
-    ui.actions.open.addEventListener('click', () => {
-        window.open(generateURL(), '_blank');
-    });
-    ui.actions.resetColors.addEventListener('click', resetColors);
+function updateGameInputMode() {
+    const isChat = (currentState.ratio === 'chat');
+    if (isChat) {
+        if (gameLabel) gameLabel.textContent = "杂谈主题 Chat Topic";
+        inputs.game.value = currentState.chatTopic;
+    } else {
+        if (gameLabel) gameLabel.textContent = "游戏名 Game Name";
+        inputs.game.value = currentState.game;
+    }
+}
+
+function handleInput(e) {
+    // Update State from Inputs
+    if (e && e.target) {
+        const t = e.target;
+        if (t === inputs.ratio) {
+            // Handled separately
+        } else if (t.type === 'checkbox') {
+            currentState[t.id.replace('input-', '')] = t.checked;
+        } else if (t === inputs.announcement || t === inputs.speed || t === inputs.flowType) {
+             currentState[t.id.replace('input-', '')] = t.value;
+        } else if (t.type === 'color') {
+             // Handled visually in updateUI, but save state here
+             if (t === inputs.color1) currentState.color1 = t.value;
+             if (t === inputs.color2) currentState.color2 = t.value;
+        }
+    }
     
-    // Color inputs specific: Update background of the card immediately
-    ui.inputs.color1.addEventListener('input', updateColorPreviews);
-    ui.inputs.color2.addEventListener('input', updateColorPreviews);
-}
-
-/**
- * Handle input changes
- */
-function handleInput(target, isChange = false) {
+    saveSettings();
     updateUI();
-    updateColorPreviews();
-    saveConfig();
-    
-    // Post message to iframe for real-time updates
-    const qs = generateQueryString();
-    ui.preview.frame.contentWindow.postMessage({
-        type: 'updateConfig',
-        queryString: qs
-    }, '*');
+    updatePreview();
 }
 
-/**
- * Update UI Visuals (Conditionals, Labels)
- */
+// Auto-scale Preview
+function fitPreview() {
+    const container = document.getElementById('preview-container');
+    const area = document.getElementById('preview-area');
+    if (!container || !area) return;
+
+    // Target dimensions
+    const baseW = 1920;
+    const baseH = 1080;
+    
+    // Available space (with padding)
+    const availW = area.clientWidth - 40;
+    const availH = area.clientHeight - 40;
+
+    const scale = Math.min(availW / baseW, availH / baseH);
+    
+    // Apply
+    container.style.transform = `scale(${scale})`;
+}
+
+// Hook resize
+window.addEventListener('resize', fitPreview);
+
 function updateUI() {
-    // 1. Update Labels
-    ui.labels.speed.textContent = `${ui.inputs.speed.value}s`;
-    
-    // 2. Logic: Chat Mode ? "Chat Topic" : "Game Name"
-    const isChat = ui.inputs.ratio.value === 'chat';
-    ui.labels.gameGroup.textContent = isChat ? '话题 Topic' : '游戏名 Game';
-    
-    // 3. Logic: Neon Toggle visibility
-    // In Chat mode, neon might be handled differently, but based on previous logic:
-    // If Chat mode -> Hide neon toggle (it's always on or handled by layout) -> NO, previous code hid it.
-    // Let's keep logic: Hide Neon Toggle and Flow Type in Chat Mode if that was the intent,
-    // OR just hide Flow Type if Neon is off.
-    
-    const isNeonOn = ui.inputs.neon.checked;
-    
-    // Logic from previous file: 
-    // neonToggleRow.style.display = isChatMode ? 'none' : 'flex';
-    // flowTypeRow.style.display = (isChatMode || !isNeonOn) ? 'none' : 'flex';
+    labels.speed.textContent = inputs.speed.value + 's';
+    labels.color1.textContent = inputs.color1.value.toUpperCase();
+    labels.color2.textContent = inputs.color2.value.toUpperCase();
 
-    if (ui.sections.neon) {
-        ui.sections.neon.style.display = isChat ? 'none' : 'flex';
-    }
-    
-    if (ui.sections.flowType) {
-        // If chat mode, hide flow type. If neon off, hide flow type.
-        ui.sections.flowType.style.display = (isChat || !isNeonOn) ? 'none' : 'flex';
-    }
+    // Visual feedback for cards
+    const card1 = document.getElementById('card-color-1');
+    const card2 = document.getElementById('card-color-2');
+    if (card1) card1.style.borderColor = inputs.color1.value;
+    if (card2) card2.style.borderColor = inputs.color2.value;
 
-    // 4. Update URL Text
-    ui.preview.urlText.textContent = generateURL();
+    // Logic: Hide Neon toggle group in Chat mode (and maybe Flow Type)
+    // Actually, user wants 'Chat Effect' background logic maybe?
+    // User request: stream effect visible in chat? No, user requested 'Chat Mode Dynamic BG' separate from Neon line.
+    // The Neon switch controls the 'beam/glow' line on Game Frame. Game Frame is hidden in Chat Mode.
+    // So hiding Neon switch in Chat Mode is correct.
+    const isChatMode = (currentState.ratio === 'chat');
+    const neonRow = document.getElementById('row-neon');
+    const flowRow = document.getElementById('row-flow-type');
+    
+    if (isChatMode) {
+        if(neonRow) neonRow.style.display = 'none';
+        if(flowRow) flowRow.style.display = 'none';
+    } else {
+        if(neonRow) neonRow.style.display = 'flex';
+        if(flowRow) flowRow.style.display = 'flex';
+    }
 }
 
-/**
- * Generate the Query String
- */
-function generateQueryString() {
+function generateParams() {
     const params = new URLSearchParams();
-    
-    const add = (k, v) => params.set(k, v);
-    
-    // Texts
-    add('announcement', ui.inputs.announcement.value);
-    add('game', ui.inputs.game.value);
-    
-    // Numbers
-    add('speed', ui.inputs.speed.value);
-    
-    // Selects
-    add('ratio', ui.inputs.ratio.value);
-    add('flowType', ui.inputs.flowType.value);
-    
-    // Toggles
-    add('music', ui.inputs.music.checked);
-    add('homepage', ui.inputs.homepage.checked);
-    add('copyright', ui.inputs.copyright.checked);
-    add('neon', ui.inputs.neon.checked);
-    
-    // Colors
-    add('color1', ui.inputs.color1.value);
-    add('color2', ui.inputs.color2.value);
-    
-    return params.toString();
-}
 
-function generateURL() {
-    let path = window.location.pathname;
-    if (path.endsWith('.html') || path.endsWith('/')) {
-        path = path.substring(0, path.lastIndexOf('/'));
+    if (currentState.announcement !== defaults.announcement) 
+        params.set('announcement', currentState.announcement);
+    
+    // Logic: Send 'game' param based on mode. 
+    // Overlay only knows 'game', so we send whichever text is appropriate.
+    if (currentState.ratio === 'chat') {
+        params.set('game', currentState.chatTopic);
+    } else {
+        if (currentState.game !== defaults.game)
+            params.set('game', currentState.game);
     }
-    if (!path.endsWith('/')) path += '/';
-    return `${window.location.protocol}//${window.location.host}${path}overlay.html?${generateQueryString()}`;
+
+    // Speed always set to ensure JS calculation works
+    params.set('speed', currentState.speed);
+
+    // Mode
+    params.set('ratio', currentState.ratio);
+
+    // Toggles - Explicitly send '1' or '0' to ensure state updates correctly
+    params.set('music', currentState.music ? '1' : '0');
+    params.set('homepage', currentState.homepage ? '1' : '0');
+    params.set('copyright', currentState.copyright ? '1' : '0');
+    params.set('neon', currentState.neon ? '1' : '0');
+    
+    // Flow Type
+    params.set('flowType', currentState.flowType);
+
+    // Colors
+    params.set('color1', currentState.color1);
+    params.set('color2', currentState.color2);
+
+    return params;
 }
 
-
-/**
- * Helper: Update Color Card Backgrounds
- */
-function updateColorPreviews() {
-    const c1 = ui.inputs.color1.value;
-    const c2 = ui.inputs.color2.value;
+function updatePreview() {
+    const params = generateParams();
+    const queryString = params.toString();
     
-    document.getElementById('card-color-1').style.background = `linear-gradient(135deg, ${c1}33, rgba(0,0,0,0.2))`;
-    document.getElementById('card-color-1').style.borderColor = c1;
-    ui.labels.color1.textContent = c1.toUpperCase();
+    // Send to iframe
+    if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.postMessage({
+            type: 'updateConfig',
+            queryString: queryString
+        }, '*');
+    }
 
-    document.getElementById('card-color-2').style.background = `linear-gradient(135deg, ${c2}33, rgba(0,0,0,0.2))`;
-    document.getElementById('card-color-2').style.borderColor = c2;
-    ui.labels.color2.textContent = c2.toUpperCase();
+    // Update URL Text
+    const fullUrl = new URL('overlay.html', window.location.href);
+    fullUrl.search = queryString;
+    urlDisplay.textContent = fullUrl.href;
 }
 
 function resetColors() {
-    ui.inputs.color1.value = DEFAULTS.color1;
-    ui.inputs.color2.value = DEFAULTS.color2;
-    handleInput(ui.inputs.color1);
-}
-
-function resizePreview() {
-    const { container, area } = ui.preview;
-    if (!container || !area) return;
-    
-    const targetW = 1920;
-    const targetH = 1080;
-    const padding = 60;
-    
-    const availableW = area.clientWidth - padding;
-    const availableH = area.clientHeight - padding;
-    
-    const scale = Math.min(availableW / targetW, availableH / targetH);
-    
-    // CSS handle centering via flexbox, we just set scale
-    // Note: We need to handle the fact that scale affects layout space.
-    // Ideally we use transform: scale() and let parent center it.
-    // Parent is flex-center. 
-    container.style.transform = `translate(-50%, -50%) scale(${scale})`;
+    currentState.color1 = defaults.color1;
+    currentState.color2 = defaults.color2;
+    // Update inputs visual
+    inputs.color1.value = defaults.color1;
+    inputs.color2.value = defaults.color2;
+    handleInput(); 
 }
 
 function copyURL() {
-    const url = generateURL();
-    navigator.clipboard.writeText(url).then(() => {
-        showToast("✅ Copied Overlay URL!");
+    const fullUrl = urlDisplay.textContent;
+    navigator.clipboard.writeText(fullUrl).then(() => {
+        showToast('✅ URL已复制 (Copied)!');
     });
 }
 
+function openFullscreen() {
+    const fullUrl = urlDisplay.textContent;
+    window.open(fullUrl, '_blank');
+}
+
 function showToast(msg) {
-    const t = ui.toast;
-    t.textContent = msg;
-    t.classList.add('show');
-    setTimeout(() => {
-        t.classList.remove('show');
-    }, 2000);
+    const el = document.getElementById('toast');
+    if(el) {
+        el.textContent = msg;
+        el.classList.add('show');
+        setTimeout(() => el.classList.remove('show'), 2000);
+    }
 }
 
 // Start
-document.addEventListener('DOMContentLoaded', init);
+init();
+// Initial fit
+setTimeout(fitPreview, 100);
