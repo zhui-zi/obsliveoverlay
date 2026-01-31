@@ -52,6 +52,8 @@ The overlay is controlled entirely via URL parameters, making it stateless and e
 | `music`        | Show music module (`true`/`false`)               | `?music=true`              |
 | `homepage`     | Show homepage URL (`true`/`false`)               | `?homepage=false`          |
 | `copyright`    | Show copyright text (`true`/`false`)             | `?copyright=false`         |
+| `neon`         | Toggle global neon effects (`true`/`false`)      | `?neon=true`               |
+| `flowType`     | Neon animation style (`beam` or `glow`)          | `?flowType=beam`           |
 | `color1`       | Primary Neon Color (Green replacement)           | `?color1=00ff00`           |
 | `color2`       | Secondary Neon Color (Purple replacement)        | `?color2=ff00ff`           |
 

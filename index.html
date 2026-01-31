@@ -5,155 +5,220 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>OBS Overlay Configurator</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
     :root {
-      --bg-color: #121212;
-      --panel-bg: #1e1e1e;
-      --text-color: #e0e0e0;
-      --accent-color: #8BC34A;
-      --border-color: #333;
+      --bg-color: #0f1115;
+      --panel-bg: #181a1f;
+      --input-bg: #22252b;
+      --text-main: #e0e0e0;
+      --text-muted: #8b9bb4;
+      --accent-color: #7c4dff; /* Purple accent to match overlay */
+      --accent-hover: #9e7aff;
+      --border-color: #2f333d;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.3);
     }
+
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
       padding: 0;
-      font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background: var(--bg-color);
-      color: var(--text-color);
+      color: var(--text-main);
       height: 100vh;
       display: flex;
       overflow: hidden;
     }
 
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #444; }
+
     /* 左侧配置面板 */
     .config-panel {
-      width: 350px;
+      width: 380px;
       background: var(--panel-bg);
       border-right: 1px solid var(--border-color);
       display: flex;
       flex-direction: column;
       height: 100%;
-      box-shadow: 2px 0 10px rgba(0,0,0,0.3);
-      z-index: 10;
+      box-shadow: 4px 0 20px rgba(0,0,0,0.4);
+      z-index: 20;
     }
 
     .panel-header {
-      padding: 20px;
+      padding: 24px;
       border-bottom: 1px solid var(--border-color);
-      background: rgba(0,0,0,0.2);
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), transparent);
     }
 
     .panel-header h1 {
       margin: 0;
-      font-size: 18px;
+      font-size: 20px;
       font-weight: 600;
-      color: var(--accent-color);
+      color: #fff;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
+      letter-spacing: -0.5px;
     }
 
     .panel-content {
       flex: 1;
       overflow-y: auto;
-      padding: 20px;
+      padding: 24px;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 24px;
     }
 
     .form-group {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
     }
 
     .form-group label {
       font-size: 13px;
       font-weight: 500;
-      color: #aaa;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     .form-control {
-      background: #2b2b2b;
-      border: 1px solid #444;
+      background: var(--input-bg);
+      border: 1px solid var(--border-color);
       color: #fff;
-      padding: 10px;
-      border-radius: 4px;
+      padding: 12px;
+      border-radius: 6px;
       font-size: 14px;
-      transition: border-color 0.2s;
+      font-family: inherit;
+      transition: all 0.2s ease;
+      width: 100%;
     }
 
     .form-control:focus {
       outline: none;
       border-color: var(--accent-color);
+      box-shadow: 0 0 0 3px rgba(124, 77, 255, 0.2);
+    }
+    
+    .form-control:hover {
+        border-color: #444;
     }
 
     textarea.form-control {
       resize: vertical;
-      min-height: 60px;
+      min-height: 80px;
+      line-height: 1.5;
+    }
+
+    select.form-control {
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%238b9bb4%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px top 50%;
+        background-size: 10px auto;
+        padding-right: 30px;
+    }
+
+    /* Range Slider */
+    input[type=range] {
+        -webkit-appearance: none; 
+        background: transparent; 
+        padding: 5px 0;
+    }
+    input[type=range]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        height: 16px;
+        width: 16px;
+        border-radius: 50%;
+        background: var(--accent-color);
+        cursor: pointer;
+        margin-top: -6px; 
+        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+    input[type=range]::-webkit-slider-runnable-track {
+        width: 100%;
+        height: 4px;
+        cursor: pointer;
+        background: var(--border-color);
+        border-radius: 2px;
     }
 
     /* 开关样式 */
+    .toggle-group {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        background: rgba(0,0,0,0.1);
+        padding: 15px;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+    }
+    
     .toggle-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 5px 0;
     }
 
     .toggle-label {
       font-size: 14px;
+      color: var(--text-main);
     }
 
     .switch {
       position: relative;
       display: inline-block;
-      width: 44px;
-      height: 24px;
+      width: 40px;
+      height: 22px;
     }
 
-    .switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
+    .switch input { opacity: 0; width: 0; height: 0; }
 
     .slider {
       position: absolute;
       cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: #444;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #333;
       transition: .3s;
-      border-radius: 24px;
+      border-radius: 22px;
     }
 
     .slider:before {
       position: absolute;
       content: "";
-      height: 18px;
-      width: 18px;
+      height: 16px;
+      width: 16px;
       left: 3px;
       bottom: 3px;
-      background-color: white;
+      background-color: #aaa;
       transition: .3s;
       border-radius: 50%;
     }
 
-    input:checked + .slider {
-      background-color: var(--accent-color);
-    }
-
-    input:checked + .slider:before {
-      transform: translateX(20px);
-    }
+    input:checked + .slider { background-color: var(--accent-color); }
+    input:checked + .slider:before { transform: translateX(18px); background-color: #fff; }
 
     /* 颜色选择器 */
+    .color-section {
+        background: rgba(0,0,0,0.1);
+        padding: 15px;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+    }
+    
     .color-picker-row {
       display: flex;
-      gap: 10px;
+      gap: 12px;
+      margin-top: 10px;
     }
     
     .color-input-wrapper {
@@ -161,89 +226,107 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      background: #2b2b2b;
-      padding: 5px;
-      border-radius: 4px;
-      border: 1px solid #444;
+      background: var(--input-bg);
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    
+    .color-input-wrapper:hover {
+        border-color: #555;
     }
 
     input[type="color"] {
-      width: 30px;
-      height: 30px;
+      width: 32px;
+      height: 32px;
       border: none;
       background: none;
       padding: 0;
       cursor: pointer;
+      border-radius: 4px;
+    }
+    
+    .color-label {
+        font-size: 12px;
+        color: var(--text-muted);
     }
 
     /* 底部操作区 */
     .panel-footer {
-      padding: 20px;
+      padding: 24px;
       border-top: 1px solid var(--border-color);
-      background: rgba(0,0,0,0.2);
+      background: var(--panel-bg);
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 15px;
     }
 
     .btn {
       display: inline-flex;
       justify-content: center;
       align-items: center;
-      padding: 12px;
+      padding: 14px;
       border: none;
-      border-radius: 4px;
+      border-radius: 6px;
       cursor: pointer;
       font-weight: 600;
       font-size: 14px;
-      transition: background 0.2s;
+      transition: all 0.2s;
       text-decoration: none;
+      gap: 8px;
     }
 
     .btn-primary {
       background: var(--accent-color);
-      color: #121212;
+      color: #fff;
+      box-shadow: 0 4px 10px rgba(124, 77, 255, 0.3);
     }
 
-    .btn-primary:hover {
-      background: #7cb342;
-    }
+    .btn-primary:active { transform: translateY(1px); }
+    .btn-primary:hover { background: var(--accent-hover); box-shadow: 0 6px 15px rgba(124, 77, 255, 0.4); }
 
     .btn-secondary {
-      background: #444;
-      color: #fff;
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
     }
 
     .btn-secondary:hover {
-      background: #555;
+      border-color: #555;
+      color: #fff;
+      background: rgba(255,255,255,0.05);
     }
 
     .url-output {
-      font-family: monospace;
-      font-size: 12px;
-      color: #888;
+      font-family: 'Consolas', monospace;
+      font-size: 11px;
+      color: var(--text-muted);
       word-break: break-all;
-      margin-top: 5px;
-      padding: 5px;
+      padding: 10px;
       background: #111;
-      border-radius: 4px;
-      max-height: 40px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      max-height: 60px;
       overflow-y: auto;
+      user-select: all;
     }
 
     /* 右侧预览 */
     .preview-area {
       flex: 1;
       background: #000;
-      display: flex; /* flex-direction: column is default or inherited, but let's be safe */
+      display: flex; 
       flex-direction: column;
       position: relative;
       background-image: 
-        linear-gradient(45deg, #111 25%, transparent 25%), 
-        linear-gradient(-45deg, #111 25%, transparent 25%), 
-        linear-gradient(45deg, transparent 75%, #111 75%), 
-        linear-gradient(-45deg, transparent 75%, #111 75%);
-      background-size: 20px 20px;
+        radial-gradient(circle at 10% 20%, rgba(20, 20, 30, 1) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(20, 20, 30, 1) 0%, transparent 20%),
+        linear-gradient(#0a0a0a 1px, transparent 1px),
+        linear-gradient(90deg, #0a0a0a 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+      background-color: #050505;
       overflow: hidden; 
       align-items: center;
       justify-content: center;
@@ -252,26 +335,27 @@
     .preview-container {
       width: 1920px;
       height: 1080px;
-      /* Absolute positioning ensures it doesn't affect parent flow size, solving shrink issues */
       position: absolute;
       top: 50%;
       left: 50%;
       transform-origin: center center;
-      box-shadow: 0 0 50px rgba(0,0,0,0.5);
-      /* Initial transformation will be set by JS */
+      box-shadow: 0 0 100px rgba(0,0,0,0.8);
       transform: translate(-50%, -50%) scale(0.5); 
+      background: #000;
     }
 
     .preview-label {
       position: absolute;
-      top: 10px;
-      right: 10px;
+      top: 20px;
+      right: 20px;
       background: rgba(0,0,0,0.7);
-      padding: 5px 10px;
-      border-radius: 4px;
+      padding: 8px 12px;
+      border-radius: 6px;
       font-size: 12px;
+      color: #888;
       pointer-events: none;
       z-index: 100;
+      border: 1px solid rgba(255,255,255,0.1);
     }
 
     iframe {
@@ -284,7 +368,7 @@
     @media (max-width: 900px) {
       body { flex-direction: column; overflow: auto; }
       .config-panel { width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--border-color); }
-      .preview-area { height: 500px; min-height: 50vh; }
+      .preview-area { height: 400px; min-height: 40vh; }
     }
   </style>
 </head>
@@ -297,15 +381,6 @@
     </div>
     
     <div class="panel-content">
-      <!-- 风格选择 -->
-      <div class="form-group">
-        <label>视觉风格 / Theme Style</label>
-        <select id="input-style" class="form-control">
-          <option value="cyber">赛博故障 / Cyber Glitch</option>
-          <option value="neon">霓虹暧昧 / Neon Ambiance</option>
-        </select>
-      </div>
-
       <!-- 文本配置 -->
       <div class="form-group">
         <label>公告内容 / Announcement</label>
@@ -320,62 +395,81 @@
       <div class="form-group">
         <label>画面布局 / Layout Mode</label>
         <select id="input-ratio" class="form-control">
+            <option value="chat" selected>杂谈模式 (两侧布局 / Chat Mode)</option>
             <option value="21:9">21:9 游戏 (铺满 / Full Width)</option>
             <option value="16:9">16:9 游戏 (居中 / Centered)</option>
-            <option value="chat">杂谈模式 (两侧布局 / Chat Mode)</option>
         </select>
       </div>
 
       <div class="form-group">
         <label id="label-game">游戏名称 / Game Name</label>
-        <input type="text" id="input-game" class="form-control" value="cities skylines 2">
+        <input type="text" id="input-game" class="form-control" value="周末杂谈">
       </div>
 
       <!-- 开关配置 -->
-      <div class="toggle-row">
-        <span class="toggle-label">显示音乐模块 (Music)</span>
-        <label class="switch">
-          <input type="checkbox" id="input-music">
-          <span class="slider"></span>
-        </label>
-      </div>
+      <div class="form-group">
+        <label>显示设置 / Toggles</label>
+        <div class="toggle-group">
+          <div class="toggle-row">
+            <span class="toggle-label">显示音乐模块 (Music)</span>
+            <label class="switch">
+              <input type="checkbox" id="input-music">
+              <span class="slider"></span>
+            </label>
+          </div>
 
-      <div class="toggle-row">
-        <span class="toggle-label">显示个人主页 (Homepage)</span>
-        <label class="switch">
-          <input type="checkbox" id="input-homepage" checked>
-          <span class="slider"></span>
-        </label>
-      </div>
+          <div class="toggle-row">
+            <span class="toggle-label">显示个人主页 (Homepage)</span>
+            <label class="switch">
+              <input type="checkbox" id="input-homepage">
+              <span class="slider"></span>
+            </label>
+          </div>
 
-      <div class="toggle-row">
-        <span class="toggle-label">显示版权信息 (Copyright)</span>
-        <label class="switch">
-          <input type="checkbox" id="input-copyright" checked>
-          <span class="slider"></span>
-        </label>
-      </div>
+          <div class="toggle-row">
+            <span class="toggle-label">显示版权信息 (Copyright)</span>
+            <label class="switch">
+              <input type="checkbox" id="input-copyright">
+              <span class="slider"></span>
+            </label>
+          </div>
 
-      <div class="toggle-row">
-        <span class="toggle-label">显示流光特效 (Neon Flow)</span>
-        <label class="switch">
-          <input type="checkbox" id="input-neon" checked>
-          <span class="slider"></span>
-        </label>
+          <div class="toggle-row" id="toggle-neon-row">
+            <span class="toggle-label">显示流光特效 (Neon Flow)</span>
+            <label class="switch">
+              <input type="checkbox" id="input-neon" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <!-- Flow Style Selector -->
+          <div class="toggle-row" id="row-flow-type" style="padding-left: 20px; border-left: 2px solid var(--border-color); margin-left: 10px;">
+             <span class="toggle-label" style="font-size: 0.9em;">特效样式 (Flow Style)</span>
+             <select id="input-flow-type" class="form-control" style="width: 140px; padding: 4px; height: auto;">
+                <option value="beam">光束跑动 🏃</option>
+                <option value="glow">流光溢彩 ✨</option>
+             </select>
+          </div>
+        </div>
       </div>
 
       <!-- 颜色配置 -->
       <div class="form-group">
-        <label>主题色配置</label>
-        <div class="color-picker-row">
-          <div class="color-input-wrapper">
-            <input type="color" id="input-color1" value="#8BC34A">
-            <span>主色</span>
+        <label>主题色配置 / Color Scheme</label>
+        <div class="color-section">
+          <div class="color-picker-row">
+            <div class="color-input-wrapper">
+              <input type="color" id="input-color1" value="#8BC34A">
+              <div class="color-label">主色 Primary</div>
+            </div>
+            <div class="color-input-wrapper">
+              <input type="color" id="input-color2" value="#9C6ADE">
+              <div class="color-label">副色 Accent</div>
+            </div>
           </div>
-          <div class="color-input-wrapper">
-            <input type="color" id="input-color2" value="#9C6ADE">
-            <span>副色</span>
-          </div>
+          <button id="btn-reset-color" class="btn btn-secondary" style="margin-top: 10px; width: 100%; padding: 8px; font-size: 12px;">
+            ↺ 重置默认颜色 (Reset Colors)
+          </button>
         </div>
       </div>
     </div>
@@ -405,7 +499,6 @@
   <script>
     // 定义配置项与DOM元素的映射
     const inputs = {
-      style: document.getElementById('input-style'),
       announcement: document.getElementById('input-announcement'),
       speed: document.getElementById('input-speed'),
       ratio: document.getElementById('input-ratio'),
@@ -414,6 +507,7 @@
       homepage: document.getElementById('input-homepage'),
       copyright: document.getElementById('input-copyright'),
       neon: document.getElementById('input-neon'),
+      flowType: document.getElementById('input-flow-type'),
       color1: document.getElementById('input-color1'),
       color2: document.getElementById('input-color2')
     };
@@ -425,6 +519,9 @@
     const btnOpen = document.getElementById('btn-open');
     const btnCopy = document.getElementById('btn-copy');
     const speedVal = document.getElementById('speed-val');
+    const neonToggleRow = document.getElementById('toggle-neon-row');
+    const flowTypeRow = document.getElementById('row-flow-type');
+    const btnResetColor = document.getElementById('btn-reset-color');
 
     // 自动缩放预览
     function resizePreview() {
@@ -450,14 +547,68 @@
     // 额外调用一次，以防万一
     window.onload = resizePreview;
 
+    // --- 本地存储逻辑 (Local Storage) ---
+    function loadConfig() {
+      // 1. 读取文字内容
+      const savedAnnouncement = localStorage.getItem('obs_overlay_announcement');
+      if (savedAnnouncement) inputs.announcement.value = savedAnnouncement;
+
+      const savedGame = localStorage.getItem('obs_overlay_game');
+      if (savedGame) inputs.game.value = savedGame;
+      
+      // 2. 读取布局模式
+      const savedRatio = localStorage.getItem('obs_overlay_ratio');
+      if (savedRatio) inputs.ratio.value = savedRatio;
+
+      // 2.5 读取Flow类型
+      const savedFlowType = localStorage.getItem('obs_overlay_flowType');
+      if (savedFlowType) inputs.flowType.value = savedFlowType;
+
+      // 3. 读取开关状态
+      ['music', 'homepage', 'copyright', 'neon'].forEach(key => {
+          const saved = localStorage.getItem(`obs_overlay_${key}`);
+          if (saved !== null) {
+              inputs[key].checked = (saved === 'true');
+          }
+      });
+
+      // 4. 读取颜色配置
+      const savedColor1 = localStorage.getItem('obs_overlay_color1');
+      if (savedColor1) inputs.color1.value = savedColor1;
+      
+      const savedColor2 = localStorage.getItem('obs_overlay_color2');
+      if (savedColor2) inputs.color2.value = savedColor2;
+
+      const savedSpeed = localStorage.getItem('obs_overlay_speed');
+      if (savedSpeed) inputs.speed.value = savedSpeed;
+    }
+
+    function saveConfig() {
+      localStorage.setItem('obs_overlay_announcement', inputs.announcement.value);
+      localStorage.setItem('obs_overlay_game', inputs.game.value);
+      localStorage.setItem('obs_overlay_ratio', inputs.ratio.value);
+      localStorage.setItem('obs_overlay_flowType', inputs.flowType.value);
+      
+      // 保存开关
+      ['music', 'homepage', 'copyright', 'neon'].forEach(key => {
+          localStorage.setItem(`obs_overlay_${key}`, inputs[key].checked);
+      });
+
+      // 保存颜色
+      localStorage.setItem('obs_overlay_color1', inputs.color1.value);
+      localStorage.setItem('obs_overlay_color2', inputs.color2.value);
+      
+      localStorage.setItem('obs_overlay_speed', inputs.speed.value);
+    }
+    // -------------------------------------
+
     // 生成QueryString
     function getQueryString() {
       const params = new URLSearchParams();
-      
-      params.set('theme', inputs.style.value);
       params.set('announcement', inputs.announcement.value);
       params.set('speed', inputs.speed.value);
       params.set('ratio', inputs.ratio.value);
+      params.set('flowType', inputs.flowType.value);
       params.set('game', inputs.game.value);
       
       // Checkbox处理
@@ -475,6 +626,10 @@
 
     // 更新逻辑
     function update() {
+      updateNeonToggleVisibility();
+      // 每次更新时保存配置
+      saveConfig();
+
       // Update UI labels
       speedVal.textContent = inputs.speed.value;
 
@@ -514,6 +669,20 @@
       btnOpen.href = fullUrl;
     }
 
+    function updateNeonToggleVisibility() {
+      if (!neonToggleRow) return;
+      const isChatMode = inputs.ratio.value === 'chat';
+      const isNeonOn = inputs.neon.checked;
+
+      neonToggleRow.style.display = isChatMode ? 'none' : 'flex';
+      
+      const flowTypeRow = document.getElementById('row-flow-type');
+      if (flowTypeRow) {
+         // Show only if NOT Chat Mode AND Neon is Enabled
+         flowTypeRow.style.display = (isChatMode || !isNeonOn) ? 'none' : 'flex';
+      }
+    }
+
     // 绑定事件
     Object.values(inputs).forEach(input => {
       input.addEventListener('input', update);
@@ -530,6 +699,17 @@
       });
     });
 
+    // 重置颜色按钮
+    if (btnResetColor) {
+      btnResetColor.addEventListener('click', () => {
+        // 重置为默认值
+        inputs.color1.value = "#8BC34A";
+        inputs.color2.value = "#9C6ADE";
+        // 触发更新
+        update();
+      });
+    }
+
     // 初始化执行一次
     // 等待一小会确保 iframe 加载 (虽然 postMessage 无需 load，但预览第一眼还是要的)
     // 实际上我们可以先让 iframe 加载默认参数，或者页面加载后立即触发一次 update
@@ -540,6 +720,9 @@
        update();
     };
     
+    // 页面加载时恢复配置
+    loadConfig();
+
     // 如果 onload 已过 (本地测试快的时候)，也调用一次
     setTimeout(update, 500);
 

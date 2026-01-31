@@ -1,0 +1,27 @@
+{
+  "name": "obsliveoverlay",
+  "version": "1.0.0",
+  "description": "[English](#english) | [中文说明](#中文说明)",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zhui-zi/obsliveoverlay.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/zhui-zi/obsliveoverlay/issues"
+  },
+  "homepage": "https://github.com/zhui-zi/obsliveoverlay#readme",
+  "dependencies": {
+    "three": "^0.182.0",
+    "vite": "^7.3.1"
+  }
+}
