@@ -125,7 +125,17 @@
             </div>
 
             <button class="reset-btn" id="btn-reset-colors">↺ Reset Defaults</button>
-            <button class="copy-css-btn" id="btn-copy-css">📋 复制弹幕样式 (Copy CSS)</button>
+        </div>
+        
+        <!-- CSS Template Copy Buttons -->
+        <div class="section-title" style="margin-top: 16px;"><span>CSS Templates</span></div>
+        <div class="css-copy-group">
+            <button class="copy-css-btn" id="btn-copy-css" data-css="laplace-cyberpunk.css">
+                🌊 Liquid Cyber (玻璃卡片)
+            </button>
+            <button class="copy-css-btn" id="btn-copy-css-stroke" data-css="theme-cyberpunk-sui.css">
+                ⚡ Cyber Stroke (霓虹描边)
+            </button>
         </div>
       </div>
 
@@ -158,27 +168,33 @@
 
   <script type="module" src="src/scripts/config.js"></script>
   <script>
-    document.getElementById('btn-copy-css').addEventListener('click', function() {
-        // Simple heuristic: If file protocol, we need to go into public/
-        // If http (Vite), public files are served at root.
-        let path = 'laplace-cyberpunk.css';
-        if (window.location.protocol === 'file:') {
-            path = 'public/laplace-cyberpunk.css';
-        }
-        
-        const fullUrl = new URL(path, window.location.href).href;
-        
-        navigator.clipboard.writeText(fullUrl).then(() => {
-            showToast('✅ 样式链接已复制 (CSS Copied)');
-        }).catch(err => {
-            // Fallback
-            const ta = document.createElement('textarea');
-            ta.value = fullUrl;
-            document.body.appendChild(ta);
-            ta.select();
-            document.execCommand('copy');
-            document.body.removeChild(ta);
-            showToast('✅ 样式链接已复制 (CSS Copied)');
+    // Handle all CSS copy buttons
+    document.querySelectorAll('.copy-css-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const cssFile = this.dataset.css;
+            if (!cssFile) return;
+            
+            // Simple heuristic: If file protocol, we need to go into public/
+            // If http (Vite), public files are served at root.
+            let path = cssFile;
+            if (window.location.protocol === 'file:') {
+                path = 'public/' + cssFile;
+            }
+            
+            const fullUrl = new URL(path, window.location.href).href;
+            
+            navigator.clipboard.writeText(fullUrl).then(() => {
+                showToast('✅ ' + cssFile + ' 已复制');
+            }).catch(err => {
+                // Fallback
+                const ta = document.createElement('textarea');
+                ta.value = fullUrl;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+                showToast('✅ ' + cssFile + ' 已复制');
+            });
         });
     });
 

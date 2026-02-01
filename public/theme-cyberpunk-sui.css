@@ -1,0 +1,247 @@
+/*
+  @title        赛博朋克描边 Cyber Stroke
+  @author       岁己SUI × ObsLiveOverlay
+  @description  极简描边风格融合赛博朋克霓虹发光效果，多层呼吸光效动画，适合深色背景直播场景
+  @updated      Feb 1, 2026
+  @version      1.0.0
+*/
+
+/* 赛博朋克描边 × 岁己SUI by LAPLACE Chat */
+/* 基于极简描边样式 × 融合 Liquid Cyber 赛博朋克风格 */
+
+/* 引入 Google Fonts 字体 */
+@import url('https://fonts.googleapis.com/css2?family=Changa+One:ital@0;1&family=Orbitron:wght@400;700&display=swap');
+
+@layer template {
+  /* 全局背景透明 */
+  body { background-color: rgba(0, 0, 0, 0); }
+
+  /* 赛博朋克配色变量 */
+  :root {
+    --cyber-primary: 139, 195, 74;     /* #8BC34A 霓虹绿 */
+    --cyber-secondary: 156, 106, 222;  /* #9C6ADE 赛博紫 */
+    --cyber-accent: 0, 255, 255;       /* #00FFFF 青色 */
+    --cyber-pink: 255, 77, 136;        /* #FF4D88 霓虹粉 */
+    --cyber-gold: 255, 215, 0;         /* #FFD700 金色 */
+  }
+
+  /* 全局事件变量 */
+  .event {
+    /* 应用赛博朋克字体 */
+    --event-font-family: 'Orbitron', 'Changa One', var(--font-sans);
+
+    /* 霓虹绿描边 - 赛博朋克风格 */
+    --shadow-color: rgba(var(--cyber-primary), 0.9);
+    --shadow-glow: rgba(var(--cyber-primary), 0.6);
+    
+    /* 多层霓虹发光描边效果 */
+    --text-shadow: 
+      /* 内层硬边描边 */
+      -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000,
+      /* 霓虹发光层 */
+      0 0 5px var(--shadow-glow),
+      0 0 10px var(--shadow-glow),
+      0 0 20px var(--shadow-glow),
+      0 0 40px var(--shadow-color);
+
+    /* 弹幕文本颜色 - 纯白 */
+    --event-message-text: #fff;
+
+    /* 用户名颜色 - 赛博朋克配色 */
+    --event-username-text-0: rgb(var(--cyber-primary));   /* 普通用户 - 霓虹绿 */
+    --event-username-text-1: rgb(var(--cyber-pink));      /* 总督 - 霓虹粉 */
+    --event-username-text-2: rgb(var(--cyber-secondary)); /* 提督 - 赛博紫 */
+    --event-username-text-3: rgb(var(--cyber-accent));    /* 舰长 - 青色 */
+
+    /* 强制醒目留言上方为白色文字 */
+    --event-superchat-top-text: #fff;
+  }
+
+  /* 优化控制台时间戳颜色 */
+  .event--superchat .timestamp {
+    color: var(--text-color);
+  }
+
+  /* 全局文字霓虹描边 */
+  .event .username,
+  .event .message,
+  .event .price {
+    text-shadow: var(--text-shadow);
+    /* 添加微妙的文字发光动画 */
+    animation: cyber-text-pulse 3s ease-in-out infinite alternate;
+  }
+
+  @keyframes cyber-text-pulse {
+    0% { 
+      filter: brightness(1);
+      text-shadow: 
+        -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000,
+        0 0 5px rgba(var(--cyber-primary), 0.4),
+        0 0 10px rgba(var(--cyber-primary), 0.3);
+    }
+    100% { 
+      filter: brightness(1.1);
+      text-shadow: 
+        -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000,
+        0 0 8px rgba(var(--cyber-primary), 0.8),
+        0 0 15px rgba(var(--cyber-primary), 0.6),
+        0 0 25px rgba(var(--cyber-primary), 0.4);
+    }
+  }
+
+  /* 高亮主播 - 金色霓虹描边 */
+  .event--message.user-type--streamer {
+    --shadow-color: rgba(var(--cyber-gold), 0.9);
+    --shadow-glow: rgba(var(--cyber-gold), 0.6);
+    --text-shadow: 
+      -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000,
+      0 0 5px var(--shadow-glow),
+      0 0 10px var(--shadow-glow),
+      0 0 20px var(--shadow-color);
+  }
+
+  /* 主播文字特殊样式 */
+  .event--message.user-type--streamer .username,
+  .event--message.user-type--streamer .message {
+    font-weight: bold;
+    color: rgb(var(--cyber-gold));
+    animation: streamer-glow 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes streamer-glow {
+    0% { 
+      text-shadow: 
+        -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000,
+        0 0 10px rgba(var(--cyber-gold), 0.5),
+        0 0 20px rgba(var(--cyber-gold), 0.3);
+    }
+    100% { 
+      text-shadow: 
+        -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000,
+        0 0 15px rgba(var(--cyber-gold), 0.9),
+        0 0 30px rgba(var(--cyber-gold), 0.6),
+        0 0 45px rgba(var(--cyber-gold), 0.4);
+    }
+  }
+
+  /* 为用户名增加 padding 防止阴影被截断 */
+  .username-text {
+    padding-left: calc(var(--1px) * 4);
+    padding-right: calc(var(--1px) * 4);
+    margin-left: calc(var(--1px) * -4);
+    margin-right: calc(var(--1px) * -4);
+  }
+
+  /* 赛博朋克风格渐变淡出效果 */
+  .event-list {
+    --offset: 40px;
+    -webkit-mask-image: linear-gradient(
+      to bottom, 
+      rgba(0, 0, 0, 0), 
+      rgba(0, 0, 0, 1) var(--offset), 
+      rgba(0, 0, 0, 1) calc(100% - var(--offset)), 
+      rgba(0, 0, 0, 0)
+    );
+    mask-image: linear-gradient(
+      to bottom, 
+      rgba(0, 0, 0, 0), 
+      rgba(0, 0, 0, 1) var(--offset), 
+      rgba(0, 0, 0, 1) calc(100% - var(--offset)), 
+      rgba(0, 0, 0, 0)
+    );
+  }
+
+  /* ===== 可选：添加赛博扫描线效果 ===== */
+  /* 取消下方注释以启用扫描线动画效果 */
+  /*
+  .event::after {
+    content: "";
+    position: absolute;
+    top: -50%; left: -50%; right: -50%; bottom: -50%;
+    background: linear-gradient(
+      60deg,
+      transparent 40%,
+      rgba(255, 255, 255, 0.05) 45%, 
+      rgba(var(--cyber-secondary), 0.2) 50%,
+      rgba(255, 255, 255, 0.05) 55%, 
+      transparent 60%
+    );
+    transform: translateX(-100%) rotate(25deg);
+    animation: scan-sheen 8s infinite ease-in-out;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+  }
+
+  @keyframes scan-sheen {
+    0% { transform: translateX(-150%) rotate(25deg); }
+    10% { transform: translateX(150%) rotate(25deg); }
+    100% { transform: translateX(150%) rotate(25deg); }
+  }
+  */
+
+  /* ===== 深色模式适配 ===== */
+  [data-theme='dark'] {
+    --mix-base: #0a0f14;
+    --mix-factor: 80%;
+  }
+
+  [data-theme='light'] {
+    /* 浅色模式使用更深的描边 */
+    .event .username,
+    .event .message,
+    .event .price {
+      --text-shadow: 
+        -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000,
+        -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000,
+        0 0 8px rgba(var(--cyber-primary), 0.9),
+        0 0 15px rgba(var(--cyber-primary), 0.6);
+    }
+  }
+
+  /* ===== 醒目留言（SC）特殊样式 ===== */
+  .event--superchat.event-show-as--normal {
+    position: relative;
+  }
+
+  .event--superchat.event-show-as--normal .top {
+    text-shadow: 
+      -1px -1px 0 rgba(0,0,0,0.5), 1px -1px 0 rgba(0,0,0,0.5), 
+      -1px 1px 0 rgba(0,0,0,0.5), 1px 1px 0 rgba(0,0,0,0.5),
+      0 0 10px rgba(var(--cyber-accent), 0.6);
+  }
+
+  /* ===== 舰长事件特殊样式 ===== */
+  .event--toast.event-show-as--normal {
+    --text-shadow: 
+      -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000,
+      0 0 8px rgba(var(--cyber-pink), 0.7),
+      0 0 15px rgba(var(--cyber-pink), 0.5);
+  }
+
+  /* 总督样式 */
+  .event.guard-level--1 .username {
+    color: rgb(var(--cyber-pink));
+    text-shadow: 
+      -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000,
+      0 0 10px rgba(var(--cyber-pink), 0.8),
+      0 0 20px rgba(var(--cyber-pink), 0.5);
+  }
+
+  /* 提督样式 */
+  .event.guard-level--2 .username {
+    color: rgb(var(--cyber-secondary));
+    text-shadow: 
+      -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000,
+      0 0 10px rgba(var(--cyber-secondary), 0.8),
+      0 0 20px rgba(var(--cyber-secondary), 0.5);
+  }
+
+  /* 舰长样式 */
+  .event.guard-level--3 .username {
+    color: rgb(var(--cyber-accent));
+    text-shadow: 
+      -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000,
+      0 0 10px rgba(var(--cyber-accent), 0.8),
+      0 0 20px rgba(var(--cyber-accent), 0.5);
+  }
+}
