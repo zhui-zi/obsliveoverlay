@@ -453,6 +453,40 @@ input:checked + .slider:before {
     border-color: #fff;
 }
 
+/* Footer Links */
+.footer-links {
+    width: 100%;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--glass-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.footer-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    transition: color 0.2s ease;
+}
+
+.footer-links a:hover {
+    color: var(--accent-primary);
+}
+
+.footer-separator {
+    opacity: 0.5;
+}
+
+.license-text {
+    opacity: 0.8;
+}
+
 /* === Preview Area === */
 .preview-area {
     flex: 1;
