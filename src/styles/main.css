@@ -11,16 +11,16 @@
       --copyright-display: none;
       
       /* ===== 🎨 主题颜色 ===== */
-      --primary-green: #4D7006;
-      --neon-green: #8BC34A;
-      --light-green: #CDDC39;
-      --primary-purple: #462BA5;
-      --neon-purple: #9C6ADE;
-      --light-purple: #B794F6;
+      --primary-green: #B45309;
+      --neon-green: #FACC15;
+      --light-green: #FDE047;
+      --primary-purple: #C2410C;
+      --neon-purple: #FB923C;
+      --light-purple: #FDBA74;
       --panel-bg: rgba(8, 8, 12, 0.98);
       --panel-bg-solid: rgb(12, 12, 18);
-      --glow-green: 0 0 15px rgba(139, 195, 74, 0.8), 0 0 40px rgba(77, 112, 6, 0.6);
-      --glow-purple: 0 0 15px rgba(156, 106, 222, 0.8), 0 0 40px rgba(70, 43, 165, 0.6);
+      --glow-green: 0 0 15px rgba(250, 204, 21, 0.8), 0 0 40px rgba(180, 83, 9, 0.6);
+      --glow-purple: 0 0 15px rgba(251, 146, 60, 0.8), 0 0 40px rgba(194, 65, 12, 0.6);
       
       /* ===== 📐 布局尺寸 ===== */
       /* 21:9 游戏区域: 1920 × 823 */
@@ -2498,78 +2498,3 @@
       to { right: calc(100% + 200px); }
     }
 
-    /* =========================================
-       🎨 霓虹暧昧风格 (Neon Ambiance) - 完全重做
-       ========================================= */
-
-    /* === 基础变量 === */
-    :root[data-theme="neon"] {
-      --neon-pink: #ff00de;
-      --neon-cyan: #00ffff;
-      --neon-purple: #9d00ff;
-      --neon-hot-pink: #ff0077;
-      --neon-white: #ffffff;
-      --glass-bg: rgba(20, 0, 30, 0.5);
-      --glass-border: rgba(255, 255, 255, 0.3);
-    }
-
-    /* === 隐藏所有赛博故障元素 === */
-    [data-theme="neon"] .top-section,
-    [data-theme="neon"] .bottom-section,
-    [data-theme="neon"] .top-bar,
-    [data-theme="neon"] .bottom-bar,
-    [data-theme="neon"] .top-ribbon,
-    [data-theme="neon"] .bottom-ribbon,
-    [data-theme="neon"] .data-ribbon,
-    [data-theme="neon"] .top-left-deco,
-    [data-theme="neon"] .bottom-left-deco,
-    [data-theme="neon"] .energy-bar,
-    [data-theme="neon"] .indicator-lights,
-    [data-theme="neon"] .top-data-stream,
-    [data-theme="neon"] .bottom-deco-waves,
-    [data-theme="neon"] .noise-overlay,
-    [data-theme="neon"] .rgb-shift,
-    [data-theme="neon"] .top-deco-particles,
-    [data-theme="neon"] .checker-grid,
-    [data-theme="neon"] .game-frame,
-    [data-theme="neon"] .danmaku-panel,
-    [data-theme="neon"] .danmaku-corner,
-    [data-theme="neon"] .status-indicators,
-    [data-theme="neon"] .side-fillers,
-    [data-theme="neon"] .chat-left-deco,
-    [data-theme="neon"] .circuit-trace,
-    [data-theme="neon"] .tech-icons,
-    [data-theme="neon"] .progress-bars,
-    [data-theme="neon"] .hex-display,
-    [data-theme="neon"] .tech-ring,
-    [data-theme="neon"] .corner-deco,
-    [data-theme="neon"] .info-card-group,
-    [data-theme="neon"] .pulse-ring,
-    [data-theme="neon"] .matrix-rain,
-    [data-theme="neon"] .announcement-area,
-    [data-theme="neon"] .audio-visualizer,
-    [data-theme="neon"] .music-module,
-    [data-theme="neon"] .clock-area,
-    [data-theme="neon"] .game-info,
-    [data-theme="neon"] .announcement-box {
-      display: none !important;
-    }
-
-    /* === 透明背景 === */
-    [data-theme="neon"] body,
-    [data-theme="neon"] .overlay {
-      background: transparent !important;
-    }
-
-    /* === 霓虹暧昧专属容器 === */
-    [data-theme="neon"] .overlay::after {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    /* ============================
-       📍 霓虹UI组件 - 使用JS动态创建
-       ============================ */

@@ -18,8 +18,8 @@
 
   /* 赛博朋克配色变量 */
   :root {
-    --cyber-primary: 139, 195, 74;     /* #8BC34A 霓虹绿 */
-    --cyber-secondary: 156, 106, 222;  /* #9C6ADE 赛博紫 */
+    --cyber-primary: 250, 204, 21;     /* #FACC15 霓虹黄 */
+    --cyber-secondary: 251, 146, 60;  /* #FB923C 霓虹橙 */
     --cyber-accent: 0, 255, 255;       /* #00FFFF 青色 */
     --cyber-pink: 255, 77, 136;        /* #FF4D88 霓虹粉 */
     --cyber-gold: 255, 215, 0;         /* #FFD700 金色 */

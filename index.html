@@ -15,127 +15,130 @@
     </div>
     
     <div class="panel-content">
-      
-      <!-- Section 1: Content -->
+
       <div class="section">
-        <div class="section-title"><span>Content</span></div>
-        
+        <div class="section-title"><span>01 文案内容</span></div>
         <div class="form-group">
           <label>公告内容 Announcement</label>
           <textarea id="input-announcement" class="form-control" spellcheck="false"></textarea>
         </div>
-
         <div class="form-group">
-            <label>
-                滚动速度 Speed 
-                <span class="form-value-label" id="val-speed">25s</span>
-            </label>
-            <input type="range" id="input-speed" min="5" max="60" step="1">
+          <label>
+            滚动速度 Speed
+            <span class="form-value-label" id="val-speed">25s</span>
+          </label>
+          <input type="range" id="input-speed" min="5" max="60" step="1">
         </div>
-
         <div class="form-group">
           <label id="label-game">游戏名 Game</label>
           <input type="text" id="input-game" class="form-control">
         </div>
       </div>
 
-      <!-- Section 2: Layout -->
       <div class="section">
-        <div class="section-title"><span>Layout</span></div>
-        
+        <div class="section-title"><span>02 画面结构</span></div>
         <div class="form-group">
-            <label>布局模式 Mode</label>
-            <select id="input-ratio" class="form-control">
-                <option value="chat">💬 杂谈 (Chat Mode)</option>
-                <option value="21:9">📺 21:9 Ultrawide</option>
-                <option value="16:9">🖥️ 16:9 Standard</option>
-            </select>
+          <label>布局模式 Mode</label>
+          <select id="input-ratio" class="form-control">
+            <option value="chat">💬 杂谈 (Chat Mode)</option>
+            <option value="21:9">📺 21:9 Ultrawide</option>
+            <option value="16:9">🖥️ 16:9 Standard</option>
+          </select>
         </div>
-
+        <div class="subsection-title">信息模块</div>
         <div class="toggle-group">
-            <div class="toggle-row">
-                <span class="toggle-label">🎵 音乐 Music</span>
-                <label class="switch">
-                    <input type="checkbox" id="input-music">
-                    <span class="slider"></span>
-                </label>
-            </div>
-            
-            <div class="toggle-row">
-                <span class="toggle-label">🏠 主页 Homepage</span>
-                <label class="switch">
-                    <input type="checkbox" id="input-homepage">
-                    <span class="slider"></span>
-                </label>
-            </div>
-
-            <div class="toggle-row">
-                <span class="toggle-label">©️ 版权 Copyright</span>
-                <label class="switch">
-                    <input type="checkbox" id="input-copyright">
-                    <span class="slider"></span>
-                </label>
-            </div>
+          <div class="toggle-row">
+            <span class="toggle-label">🎵 音乐 Music</span>
+            <label class="switch">
+              <input type="checkbox" id="input-music">
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="toggle-row">
+            <span class="toggle-label">🏠 主页 Homepage</span>
+            <label class="switch">
+              <input type="checkbox" id="input-homepage">
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="toggle-row">
+            <span class="toggle-label">©️ 版权 Copyright</span>
+            <label class="switch">
+              <input type="checkbox" id="input-copyright">
+              <span class="slider"></span>
+            </label>
+          </div>
         </div>
       </div>
 
-      <!-- Section 3: Visuals -->
       <div class="section">
-        <div class="section-title"><span>Visuals</span></div>
-
-        <div class="toggle-group">
-            <div class="toggle-row" id="row-neon">
-                <span class="toggle-label">✨ 流光特效 Neon</span>
-                <label class="switch">
-                    <input type="checkbox" id="input-neon">
-                    <span class="slider"></span>
-                </label>
-            </div>
-            
-            <div class="sub-control-row" id="row-flow-type">
-                <span class="toggle-label" style="font-size:12px; opacity:0.8;">样式 Style</span>
-                <select id="input-flow-type" class="form-control" style="width: 120px; padding: 4px; height: auto; font-size:12px;">
-                    <option value="beam">⚡ Beam</option>
-                    <option value="glow">🌟 Glow</option>
-                </select>
-            </div>
+        <div class="section-title"><span>03 主题与配色</span></div>
+        <div class="form-group">
+          <label>主题 Theme</label>
+          <select id="input-theme" class="form-control">
+            <option value="cyberpunk">cyberpunk</option>
+          </select>
         </div>
-
+        <div class="form-group">
+          <label>预制配色 Color Preset</label>
+          <select id="input-color-preset" class="form-control">
+            <option value="yellowOrange">🟡🟠 黄橙（新默认）</option>
+            <option value="bluePurple">🔵🟣 蓝紫（旧经典）</option>
+            <option value="custom">🎨 自定义</option>
+          </select>
+        </div>
         <div class="color-grid">
-            <!-- Color 1 -->
-            <div class="color-card" id="card-color-1">
-                <div class="color-preview">
-                    <input type="color" id="color-picker-1">
-                </div>
-                <div class="color-info">
-                    <span>Primary</span>
-                    <span id="val-color1">#8BC34A</span>
-                </div>
+          <div class="color-card" id="card-color-1">
+            <div class="color-preview">
+              <input type="color" id="color-picker-1">
             </div>
-
-            <!-- Color 2 -->
-            <div class="color-card" id="card-color-2">
-                <div class="color-preview">
-                    <input type="color" id="color-picker-2">
-                </div>
-                <div class="color-info">
-                    <span>Accent</span>
-                    <span id="val-color2">#9C6ADE</span>
-                </div>
+            <div class="color-info">
+              <span>Primary</span>
+              <span id="val-color1">#FACC15</span>
             </div>
-
-            <button class="reset-btn" id="btn-reset-colors">↺ Reset Defaults</button>
+          </div>
+          <div class="color-card" id="card-color-2">
+            <div class="color-preview">
+              <input type="color" id="color-picker-2">
+            </div>
+            <div class="color-info">
+              <span>Accent</span>
+              <span id="val-color2">#FB923C</span>
+            </div>
+          </div>
+          <button class="reset-btn" id="btn-reset-colors">↺ Reset Defaults</button>
         </div>
-        
-        <!-- CSS Template Copy Buttons -->
-        <div class="section-title" style="margin-top: 16px;"><span>CSS Templates</span></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title"><span>04 动效控制</span></div>
+        <div class="toggle-group">
+          <div class="toggle-row" id="row-neon">
+            <span class="toggle-label">✨ 流光特效 Neon</span>
+            <label class="switch">
+              <input type="checkbox" id="input-neon">
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="sub-control-row" id="row-flow-type">
+            <span class="toggle-label">样式 Style</span>
+            <select id="input-flow-type" class="form-control form-control-inline">
+              <option value="beam">⚡ Beam</option>
+              <option value="glow">🌟 Glow</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title"><span>05 模板输出</span></div>
         <div class="css-copy-group">
-            <button class="copy-css-btn" id="btn-copy-css" data-css="laplace-cyberpunk.css">
-                🌊 Liquid Cyber (玻璃卡片)
-            </button>
-            <button class="copy-css-btn" id="btn-copy-css-stroke" data-css="theme-cyberpunk-sui.css">
-                ⚡ Cyber Stroke (霓虹描边)
-            </button>
+          <button class="copy-css-btn" id="btn-copy-css" data-css="laplace-cyberpunk.css">
+            🌊 Liquid Cyber
+          </button>
+          <button class="copy-css-btn" id="btn-copy-css-stroke" data-css="theme-cyberpunk-sui.css">
+            ⚡ Cyber Stroke
+          </button>
         </div>
       </div>
 
@@ -146,11 +149,11 @@
       <div id="url-text" class="url-container" title="Browser Source URL">...</div>
       
       <button class="btn btn-primary" id="btn-copy">
-        📄 复制 OBS 链接 (URL)
+        📄 复制链接
       </button>
       
       <button class="btn btn-secondary" id="btn-open">
-        🔗 Open Fullscreen
+        🔗 全屏预览
       </button>
 
       <div class="footer-links">

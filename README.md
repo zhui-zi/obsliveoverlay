@@ -17,6 +17,7 @@ A lightweight, web-based broadcast overlay for OBS Studio featuring a configurab
     -   **Chat**: Dynamic background animation for intermission scenes.
 -   **State Persistence**: Configuration defaults are saved to `localStorage` for convenience.
 -   **Reactive Theming**: Adjust primary/secondary styling colors via CSS variables (`--neon-green`, `--neon-purple`).
+-   **Preset-Driven Core**: Theme and layout behavior are now centralized in reusable preset registries.
 
 ## Project Structure
 
@@ -28,6 +29,9 @@ A lightweight, web-based broadcast overlay for OBS Studio featuring a configurab
 │   ├── scripts/
 │   │   ├── config.js   # Logic: Dashboard UI & URL Generation
 │   │   └── overlay.js  # Logic: URL Parsing, DOM Manipulation, Effects
+│   │   └── shared/
+│   │       ├── overlay-schema.js  # Shared config schema/normalize/serialize
+│   │       └── overlay-presets.js # Theme + layout preset registry
 │   └── styles/
 │       ├── config.css  # Styles: Dashboard
 │       └── main.css    # Styles: Core Overlay Theme (Glitch, Neon, Layouts)
@@ -64,12 +68,40 @@ The overlay behaves as a stateless function of the URL parameters:
 | Parameter | Values | Description |
 | :--- | :--- | :--- |
 | `ratio` | `16-9`, `21-9`, `chat` | Layout mode. |
-| `theme` | `neon`, `default` | Toggles extra glow effects. |
 | `game` | *string* | Text for the "Game" footer module. |
 | `topic` | *string* | Text for the "Topic" module (Chat mode). |
 | `announcement` | *string* | Text for the top scrolling marquee. |
 | `color1` | *hex* | Primary accent color (no `#`). |
 | `color2` | *hex* | Secondary accent color (no `#`). |
+| `theme` | `cyberpunk` / custom preset id | Overlay theme preset id. |
+
+## Extending Themes & Layouts
+
+### Add a New Theme Preset
+
+1. Open `src/scripts/shared/overlay-presets.js`.
+2. Add a new entry in `THEME_PRESETS`:
+    - `id`: unique theme id.
+    - `name`: human readable name.
+    - `tokens`: CSS variable map (for panel/bg/base style tokens).
+3. Keep color customization via `color1`/`color2` (already merged through `buildColorTokens`).
+
+### Add a New Layout Preset
+
+1. Open `src/scripts/shared/overlay-presets.js`.
+2. Add a new entry in `LAYOUT_PRESETS`:
+    - `gameLabel`: text for bottom-left module.
+    - `bodyClass`: optional mode class (for custom CSS blocks).
+    - `showFrame` / `showSideFillers`: visibility toggles.
+    - `frameRect`: `{ x, width }` for game-frame SVG rects.
+    - `cssVars`: layout-level CSS vars (e.g. `--top-bar-height`, `--game-height`).
+3. Add an option in `index.html` (`#input-ratio`) if you want it selectable from dashboard.
+
+### Why This Refactor Helps
+
+- `config.js` and `overlay.js` now share one schema for defaults + parse + serialization.
+- URL parameters remain the single source of truth.
+- New themes/layouts usually only require editing preset objects rather than touching runtime logic.
 
 ## License
 

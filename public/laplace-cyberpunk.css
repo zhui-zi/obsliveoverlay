@@ -21,8 +21,8 @@
         --base-font-size: 14px;
         --base-spacing: 8px; /* Reduced from 20px */
         --avatar-size: 28px;
-        --liquid-primary: 139, 195, 74;   /* #8BC34A Green */
-        --liquid-secondary: 156, 106, 222; /* #9C6ADE Purple */
+        --liquid-primary: 250, 204, 21;   /* #FACC15 Yellow */
+        --liquid-secondary: 251, 146, 60; /* #FB923C Orange */
     }
 
     /* 
