@@ -17,6 +17,7 @@ const inputs = {
     game: document.getElementById('input-game'),
     speed: document.getElementById('input-speed'),
     ratio: document.getElementById('input-ratio'),
+    leftAlign169: document.getElementById('input-left-align-169'),
     music: document.getElementById('input-music'),
     homepage: document.getElementById('input-homepage'),
     copyright: document.getElementById('input-copyright'),
@@ -45,11 +46,14 @@ const btns = {
 function ensureThemeOptions() {
     if (!inputs.theme) return;
     const supportedThemeIds = getAvailableThemeIds();
+    const themeLabels = {
+        cyberpunk: '⚡ Cyberpunk Glitch'
+    };
     inputs.theme.innerHTML = '';
     supportedThemeIds.forEach((themeId) => {
         const option = document.createElement('option');
         option.value = themeId;
-        option.textContent = themeId;
+        option.textContent = themeLabels[themeId] || themeId;
         inputs.theme.appendChild(option);
     });
 }
@@ -112,6 +116,7 @@ function syncStateToForm() {
     if (inputs.announcement) inputs.announcement.value = currentState.announcement;
     if (inputs.speed) inputs.speed.value = String(currentState.speed);
     if (inputs.ratio) inputs.ratio.value = currentState.ratio;
+    if (inputs.leftAlign169) inputs.leftAlign169.checked = !!currentState.leftAlign169;
     if (inputs.music) inputs.music.checked = currentState.music;
     if (inputs.homepage) inputs.homepage.checked = currentState.homepage;
     if (inputs.copyright) inputs.copyright.checked = currentState.copyright;
@@ -135,10 +140,13 @@ function updateUI() {
     if (card2 && inputs.color2) card2.style.borderColor = inputs.color2.value;
 
     const isChatMode = currentState.ratio === 'chat';
+    const is16x9Mode = currentState.ratio === '16:9';
     const neonRow = document.getElementById('row-neon');
     const flowRow = document.getElementById('row-flow-type');
+    const leftAlignRow = document.getElementById('row-left-align-169');
     if (neonRow) neonRow.style.display = isChatMode ? 'none' : 'flex';
     if (flowRow) flowRow.style.display = isChatMode ? 'none' : 'flex';
+    if (leftAlignRow) leftAlignRow.style.display = is16x9Mode ? 'flex' : 'none';
 }
 
 function updatePreview() {
@@ -170,6 +178,8 @@ function applyInputChange(target) {
         currentState.announcement = target.value;
     } else if (target === inputs.speed) {
         currentState.speed = Number(target.value) || DEFAULT_OVERLAY_CONFIG.speed;
+    } else if (target === inputs.leftAlign169) {
+        currentState.leftAlign169 = !!target.checked;
     } else if (target === inputs.flowType) {
         currentState.flowType = normalizeFlowType(target.value, DEFAULT_OVERLAY_CONFIG.flowType);
     } else if (target === inputs.color1) {

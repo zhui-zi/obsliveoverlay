@@ -4,6 +4,7 @@ const DEFAULT_OVERLAY_CONFIG = Object.freeze({
   chatTopic: 'Just Chatting / 杂谈',
   speed: 25,
   ratio: 'chat',
+  leftAlign169: false,
   music: false,
   homepage: false,
   copyright: false,
@@ -82,6 +83,7 @@ function readConfigFromParams(params, options = {}) {
     chatTopic: params.has('chatTopic') ? params.get('chatTopic') : base.chatTopic,
     speed: clampNumber(params.get('speed'), 5, 120, base.speed),
     ratio,
+    leftAlign169: parseBoolean(params.get('leftAlign169'), base.leftAlign169),
     music: parseBoolean(params.get('music'), base.music),
     homepage: parseBoolean(params.get('homepage'), base.homepage),
     copyright: parseBoolean(params.get('copyright'), base.copyright),
@@ -101,6 +103,7 @@ function serializeConfigToParams(config, defaults = DEFAULT_OVERLAY_CONFIG) {
 
   params.set('speed', String(clampNumber(state.speed, 5, 120, defaults.speed)));
   params.set('ratio', normalizeMode(state.ratio, defaults.ratio));
+  params.set('leftAlign169', state.leftAlign169 ? '1' : '0');
 
   params.set('music', state.music ? '1' : '0');
   params.set('homepage', state.homepage ? '1' : '0');

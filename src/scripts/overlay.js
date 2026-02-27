@@ -15,6 +15,18 @@ const refs = {
   frameRects: ['rect-bg', 'rect-main', 'rect-glitch'].map((id) => document.getElementById(id))
 };
 
+const CENTERED_16_9 = Object.freeze({
+  frameRect: { x: 238.5, width: 1463 },
+  fillerLeftWidth: '230px',
+  fillerRightWidth: '230px'
+});
+
+const LEFT_ALIGNED_16_9 = Object.freeze({
+  frameRect: { x: 28.5, width: 1463 },
+  fillerLeftWidth: '18px',
+  fillerRightWidth: '440px'
+});
+
 function updateAnnouncement(text) {
   refs.root.style.setProperty('--announcement-text', `"${text}"`);
   if (!refs.announcementText) return;
@@ -32,22 +44,29 @@ function updateMarqueeSpeed(baseSpeed) {
   });
 }
 
-function applyLayout(mode) {
+function applyLayout(mode, leftAlign169 = false) {
   const preset = resolveLayoutPreset(mode);
+  const useLeftAligned16x9 = mode === '16:9' && leftAlign169;
+  const layout16x9 = useLeftAligned16x9 ? LEFT_ALIGNED_16_9 : CENTERED_16_9;
 
-  refs.body.classList.remove('mode-chat');
+  refs.body.classList.remove('mode-chat', 'mode-169-left');
   if (preset.bodyClass) refs.body.classList.add(preset.bodyClass);
+  if (useLeftAligned16x9) refs.body.classList.add('mode-169-left');
 
   applyCssVariables(refs.root, preset.cssVars);
+  refs.root.style.setProperty('--filler-left-width', mode === '16:9' ? layout16x9.fillerLeftWidth : '230px');
+  refs.root.style.setProperty('--filler-right-width', mode === '16:9' ? layout16x9.fillerRightWidth : '230px');
 
   if (refs.gameLabel) refs.gameLabel.textContent = preset.gameLabel;
   if (refs.sideFillers) refs.sideFillers.style.display = preset.showSideFillers ? 'block' : 'none';
 
+  const frameRect = mode === '16:9' ? layout16x9.frameRect : preset.frameRect;
+
   refs.frameRects.forEach((rect) => {
     if (!rect) return;
     rect.style.display = preset.showFrame ? 'block' : 'none';
-    rect.setAttribute('width', preset.frameRect.width);
-    rect.setAttribute('x', preset.frameRect.x);
+    rect.setAttribute('width', frameRect.width);
+    rect.setAttribute('x', frameRect.x);
   });
 }
 
@@ -90,7 +109,7 @@ function applyConfig(paramsSource) {
 
   updateAnnouncement(config.announcement);
   applyGameText(gameText);
-  applyLayout(config.ratio);
+  applyLayout(config.ratio, config.leftAlign169);
   applyTheme(config.theme, config.color1, config.color2);
   applyToggleState(config);
   applyFlowEffect(config.flowType);

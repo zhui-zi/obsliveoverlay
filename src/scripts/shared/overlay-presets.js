@@ -1,7 +1,7 @@
 const THEME_PRESETS = Object.freeze({
   cyberpunk: {
     id: 'cyberpunk',
-    name: 'Cyberpunk',
+    name: 'Cyberpunk Glitch',
     tokens: {
       '--panel-bg': 'rgba(8, 8, 12, 0.98)',
       '--panel-bg-solid': 'rgb(12, 12, 18)'
