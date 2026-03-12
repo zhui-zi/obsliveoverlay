@@ -1,0 +1,413 @@
+/* ==============================================
+   macOS Overlay Theme - Ultimate Frosted Glass
+   OBS Live Overlay · 1920x1080
+   ============================================== */
+
+:root {
+  --announcement-text: "欢迎来到直播间";
+  --game-name-text: "Cities Skylines 2";
+  --music-display: none;
+  --homepage-display: none;
+  --copyright-display: none;
+  --neon-visibility: visible;
+
+  --primary-green: #34C759;
+  --neon-green: #34C759;
+  --light-green: #30D158;
+  --primary-purple: #AF52DE;
+  --neon-purple: #AF52DE;
+  --light-purple: #BF5AF2;
+
+  --mac-glass-bg: rgba(30, 30, 35, 0.35);
+  --mac-glass-blur: blur(24px) saturate(150%);
+  --mac-border: rgba(255, 255, 255, 0.15);
+  --mac-inner-bg: rgba(0, 0, 0, 0.25);
+  
+  --mac-radius-lg: 24px;  /* 统一大圆角 */
+  --mac-radius-md: 16px;  /* 统一图标/内部圆角 */
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 1920px; height: 1080px; overflow: hidden; background: transparent;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", sans-serif;
+  color: #fff; -webkit-font-smoothing: antialiased;
+}
+
+/* Ambient glow */
+.mac-wallpaper-ambient {
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 75% 25%, rgba(var(--neon-green), 0.1) 0%, transparent 60%),
+              radial-gradient(circle at 25% 75%, rgba(var(--neon-purple), 0.1) 0%, transparent 60%);
+  pointer-events: none; opacity: var(--neon-visibility); z-index: 0;
+}
+
+.overlay { position: relative; width: 1920px; height: 1080px; pointer-events: none; z-index: 10; }
+
+/* ==============================================
+   Top Menu Bar
+   ============================================== */
+.mac-menubar {
+  position: absolute; top: 0; left: 0; right: 0; height: 32px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 20px;
+  background: rgba(24, 24, 24, 0.35); backdrop-filter: blur(40px) saturate(150%); -webkit-backdrop-filter: blur(40px) saturate(150%);
+  border-bottom: 0.5px solid rgba(255,255,255,0.1);
+  box-shadow: 0 1px 5px rgba(0,0,0,0.1); font-size: 15px; font-weight: 500;
+  z-index: 100;
+}
+
+.menubar-left, .menubar-right { display: flex; align-items: center; gap: 6px; }
+.menubar-item { padding: 0 12px; height: 32px; display: flex; align-items: center; }
+.menubar-item.bold { font-weight: 600; padding-left: 4px; }
+.apple-logo { display: flex; align-items: center; padding-right: 8px; margin-top: -2px; }
+
+.live-indicator { display: flex; gap: 12px; }
+.live-dot {
+  width: 10px; height: 10px; border-radius: 50%; background: #FF5F56;
+  box-shadow: 0 0 8px rgba(255, 95, 86, 0.8); animation: pulse-live 2s infinite;
+}
+@keyframes pulse-live { 0% { box-shadow: 0 0 0 0 rgba(255, 95, 86, 0.4); } 70% { box-shadow: 0 0 0 6px rgba(255, 95, 86, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 95, 86, 0); } }
+
+.menubar-icon { padding: 0 8px; display: flex; align-items: center; opacity: 0.9; }
+.menubar-icon svg { width: 18px; height: 18px; display: block; }
+.time-display { font-variant-numeric: tabular-nums; font-size: 15px; }
+
+/* ==============================================
+   Game Frame (16:9 macOS Window)
+   ============================================== */
+.game-frame {
+  position: absolute;
+  top: 56px;
+  left: 24px;
+  width: 1536px; /* 1536 / 16 * 9 = 864px，标准缩放16:9并保证边界内 */
+  height: 896px; /* 32px标题栏 + 864px内框(16:9高度) */
+  z-index: 5;
+  box-sizing: border-box; /* 确保边框计算在尺寸内 */
+}
+
+.mac-window {
+  display: flex;
+  flex-direction: column;
+  background: transparent;
+  border-radius: var(--mac-radius-lg);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  overflow: hidden;
+}
+
+.mac-window-titlebar {
+  height: 32px;
+  background: var(--mac-glass-bg);
+  backdrop-filter: var(--mac-glass-blur); -webkit-backdrop-filter: var(--mac-glass-blur);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  flex-shrink: 0;
+}
+
+.mac-window-controls {
+  display: flex;
+  gap: 12px;
+}
+
+.mac-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.1), 0 1px 1px rgba(255,255,255,0.1);
+}
+.mac-dot.red { background: #FF5F56; }
+.mac-dot.yellow { background: #FFBD2E; }
+.mac-dot.green { background: #27C93F; }
+
+.mac-window-content {
+  flex: 1;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05);
+  background: transparent;
+}
+
+/* ==============================================
+   Frosted Glass Sidebar (Danmaku) - 半透明毛玻璃
+   ============================================== */
+.mac-sidebar {
+  position: absolute; top: 56px; right: 24px;
+  height: 452px; /* 原为 bottom: 120px，约 904px，现高度恰好缩短一半留出空间展示模型 */
+  width: 312px; /* Game:1536 + Left:24 + Gap:24 + Sidebar:312 + Right:24 = 1920 */
+  display: flex; flex-direction: column; z-index: 20;
+  background: var(--mac-glass-bg);
+  backdrop-filter: var(--mac-glass-blur); -webkit-backdrop-filter: var(--mac-glass-blur);
+  border: 1px solid var(--mac-border);
+  border-radius: var(--mac-radius-lg);
+  box-shadow: 0 30px 60px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.2);
+  overflow: hidden; /* Ensure titlebar corners clip smoothly */
+}
+
+/* 弹幕内容区域 */
+.danmaku-content { flex: 1; padding: 20px; overflow: hidden; font-size: 28px; line-height: 1.5; }
+
+/* ==============================================
+   Floating Large Rounded Glass Bottom Bar
+   悬浮式大圆角底栏设计 + 毛玻璃模块
+   ============================================== */
+.mac-bottom-bar {
+  position: absolute; bottom: 24px; 
+  left: 24px; /* 居左，对齐游戏画面 */
+  transform: none;
+  display: flex; align-items: center; gap: 24px;
+  padding: 0; 
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  backdrop-filter: none; -webkit-backdrop-filter: none;
+  z-index: 50;
+}
+
+.bar-section {
+  display: flex; align-items: center; gap: 20px;    height: 84px;  padding: 14px 40px 14px 14px; /* 左侧留距给icon，右侧给文字 */
+  background: var(--mac-glass-bg);
+  backdrop-filter: var(--mac-glass-blur); -webkit-backdrop-filter: var(--mac-glass-blur);
+  border: 1px solid var(--mac-border);
+  border-radius: var(--mac-radius-lg);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.25);
+}
+
+.section-icon {
+  width: 56px; height: 56px; border-radius: var(--mac-radius-md); 
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; flex-shrink: 0;
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+}
+.section-icon svg { display: block; margin: auto; }
+
+.mac-icon-yellow {
+  background: rgba(255, 214, 10, 0.15); border: 1px solid rgba(255, 214, 10, 0.4); color: #FFD60A;
+  box-shadow: 0 0 15px rgba(255, 214, 10, 0.3), inset 0 2px 6px rgba(255, 214, 10, 0.4);
+}
+.mac-icon-purple {
+  background: rgba(191, 90, 242, 0.15); border: 1px solid rgba(191, 90, 242, 0.4); color: #BF5AF2;
+  box-shadow: 0 0 15px rgba(191, 90, 242, 0.3), inset 0 2px 6px rgba(191, 90, 242, 0.4);
+}
+.mac-icon-red {
+  background: rgba(255, 55, 95, 0.15); border: 1px solid rgba(255, 55, 95, 0.4); color: #FF375F;
+  box-shadow: 0 0 15px rgba(255, 55, 95, 0.3), inset 0 2px 6px rgba(255, 55, 95, 0.4);
+}
+
+.section-text {
+  font-size: 28px; font-weight: 600; text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 320px;
+  letter-spacing: 0.5px;
+}
+
+/* Announcement Component */
+.announcement-section { max-width: 480px; }
+.announcement-scroll { width: 360px; overflow: hidden; position: relative; white-space: nowrap; }
+.announcement-text { 
+  display: inline-block; padding-right: 40px; 
+  animation: marquee var(--scroll-speed, 15s) linear infinite; 
+  font-size: 28px; font-weight: 600; text-shadow: 0 1px 3px rgba(0,0,0,0.4); 
+  letter-spacing: 0.5px;
+}
+.announcement-text::after { content: attr(data-text); margin-left: 40px; }
+@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+/* Music Module */
+.music-section { display: var(--music-display); max-width: 320px; }
+
+/* Link Buttons / Info Section */
+.links-section {
+  display: flex;
+  flex-direction: column;
+  padding: 12px 28px 12px 18px;
+  gap: 12px; 
+  border-radius: var(--mac-radius-lg);
+  background: var(--mac-glass-bg);
+  backdrop-filter: var(--mac-glass-blur); -webkit-backdrop-filter: var(--mac-glass-blur);
+  border: 1px solid var(--mac-border);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.25);
+  justify-content: center;
+  min-width: max-content;
+}
+
+:root[style*="--homepage-display: none"] .links-section {
+  display: none !important;
+}
+
+.info-row {
+    display: flex; align-items: center; gap: 12px;
+}
+.info-icon {
+    width: 26px; height: 26px; 
+  border-radius: 6px; 
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255,255,255,0.15);
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; box-shadow: 0 0 8px rgba(255,255,255,0.1), inset 0 1px 3px rgba(255,255,255,0.2);
+}
+.info-icon svg { width: 16px; height: 16px; display: block; margin: auto; }
+
+.info-text {
+    font-size: 18px; font-weight: 500; font-family: -apple-system, sans-serif;
+  color: rgba(255, 255, 255, 0.95);
+  letter-spacing: 0.5px;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+  line-height: 1;
+}
+
+/* 隐藏原本分别控制的样式变量覆盖，完全交由链接组控制 */
+.homepage-badge, .copyright-badge { display: flex; }
+
+/* ==============================================
+   Chat Mode Overrides (杂谈模式)
+   ============================================== */
+  body.mode-chat {
+      --mac-glass-bg: rgba(20, 20, 25, 0.85); /* 提高透明度加深背景 */
+      --mac-glass-blur: blur(80px) saturate(200%); /* 增加毛玻璃模糊半径以提升文本可读性 */        --mac-border: rgba(255, 255, 255, 0.25);
+    }
+
+    body.mode-chat .game-frame { display: none; }
+  /* In Chat Mode, Sidebar takes normal dimensions just like game mode to maintain aspect ratio/dimensions perfectly.
+     We remove the massive chat overrides. The chatbox matches Game Mode precisely. */
+body.mode-chat .mac-sidebar {
+    width: 532px;
+    height: 770px;
+    bottom: auto;
+  }
+
+  /* Redock bottom bar to Left side for Chat, turning into a full height wrapper */
+  body.mode-chat .mac-bottom-bar {
+    left: 24px; top: 56px; bottom: 24px; right: auto;
+    transform: none;
+    width: 1316px; /* 1920 - 24 (right) - 532 (sidebar) - 24 (gap) - 24 (left) = 1316px */
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+}
+
+body.mode-chat .bar-section {
+  width: auto; height: 104px; padding: 18px 36px 18px 18px;
+  gap: 24px;
+}
+body.mode-chat .section-icon { width: 68px; height: 68px; border-radius: 20px; }
+body.mode-chat .section-icon svg { width: 32px; height: 32px; }
+
+body.mode-chat .section-text {
+  font-size: 26px; white-space: normal; line-height: 1.4; width: 100%; max-width: none;
+}
+
+/* Announcement stretches horizontal at the top, rest is pushed lower-left */
+body.mode-chat .announcement-section {
+  width: 100%; /* Fill the container! */
+  max-width: none;
+  margin-bottom: auto; /* Pushes the remaining elements vertically to the bottom left */
+  order: 1;
+}
+body.mode-chat .links-section {
+  order: 2;
+}
+body.mode-chat .music-section {
+  order: 3;
+}
+body.mode-chat .game-section {
+  order: 4;
+}
+body.mode-chat .announcement-scroll { 
+  flex: 1; /* Stretch to take up the rest of the bar */
+  width: auto;
+  overflow: hidden; 
+  display: block; 
+}
+
+/* Let the announcement text use default normal mode styles, so it actually scrolls seamlessly */
+/* By removing overrides like scrollLeft animation and padding-left: 100%, we fix the text missing issue */
+
+/* --- Cinematic Light & Shadow Effects for OBS --- */
+@keyframes dynamic-glass-shadow {
+  0%, 100% {
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.2);
+    border-color: rgba(255,255,255,0.15);
+  }
+  50% {
+    box-shadow: 0 25px 50px rgba(0,0,0,0.6), 0 0 15px rgba(255,255,255,0.08), inset 0 1px 3px rgba(255,255,255,0.35);
+    border-color: rgba(255,255,255,0.3);
+  }
+}
+@keyframes icon-radiance {
+  0%, 100% {
+    filter: brightness(1) drop-shadow(0 0 4px rgba(0,0,0,0.3));
+  }
+  50% {
+    filter: brightness(1.15) drop-shadow(0 0 12px currentColor);
+  }
+}
+@keyframes text-aurora {
+  0%, 100% { text-shadow: 0 1px 3px rgba(0,0,0,0.4); opacity: 0.9; }
+  50% { text-shadow: 0 1px 3px rgba(0,0,0,0.6), 0 0 12px rgba(255,255,255,0.25); opacity: 1; }
+}
+
+.bar-section {
+  animation: dynamic-glass-shadow 5s infinite ease-in-out;
+}
+.section-icon {
+  animation: icon-radiance 4s infinite ease-in-out;
+}
+.section-text {
+  animation: text-aurora 6s infinite ease-in-out;
+}
+
+/* No Text Mode */
+body.no-text .section-text,
+body.no-text .announcement-scroll,
+body.no-text .announcement-text {
+  display: none !important;
+}
+
+body.no-text .game-section {
+  width: 300px !important;
+  height: 84px !important;
+}
+body.no-text .music-section {
+  width: 350px !important;
+  height: 84px !important;
+}
+body.no-text .announcement-section {
+  width: 500px !important;
+  height: 84px !important;
+}
+body.no-text .links-section {
+  width: auto !important;
+  padding-right: 28px !important;
+  height: 84px !important;
+}
+
+/* Chat mode adjustments for no-text */
+body.mode-chat.no-text .announcement-section {
+  width: 100% !important; /* Stretch fully across the top */
+  height: 104px !important;
+  margin-bottom: auto !important; /* Keep top alignment in chat mode */
+}
+body.mode-chat.no-text .music-section {
+  width: 360px !important; /* Keep music area same size */
+  height: 104px !important;
+}
+body.mode-chat.no-text .game-section {
+  width: 360px !important; /* Match music section size */
+  height: 104px !important;
+}
+body.mode-chat.no-text .links-section {
+  width: auto !important;
+  height: 104px !important;
+  padding-right: 36px !important;
+  flex-direction: column !important; /* Layout in two rows */
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* Chat mode icon overrides */
+body.mode-chat .svg-game { display: none !important; }
+body.mode-chat .svg-chat { display: block !important; }
+
+
+

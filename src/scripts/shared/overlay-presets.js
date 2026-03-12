@@ -6,6 +6,11 @@ const THEME_PRESETS = Object.freeze({
       '--panel-bg': 'rgba(8, 8, 12, 0.98)',
       '--panel-bg-solid': 'rgb(12, 12, 18)'
     }
+  },
+  macos: {
+    id: 'macos',
+    name: 'macOS Clear',
+    tokens: {}
   }
 });
 

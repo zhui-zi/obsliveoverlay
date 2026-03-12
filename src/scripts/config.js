@@ -17,6 +17,7 @@ const inputs = {
     game: document.getElementById('input-game'),
     speed: document.getElementById('input-speed'),
     ratio: document.getElementById('input-ratio'),
+    noText: document.getElementById('input-no-text'),
     leftAlign169: document.getElementById('input-left-align-169'),
     music: document.getElementById('input-music'),
     homepage: document.getElementById('input-homepage'),
@@ -47,7 +48,8 @@ function ensureThemeOptions() {
     if (!inputs.theme) return;
     const supportedThemeIds = getAvailableThemeIds();
     const themeLabels = {
-        cyberpunk: '⚡ Cyberpunk Glitch'
+        cyberpunk: '✦ Cyberpunk Glitch',
+        macos: ' macOS Clear'
     };
     inputs.theme.innerHTML = '';
     supportedThemeIds.forEach((themeId) => {
@@ -116,6 +118,7 @@ function syncStateToForm() {
     if (inputs.announcement) inputs.announcement.value = currentState.announcement;
     if (inputs.speed) inputs.speed.value = String(currentState.speed);
     if (inputs.ratio) inputs.ratio.value = currentState.ratio;
+    if (inputs.noText) inputs.noText.checked = !!currentState.noText;
     if (inputs.leftAlign169) inputs.leftAlign169.checked = !!currentState.leftAlign169;
     if (inputs.music) inputs.music.checked = currentState.music;
     if (inputs.homepage) inputs.homepage.checked = currentState.homepage;
@@ -141,23 +144,50 @@ function updateUI() {
 
     const isChatMode = currentState.ratio === 'chat';
     const is16x9Mode = currentState.ratio === '16:9';
+    const isMacosTheme = currentState.theme === 'macos';
+
     const neonRow = document.getElementById('row-neon');
     const flowRow = document.getElementById('row-flow-type');
     const leftAlignRow = document.getElementById('row-left-align-169');
-    if (neonRow) neonRow.style.display = isChatMode ? 'none' : 'flex';
-    if (flowRow) flowRow.style.display = isChatMode ? 'none' : 'flex';
-    if (leftAlignRow) leftAlignRow.style.display = is16x9Mode ? 'flex' : 'none';
+    
+    // Hide controls that are not supported in macOS theme
+    if (neonRow) neonRow.style.display = (isChatMode || isMacosTheme) ? 'none' : 'flex';
+    if (flowRow) flowRow.style.display = (isChatMode || isMacosTheme) ? 'none' : 'flex';
+    if (leftAlignRow) leftAlignRow.style.display = (is16x9Mode && !isMacosTheme) ? 'flex' : 'none';
+
+    // Handle Colors and Layout options that macOS doesn't support
+    const colorPresetForm = document.getElementById('input-color-preset')?.closest('.form-group');
+    const colorGrid = document.querySelector('.color-grid');
+    if (colorPresetForm) colorPresetForm.style.display = isMacosTheme ? 'none' : 'block';
+    if (colorGrid) colorGrid.style.display = isMacosTheme ? 'none' : 'grid';
+
+    // Disable 21:9 in macos theme
+    if (inputs.ratio) {
+        const opt219 = inputs.ratio.querySelector('option[value="21:9"]');
+        if (opt219) {
+            opt219.style.display = isMacosTheme ? 'none' : 'block';
+            opt219.disabled = isMacosTheme;
+        }
+    }
 }
 
 function updatePreview() {
     const params = serializeConfigToParams(currentState, DEFAULT_OVERLAY_CONFIG);
     const queryString = params.toString();
 
-    if (iframe && iframe.contentWindow) {
-        iframe.contentWindow.postMessage({ type: 'updateConfig', queryString }, '*');
+    const targetHtml = currentState.theme === 'macos' ? 'overlay-macos.html' : 'overlay.html';
+
+    if (iframe) {
+        // Only update src if the HTML file changed or it's the first load
+        const currentPath = iframe.src ? new URL(iframe.src).pathname.split('/').pop() : '';
+        if (currentPath !== targetHtml) {
+            iframe.src = targetHtml + '?' + queryString;
+        } else if (iframe.contentWindow) {
+            iframe.contentWindow.postMessage({ type: 'updateConfig', queryString }, '*');
+        }
     }
 
-    const fullUrl = new URL('overlay.html', window.location.href);
+    const fullUrl = new URL(targetHtml, window.location.href);
     fullUrl.search = queryString;
     if (urlDisplay) urlDisplay.textContent = fullUrl.href;
 }
@@ -178,6 +208,8 @@ function applyInputChange(target) {
         currentState.announcement = target.value;
     } else if (target === inputs.speed) {
         currentState.speed = Number(target.value) || DEFAULT_OVERLAY_CONFIG.speed;
+    } else if (target === inputs.noText) {
+        currentState.noText = !!target.checked;
     } else if (target === inputs.leftAlign169) {
         currentState.leftAlign169 = !!target.checked;
     } else if (target === inputs.flowType) {

@@ -85,6 +85,7 @@ function applyToggleState(config) {
 
   refs.body.classList.toggle('music-hidden', !config.music);
   refs.body.classList.toggle('neon-enabled', !!config.neon);
+  refs.body.classList.toggle('no-text', !!config.noText);
 }
 
 function applyFlowEffect(flowType) {
