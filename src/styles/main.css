@@ -591,19 +591,18 @@
     }
 
     body[data-theme="minimal-light"] .effect-glow .path-main {
+      stroke: url(#beamGradient);
       stroke-width: 8;
       opacity: 0.95;
-      animation: minimal-glow-breathe 3.2s ease-in-out infinite;
+      animation: minimal-rainbow-glow 4.5s linear infinite;
     }
 
-    @keyframes minimal-glow-breathe {
+    @keyframes minimal-rainbow-glow {
       0%, 100% {
-        stroke: var(--primary-green);
-        filter: drop-shadow(0 0 6px var(--primary-green)) drop-shadow(0 0 24px var(--primary-green));
+        filter: hue-rotate(0deg) saturate(1.15) drop-shadow(0 0 8px rgba(255, 0, 77, 0.9)) drop-shadow(0 0 28px rgba(0, 176, 255, 0.75));
       }
-      50% {
-        stroke: var(--primary-purple);
-        filter: drop-shadow(0 0 10px var(--primary-purple)) drop-shadow(0 0 30px var(--primary-purple));
+      100% {
+        filter: hue-rotate(360deg) saturate(1.15) drop-shadow(0 0 8px rgba(255, 0, 77, 0.9)) drop-shadow(0 0 28px rgba(0, 176, 255, 0.75));
       }
     }
 

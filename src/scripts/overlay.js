@@ -15,6 +15,22 @@ const refs = {
   frameRects: ['rect-bg', 'rect-main', 'rect-glitch'].map((id) => document.getElementById(id))
 };
 
+const DEFAULT_GRADIENT_STOPS = Object.freeze([
+  { offset: '0%', color: 'var(--primary-green)' },
+  { offset: '50%', color: 'var(--primary-purple)' },
+  { offset: '100%', color: 'var(--primary-green)' }
+]);
+
+const MINIMAL_RAINBOW_STOPS = Object.freeze([
+  { offset: '0%', color: '#FF004D' },
+  { offset: '17%', color: '#FF7A00' },
+  { offset: '34%', color: '#FFD400' },
+  { offset: '50%', color: '#00E676' },
+  { offset: '67%', color: '#00B0FF' },
+  { offset: '84%', color: '#7C4DFF' },
+  { offset: '100%', color: '#FF004D' }
+]);
+
 const CENTERED_16_9 = Object.freeze({
   frameRect: { x: 238.5, y: 10, width: 1463, height: 823 },
   fillerLeftWidth: '230px',
@@ -65,7 +81,10 @@ function applyLayout(mode, leftAlign169 = false) {
 
   let frameRect = mode === '16:9' ? layout16x9.frameRect : preset.frameRect;
   if (isMinimalLightTheme) {
+    if (refs.beamSvg) refs.beamSvg.setAttribute('viewBox', '0 0 1920 1080');
     frameRect = { x: 192, y: 108, width: 1536, height: 864 };
+  } else if (refs.beamSvg) {
+    refs.beamSvg.setAttribute('viewBox', '0 0 1940 843');
   }
 
   refs.frameRects.forEach((rect) => {
@@ -78,11 +97,28 @@ function applyLayout(mode, leftAlign169 = false) {
   });
 }
 
+function applyBeamGradient(themeId) {
+  const gradient = document.getElementById('beamGradient');
+  if (!gradient) return;
+
+  const stopPalette = themeId === 'minimal-light' ? MINIMAL_RAINBOW_STOPS : DEFAULT_GRADIENT_STOPS;
+  gradient.replaceChildren();
+
+  stopPalette.forEach((stopDef) => {
+    const stop = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+    stop.setAttribute('offset', stopDef.offset);
+    stop.style.stopColor = stopDef.color;
+    stop.style.stopOpacity = '1';
+    gradient.appendChild(stop);
+  });
+}
+
 function applyTheme(themeId, color1, color2) {
   const themePreset = resolveThemePreset(themeId);
   refs.body.dataset.theme = themePreset.id;
   applyCssVariables(refs.root, themePreset.tokens);
   applyCssVariables(refs.root, buildColorTokens(color1, color2));
+  applyBeamGradient(themeId);
 }
 
 function applyToggleState(config) {
