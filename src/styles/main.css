@@ -653,7 +653,6 @@
       height: 68px;
       display: inline-flex;
       align-items: stretch;
-      gap: 14px;
       animation: minimal-datetime-fade-in 0.8s ease-out;
     }
 
