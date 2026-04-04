@@ -11,6 +11,14 @@ const THEME_PRESETS = Object.freeze({
     id: 'macos',
     name: 'macOS Clear',
     tokens: {}
+  },
+  'minimal-light': {
+    id: 'minimal-light',
+    name: 'Minimal Light Shadow',
+    tokens: {
+      '--panel-bg': 'transparent',
+      '--panel-bg-solid': 'transparent'
+    }
   }
 });
 
@@ -21,7 +29,7 @@ const LAYOUT_PRESETS = Object.freeze({
     bodyClass: 'mode-chat',
     showFrame: false,
     showSideFillers: false,
-    frameRect: { x: 10, width: 1920 },
+    frameRect: { x: 10, y: 10, width: 1920, height: 823 },
     cssVars: {
       '--top-bar-height': '129px',
       '--bottom-bar-height': '128px',
@@ -34,7 +42,7 @@ const LAYOUT_PRESETS = Object.freeze({
     bodyClass: '',
     showFrame: true,
     showSideFillers: false,
-    frameRect: { x: 10, width: 1920 },
+    frameRect: { x: 10, y: 10, width: 1920, height: 823 },
     cssVars: {
       '--top-bar-height': '129px',
       '--bottom-bar-height': '128px',
@@ -47,7 +55,7 @@ const LAYOUT_PRESETS = Object.freeze({
     bodyClass: '',
     showFrame: true,
     showSideFillers: true,
-    frameRect: { x: 238.5, width: 1463 },
+    frameRect: { x: 238.5, y: 10, width: 1463, height: 823 },
     cssVars: {
       '--top-bar-height': '129px',
       '--bottom-bar-height': '128px',

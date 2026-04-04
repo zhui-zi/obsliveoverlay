@@ -16,13 +16,13 @@ const refs = {
 };
 
 const CENTERED_16_9 = Object.freeze({
-  frameRect: { x: 238.5, width: 1463 },
+  frameRect: { x: 238.5, y: 10, width: 1463, height: 823 },
   fillerLeftWidth: '230px',
   fillerRightWidth: '230px'
 });
 
 const LEFT_ALIGNED_16_9 = Object.freeze({
-  frameRect: { x: 28.5, width: 1463 },
+  frameRect: { x: 28.5, y: 10, width: 1463, height: 823 },
   fillerLeftWidth: '18px',
   fillerRightWidth: '440px'
 });
@@ -46,6 +46,7 @@ function updateMarqueeSpeed(baseSpeed) {
 
 function applyLayout(mode, leftAlign169 = false) {
   const preset = resolveLayoutPreset(mode);
+  const isMinimalLightTheme = refs.body?.dataset?.theme === 'minimal-light';
   const useLeftAligned16x9 = mode === '16:9' && leftAlign169;
   const layout16x9 = useLeftAligned16x9 ? LEFT_ALIGNED_16_9 : CENTERED_16_9;
 
@@ -58,15 +59,22 @@ function applyLayout(mode, leftAlign169 = false) {
   refs.root.style.setProperty('--filler-right-width', mode === '16:9' ? layout16x9.fillerRightWidth : '230px');
 
   if (refs.gameLabel) refs.gameLabel.textContent = preset.gameLabel;
-  if (refs.sideFillers) refs.sideFillers.style.display = preset.showSideFillers ? 'block' : 'none';
+  if (refs.sideFillers) {
+    refs.sideFillers.style.display = (!isMinimalLightTheme && preset.showSideFillers) ? 'block' : 'none';
+  }
 
-  const frameRect = mode === '16:9' ? layout16x9.frameRect : preset.frameRect;
+  let frameRect = mode === '16:9' ? layout16x9.frameRect : preset.frameRect;
+  if (isMinimalLightTheme) {
+    frameRect = { x: 192, y: 108, width: 1536, height: 864 };
+  }
 
   refs.frameRects.forEach((rect) => {
     if (!rect) return;
-    rect.style.display = preset.showFrame ? 'block' : 'none';
+    rect.style.display = (isMinimalLightTheme || preset.showFrame) ? 'block' : 'none';
     rect.setAttribute('width', frameRect.width);
     rect.setAttribute('x', frameRect.x);
+    rect.setAttribute('y', frameRect.y);
+    rect.setAttribute('height', frameRect.height);
   });
 }
 
@@ -88,10 +96,11 @@ function applyToggleState(config) {
   refs.body.classList.toggle('no-text', !!config.noText);
 }
 
-function applyFlowEffect(flowType) {
+function applyFlowEffect(flowType, themeId) {
   if (!refs.beamSvg) return;
+  const finalFlowType = themeId === 'minimal-light' ? 'glow' : flowType;
   refs.beamSvg.classList.remove('effect-beam', 'effect-glow');
-  refs.beamSvg.classList.add(`effect-${flowType}`);
+  refs.beamSvg.classList.add(`effect-${finalFlowType}`);
 }
 
 function applyGameText(text) {
@@ -110,10 +119,10 @@ function applyConfig(paramsSource) {
 
   updateAnnouncement(config.announcement);
   applyGameText(gameText);
-  applyLayout(config.ratio, config.leftAlign169);
   applyTheme(config.theme, config.color1, config.color2);
+  applyLayout(config.ratio, config.leftAlign169);
   applyToggleState(config);
-  applyFlowEffect(config.flowType);
+  applyFlowEffect(config.flowType, config.theme);
 
   setTimeout(() => updateMarqueeSpeed(config.speed), 100);
   if (!loadListenerAttached) {

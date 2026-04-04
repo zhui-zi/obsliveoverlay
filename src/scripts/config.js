@@ -49,7 +49,8 @@ function ensureThemeOptions() {
     const supportedThemeIds = getAvailableThemeIds();
     const themeLabels = {
         cyberpunk: '✦ Cyberpunk Glitch',
-        macos: ' macOS Clear'
+        macos: ' macOS Clear',
+        'minimal-light': '◻ 极简光影'
     };
     inputs.theme.innerHTML = '';
     supportedThemeIds.forEach((themeId) => {

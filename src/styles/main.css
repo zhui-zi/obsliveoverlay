@@ -564,6 +564,49 @@
         }
     }
 
+    /* ========== 极简光影主题：仅保留流光边框 ========== */
+    body[data-theme="minimal-light"] .overlay > :not(.game-frame) {
+      display: none !important;
+    }
+
+    body[data-theme="minimal-light"] .game-frame {
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1080px;
+      z-index: 50;
+    }
+
+    body[data-theme="minimal-light"] .beam-svg {
+      width: 1920px;
+      height: 1080px;
+      top: 0;
+      left: 0;
+      overflow: visible;
+    }
+
+    body[data-theme="minimal-light"] .path-bg,
+    body[data-theme="minimal-light"] .path-glitch {
+      display: none !important;
+    }
+
+    body[data-theme="minimal-light"] .effect-glow .path-main {
+      stroke-width: 8;
+      opacity: 0.95;
+      animation: minimal-glow-breathe 3.2s ease-in-out infinite;
+    }
+
+    @keyframes minimal-glow-breathe {
+      0%, 100% {
+        stroke: var(--primary-green);
+        filter: drop-shadow(0 0 6px var(--primary-green)) drop-shadow(0 0 24px var(--primary-green));
+      }
+      50% {
+        stroke: var(--primary-purple);
+        filter: drop-shadow(0 0 10px var(--primary-purple)) drop-shadow(0 0 30px var(--primary-purple));
+      }
+    }
+
     /* 主线条：颜色渐变和发光 */
     .path-main {
       stroke: url(#beamGradient);
