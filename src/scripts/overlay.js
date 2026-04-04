@@ -82,7 +82,7 @@ function applyLayout(mode, leftAlign169 = false) {
   let frameRect = mode === '16:9' ? layout16x9.frameRect : preset.frameRect;
   if (isMinimalLightTheme) {
     if (refs.beamSvg) refs.beamSvg.setAttribute('viewBox', '0 0 1920 1080');
-    frameRect = { x: 96, y: 54, width: 1728, height: 972 };
+    frameRect = { x: 40, y: 24, width: 1728, height: 972 };
   } else if (refs.beamSvg) {
     refs.beamSvg.setAttribute('viewBox', '0 0 1940 843');
   }
