@@ -645,7 +645,7 @@
 
     body[data-theme="minimal-light"] .minimal-datetime {
       position: absolute;
-      left: var(--minimal-clock-left, 40px);
+      right: var(--minimal-clock-right, 40px);
       top: var(--minimal-clock-top, 1004px);
       z-index: 60;
       pointer-events: none;

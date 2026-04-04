@@ -84,7 +84,7 @@ function applyLayout(mode, leftAlign169 = false) {
   let frameRect = mode === '16:9' ? layout16x9.frameRect : preset.frameRect;
   if (isMinimalLightTheme) {
     if (refs.beamSvg) refs.beamSvg.setAttribute('viewBox', '0 0 1920 1080');
-    frameRect = { x: 40, y: 24, width: 1728, height: 972 };
+    frameRect = { x: 152, y: 24, width: 1728, height: 972 };
   } else if (refs.beamSvg) {
     refs.beamSvg.setAttribute('viewBox', '0 0 1940 843');
   }
@@ -102,6 +102,7 @@ function applyLayout(mode, leftAlign169 = false) {
 
   if (isMinimalLightTheme) {
     refs.root.style.setProperty('--minimal-clock-left', `${frameRect.x}px`);
+    refs.root.style.setProperty('--minimal-clock-right', `${1920 - (frameRect.x + frameRect.width)}px`);
     refs.root.style.setProperty('--minimal-clock-top', `${frameRect.y + frameRect.height + 8}px`);
   }
 }
