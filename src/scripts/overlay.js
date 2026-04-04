@@ -12,6 +12,8 @@ const refs = {
   beamSvg: document.querySelector('.beam-svg'),
   sideFillers: document.getElementById('sideFillers'),
   clock: document.getElementById('clock'),
+  minimalClock: document.getElementById('minimalClock'),
+  minimalDate: document.getElementById('minimalDate'),
   frameRects: ['rect-bg', 'rect-main', 'rect-glitch'].map((id) => document.getElementById(id))
 };
 
@@ -94,7 +96,14 @@ function applyLayout(mode, leftAlign169 = false) {
     rect.setAttribute('x', frameRect.x);
     rect.setAttribute('y', frameRect.y);
     rect.setAttribute('height', frameRect.height);
+    rect.setAttribute('rx', isMinimalLightTheme ? '0' : '30');
+    rect.setAttribute('ry', isMinimalLightTheme ? '0' : '30');
   });
+
+  if (isMinimalLightTheme) {
+    refs.root.style.setProperty('--minimal-clock-left', `${frameRect.x}px`);
+    refs.root.style.setProperty('--minimal-clock-top', `${frameRect.y + frameRect.height + 8}px`);
+  }
 }
 
 function applyBeamGradient(themeId) {
@@ -172,6 +181,15 @@ function updateClock() {
   const pad = (value) => String(value).padStart(2, '0');
   const time = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
   if (refs.clock) refs.clock.textContent = time;
+
+  if (refs.minimalClock) {
+    refs.minimalClock.textContent = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+  }
+
+  if (refs.minimalDate) {
+    const weekday = now.toLocaleDateString('en-US', { weekday: 'long' }).toUpperCase();
+    refs.minimalDate.textContent = `${now.getFullYear()}.${pad(now.getMonth() + 1)}.${pad(now.getDate())} ${weekday}`;
+  }
 }
 
 window.addEventListener('message', (event) => {
