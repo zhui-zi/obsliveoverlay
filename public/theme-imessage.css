@@ -92,6 +92,8 @@
       color: var(--text);
       background-color: var(--bg);
       border-radius: calc(var(--1px) * 18);
+      /* 收敛气泡尾部的内弧圆角，让尾巴能够严丝合缝地拼接而无需重叠 */
+      border-bottom-left-radius: calc(var(--1px) * 2);
       font-size: calc(var(--event-font-size) * 1);
       line-height: 1.4;
       max-width: 80%;
@@ -101,18 +103,17 @@
     }
 
     /* iMessage 的小尾巴（左侧） */
-    /* 由于 OBS 背景透明，传统的“用背景色盖住圆角”的方法不适用，我们使用特殊的圆角与裁剪 */
+    /* 因为透明度层叠问题，我们禁止尾巴与气泡重叠，将其刚好放置在气泡外部并模拟外抛曲线 */
     &:not(.has-emotes) .message::before {
       content: "";
       position: absolute;
       bottom: 0;
       left: calc(var(--1px) * -6);
-      width: calc(var(--1px) * 16);
+      width: calc(var(--1px) * 6);
       height: calc(var(--1px) * 14);
-      background-color: inherit;
-      border-bottom-right-radius: calc(var(--1px) * 16);
-      /* 裁剪出平滑的尾部曲线 */
-      clip-path: polygon(100% 0, 100% 100%, 0 100%);
+      background-color: var(--bg);
+      /* 利用椭圆裁剪成经典尾巴弧度，100% 100% 指的是右下角 */
+      clip-path: ellipse(100% 100% at 100% 100%);
       z-index: -1;
     }
 
