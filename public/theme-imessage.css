@@ -91,43 +91,28 @@
       padding: calc(var(--1px) * 8) calc(var(--1px) * 14);
       color: var(--text);
       background-color: var(--bg);
-      border-radius: calc(var(--1px) * 18) !important;
-      /* 收敛气泡尾部的内弧圆角，让尾巴能够严丝合缝地拼接而无需重叠 */
-      border-bottom-left-radius: calc(var(--1px) * 2) !important;
+      border-radius: calc(var(--1px) * 18);
       font-size: calc(var(--event-font-size) * 1);
       line-height: 1.4;
       max-width: 80%;
       word-wrap: break-word;
       /* 极其轻微的阴影提升质感 */
       box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-      border: none !important;
     }
 
-    /* 彻底屏蔽原有附带的多余形状（主要是原版弹幕机中写死的 ::before 三角形） */
-    .message::before {
-      display: none !important;
-      content: none !important;
-      border: none !important;
-      width: 0 !important;
-      height: 0 !important;
-    }
-
-    /* iMessage 的小尾巴（左侧），改用 ::after 杜绝任何旧样式污染 */
-    /* 因为透明度层叠问题，我们禁止尾巴与气泡重叠，将其刚好放置在气泡外部并模拟外抛曲线 */
-    &:not(.has-emotes) .message::after {
+    /* iMessage 的小尾巴（左侧） */
+    /* 由于 OBS 背景透明，传统的“用背景色盖住圆角”的方法不适用，我们使用特殊的圆角与裁剪 */
+    &:not(.has-emotes) .message::before {
       content: "";
-      position: absolute !important;
-      display: block !important;
-      top: auto !important;
-      bottom: 0 !important;
-      left: calc(var(--1px) * -6) !important;
-      width: calc(var(--1px) * 6) !important;
-      height: calc(var(--1px) * 14) !important;
-      background-color: var(--bg) !important;
-      border: none !important;
-      transform: none !important;
-      /* 利用椭圆裁剪成经典尾巴弧度，100% 100% 指的是右下角 */
-      clip-path: ellipse(100% 100% at 100% 100%) !important;
+      position: absolute;
+      bottom: 0;
+      left: calc(var(--1px) * -6);
+      width: calc(var(--1px) * 16);
+      height: calc(var(--1px) * 14);
+      background-color: inherit;
+      border-bottom-right-radius: calc(var(--1px) * 16);
+      /* 裁剪出平滑的尾部曲线 */
+      clip-path: polygon(100% 0, 100% 100%, 0 100%);
       z-index: -1;
     }
 
@@ -186,7 +171,7 @@
       }
 
       &.user-type--streamer {
-         --bg: rgba(15, 90, 45, 0.55); /* 半透明磨砂深绿色 */
+         --bg: rgba(20, 100, 45, 0.55); /* 半透明磨砂深绿色 */
       }
     }
   }
