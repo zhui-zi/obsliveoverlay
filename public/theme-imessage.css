@@ -100,18 +100,21 @@
       box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     }
 
-    /* iMessage 的小尾巴（左侧） */
-    /* 由于 OBS 背景透明，传统的“用背景色盖住圆角”的方法不适用，我们使用特殊的圆角与裁剪 */
+    /* iMessage 的小尾巴（左侧）- 防重叠优化 */
+    /* 我们将尾巴部分独立于气泡左外侧，并将气泡左下角变直角拼接，完美避免半透明涂层的重叠变暗 */
+    &:not(.has-emotes) .message {
+      border-bottom-left-radius: calc(var(--1px) * 1);
+    }
     &:not(.has-emotes) .message::before {
       content: "";
       position: absolute;
       bottom: 0;
-      left: calc(var(--1px) * -6);
-      width: calc(var(--1px) * 16);
-      height: calc(var(--1px) * 14);
+      left: calc(var(--1px) * -12);
+      width: calc(var(--1px) * 12);
+      height: calc(var(--1px) * 16);
       background-color: inherit;
-      border-bottom-right-radius: calc(var(--1px) * 16);
-      /* 裁剪出平滑的尾部曲线 */
+      border-bottom-left-radius: calc(var(--1px) * 14);
+      /* 裁剪尾部曲线 */
       clip-path: polygon(100% 0, 100% 100%, 0 100%);
       z-index: -1;
     }
@@ -158,7 +161,7 @@
       --bg: rgba(15, 45, 90, 0.55); /* 深蓝色半透明毛玻璃材质 */
       --text: #FFFFFF;
       /* 增强在深色模式下的反光质感 */
-      .message {
+      .message, &:not(.has-emotes) .message::before {
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
         box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1), 0 1px 3px rgba(0, 0, 0, 0.2);
