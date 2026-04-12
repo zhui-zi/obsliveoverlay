@@ -29,16 +29,33 @@
     }
   }
 
-  /* iMessage 经典入场动画：从底部滑入并且轻微放大 */
+  /* iMessage 经典入场动画：从底部滑入并带有果冻回弹 */
   @keyframes imessage-in {
     0% {
       opacity: 0;
-      transform: translateY(12px) scale(0.95);
+      transform: translateY(16px) scale(0.85);
+    }
+    60% {
+      opacity: 1;
+      transform: translateY(-2px) scale(1.02);
     }
     100% {
       opacity: 1;
       transform: translateY(0) scale(1);
     }
+  }
+
+  /* 增强用户名发光阴影以防止在某些游戏画面中看不清 */
+  .event--message .username,
+  .event--system .content,
+  .event--superchat .content,
+  .event--toast .content,
+  .event--gift .content {
+    /* 使用双层描边+弥散阴影的方式提供最高对比度 */
+    text-shadow: 
+      0 1px 2px rgba(0, 0, 0, 0.8),
+      0 0 4px rgba(0, 0, 0, 0.4),
+      0 0px 1px rgba(0, 0, 0, 0.9);
   }
 
   .event--message {
