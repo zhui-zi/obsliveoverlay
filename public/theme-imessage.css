@@ -103,9 +103,18 @@
       border: none !important;
     }
 
-    /* iMessage 的小尾巴（左侧） */
+    /* 彻底屏蔽原有附带的多余形状（主要是原版弹幕机中写死的 ::before 三角形） */
+    .message::before {
+      display: none !important;
+      content: none !important;
+      border: none !important;
+      width: 0 !important;
+      height: 0 !important;
+    }
+
+    /* iMessage 的小尾巴（左侧），改用 ::after 杜绝任何旧样式污染 */
     /* 因为透明度层叠问题，我们禁止尾巴与气泡重叠，将其刚好放置在气泡外部并模拟外抛曲线 */
-    &:not(.has-emotes) .message::before {
+    &:not(.has-emotes) .message::after {
       content: "";
       position: absolute !important;
       display: block !important;
