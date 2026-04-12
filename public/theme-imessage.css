@@ -91,29 +91,34 @@
       padding: calc(var(--1px) * 8) calc(var(--1px) * 14);
       color: var(--text);
       background-color: var(--bg);
-      border-radius: calc(var(--1px) * 18);
+      border-radius: calc(var(--1px) * 18) !important;
       /* 收敛气泡尾部的内弧圆角，让尾巴能够严丝合缝地拼接而无需重叠 */
-      border-bottom-left-radius: calc(var(--1px) * 2);
+      border-bottom-left-radius: calc(var(--1px) * 2) !important;
       font-size: calc(var(--event-font-size) * 1);
       line-height: 1.4;
       max-width: 80%;
       word-wrap: break-word;
       /* 极其轻微的阴影提升质感 */
       box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      border: none !important;
     }
 
     /* iMessage 的小尾巴（左侧） */
     /* 因为透明度层叠问题，我们禁止尾巴与气泡重叠，将其刚好放置在气泡外部并模拟外抛曲线 */
     &:not(.has-emotes) .message::before {
       content: "";
-      position: absolute;
-      bottom: 0;
-      left: calc(var(--1px) * -6);
-      width: calc(var(--1px) * 6);
-      height: calc(var(--1px) * 14);
-      background-color: var(--bg);
+      position: absolute !important;
+      display: block !important;
+      top: auto !important;
+      bottom: 0 !important;
+      left: calc(var(--1px) * -6) !important;
+      width: calc(var(--1px) * 6) !important;
+      height: calc(var(--1px) * 14) !important;
+      background-color: var(--bg) !important;
+      border: none !important;
+      transform: none !important;
       /* 利用椭圆裁剪成经典尾巴弧度，100% 100% 指的是右下角 */
-      clip-path: ellipse(100% 100% at 100% 100%);
+      clip-path: ellipse(100% 100% at 100% 100%) !important;
       z-index: -1;
     }
 
