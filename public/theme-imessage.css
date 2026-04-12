@@ -1,0 +1,153 @@
+/*
+  @title        Apple iMessage Style
+  @description  仿 Apple iMessage 风格的弹幕样式，包含精致的动画与拟物化气泡细节。
+  @author       GitHub Copilot
+  @version      1.0.0
+*/
+
+@layer remote-css {
+  /* 全局 OKLCH 配置 */
+  [data-theme="light"] {
+    --mix-base: #000;
+    --mix-factor: 98%;
+  }
+
+  body {
+    background-color: transparent;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+
+  .event {
+    --event-font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    transition: 0.3s opacity ease, 0.3s transform ease;
+    
+    .meta .avatar--sender {
+      --avatar-size: calc(var(--1px) * 32);
+      top: calc(var(--1px) * 8);
+      border-radius: 50%;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  /* iMessage 经典入场动画：从底部滑入并且轻微放大 */
+  @keyframes imessage-in {
+    0% {
+      opacity: 0;
+      transform: translateY(12px) scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .event--message {
+    /* 默认普通用户：iMessage 灰色 */
+    --text: #000000;
+    --bg: #E9E9EB;
+    /* 深色模式下变量映射可以在后面定义，这里以浅色为主 */
+    
+    transform-origin: bottom left;
+
+    /* 舰长/提督/总督：iMessage 蓝色（对应 iMessage 里的主气泡） */
+    &.guard-level--1,
+    &.guard-level--2,
+    &.guard-level--3 {
+      --text: #FFFFFF;
+      --bg: #0B84FE; 
+    }
+
+    /* 主播：iMessage 绿色（对应 SMS 短信气泡） */
+    &.user-type--streamer {
+      --text: #FFFFFF;
+      --bg: #34C759;
+    }
+
+    .message {
+      --margin-left: 42;
+      position: relative;
+      display: inline-block;
+      margin-left: calc(var(--1px) * var(--margin-left));
+      margin-top: calc(var(--1px) * 4);
+      padding: calc(var(--1px) * 8) calc(var(--1px) * 14);
+      color: var(--text);
+      background-color: var(--bg);
+      border-radius: calc(var(--1px) * 18);
+      font-size: calc(var(--event-font-size) * 1);
+      line-height: 1.4;
+      max-width: 80%;
+      word-wrap: break-word;
+      /* 极其轻微的阴影提升质感 */
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    /* iMessage 的小尾巴（左侧） */
+    /* 由于 OBS 背景透明，传统的“用背景色盖住圆角”的方法不适用，我们使用特殊的圆角与裁剪 */
+    &:not(.has-emotes) .message::before {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: calc(var(--1px) * -6);
+      width: calc(var(--1px) * 16);
+      height: calc(var(--1px) * 14);
+      background-color: inherit;
+      border-bottom-right-radius: calc(var(--1px) * 16);
+      /* 裁剪出平滑的尾部曲线 */
+      clip-path: polygon(100% 0, 100% 100%, 0 100%);
+      z-index: -1;
+    }
+
+    /* 移除包含大表情的外边框和底色 */
+    &.has-emotes .message {
+      background-color: transparent !important;
+      padding: 0 !important;
+      box-shadow: none !important;
+    }
+
+    .emote {
+      max-height: calc(var(--event-line-height) * 2.5);
+    }
+
+    /* 应用入场动画 */
+    .can-motion &:nth-last-child(-n + 2) {
+      animation: imessage-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1) 1;
+    }
+  }
+
+  /* 全局渐变淡出遮罩（列表上下边缘隐去） */
+  .event-list {
+    --offset: 40px;
+    mask-image: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0),
+      rgba(0, 0, 0, 1) var(--offset),
+      rgba(0, 0, 0, 1) calc(100% - var(--offset)),
+      rgba(0, 0, 0, 0)
+    );
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0),
+      rgba(0, 0, 0, 1) var(--offset),
+      rgba(0, 0, 0, 1) calc(100% - var(--offset)),
+      rgba(0, 0, 0, 0)
+    );
+  }
+
+  /* 深色模式支持 */
+  .scheme-dark {
+    .event--message {
+      --bg: #262628; /* 深色模式下的灰色气泡 */
+      --text: #FFFFFF;
+
+      &.guard-level--1,
+      &.guard-level--2,
+      &.guard-level--3 {
+         --bg: #0A84FF; /* 深色蓝 */
+      }
+
+      &.user-type--streamer {
+         --bg: #30D158; /* 深色绿 */
+      }
+    }
+  }
+}

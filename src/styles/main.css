@@ -1,4 +1,4 @@
-:root {
+﻿:root {
       /* ===== 📝 文字内容配置 ===== */
       --announcement-text: "没啥好说的，都来我家喝酒吧！";
       --game-name-text: "cities skylines 2";
@@ -498,7 +498,7 @@
     .beam-svg {
       width: 1940px;
       height: 843px;
-      display: block;
+      display: inline;
       overflow: visible;
       position: absolute;
       top: -10px;
@@ -599,7 +599,7 @@
     }
 
     body[data-theme="minimal-light"] .effect-glow .path-glitch {
-      display: block;
+      display: inline;
       stroke: url(#beamGradient);
       stroke-width: 12;
       stroke-linejoin: miter;
@@ -695,7 +695,7 @@
       font-size: 36px;
       letter-spacing: 3px;
       line-height: 1;
-      display: block;
+      display: inline;
       width: 100%;
       white-space: nowrap;
       text-align: center;
@@ -715,7 +715,7 @@
       font-family: 'Google Sans Mono', 'Consolas', monospace;
       font-size: 13px;
       letter-spacing: 1.8px;
-      display: block;
+      display: inline;
       width: 100%;
       white-space: nowrap;
       text-align: center;
@@ -2178,7 +2178,7 @@
     }
 
     body.mode-chat .chat-left-deco {
-        display: block;
+        display: inline;
     }
 
     /* 1. 旋转的赛博罗盘 */
@@ -2699,4 +2699,54 @@
     }
 
 
+
+
+/* ========== �ɰ�ͼ��߿� ========== */
+.cute-border-layer {
+  display: none;
+  pointer-events: none;
+}
+
+body.cute-border-enabled .cute-border-layer {
+  display: inline;
+}
+
+body[data-theme="minimal-light"] .cute-border-layer {
+  display: none; /* Default theme hides it unless cute-border-enabled is added */
+}
+body[data-theme="minimal-light"].cute-border-enabled .cute-border-layer {
+  display: inline; /* Override priority for minimal-light */
+}
+
+/* ����ԭ�������ߣ�����ɰ��߿�������Ǽ����Ӱ�����������У�*/
+body.cute-border-enabled[data-theme="minimal-light"] .neon-path {
+  /* opacity: 0.15; ���Խ���ԭ�б߿�͸���ȣ����߱�����������Ч */
+}
+
+/* ����/��̬Ч�� */
+.cute-border-layer text {
+  animation: cutePulse 3s ease-in-out infinite alternate;
+  letter-spacing: 12px;
+}
+
+@keyframes cutePulse {
+  0% { transform: scale(0.99) translate(10px, 5px); }
+  100% { transform: scale(1.01) translate(-5px, -10px); }
+}
+
+
+.cute-border-layer {
+  transform-origin: center;
+}
+
+
+/* ȷ��ֻ�ڼ����Ӱ����ʾ */
+body:not([data-theme="minimal-light"]) .cute-border-layer {
+  display: none !important;
+}
+
+
+body.cute-border-enabled[data-theme="minimal-light"] .neon-path {
+  
+}
 
