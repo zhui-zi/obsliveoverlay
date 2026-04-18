@@ -1,0 +1,176 @@
+@charset "utf-8";
+
+/*
+  @title        Flat Capsule
+  @author       ObsLiveOverlay
+  @description  扁平半透明胶囊风格弹幕样式，所有弹幕类型完美适配，带有精美的进入动画和发光特效。
+  @updated      April 18, 2026
+  @version      1.0.0
+*/
+
+@layer template {
+    :root {
+        --capsule-bg: rgba(20, 20, 25, 0.65);
+        --capsule-blur: 12px;
+        --text-primary: rgba(255, 255, 255, 0.95);
+        --text-secondary: rgba(255, 255, 255, 0.7);
+        --accent-normal: #3b82f6;
+        --accent-superchat: #a855f7;
+        --accent-gift: #ef4444;
+        --accent-system: #10b981;
+        --accent-guard1: #0284c7; /* 舰长 */
+        --accent-guard2: #7e22ce; /* 提督 */
+        --accent-guard3: #b91c1c; /* 总督 */
+    }
+
+    body {
+        background-color: transparent;
+        font-family: "MiSans", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;
+    }
+
+    .log-container {
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+        overflow: hidden;
+    }
+
+    .event {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        width: fit-content;
+        max-width: 95%;
+        margin-bottom: 12px;
+        padding: 6px 16px 6px 8px; /* Extra left padding for avatar overlap */
+        border-radius: 999px; /* Capsule shape */
+        background: var(--capsule-bg);
+        backdrop-filter: blur(var(--capsule-blur));
+        -webkit-backdrop-filter: blur(var(--capsule-blur));
+        color: var(--text-primary);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), inset 0 0 1px rgba(255, 255, 255, 0.1);
+        transform-origin: left center;
+        animation: capsule-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        border-left: 4px solid var(--accent-normal);
+        transition: all 0.3s ease;
+    }
+
+    @keyframes capsule-in {
+        0% {
+            opacity: 0;
+            transform: translateX(-30px) scale(0.95);
+        }
+        100% {
+            opacity: 1;
+            transform: translateX(0) scale(1);
+        }
+    }
+
+    /* Wrap & Layout inside event */
+    .event-wrap {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+    }
+
+    .meta {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-shrink: 0;
+    }
+
+    .avatar--sender {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        object-fit: cover;
+    }
+
+    .username {
+        font-weight: 600;
+        font-size: 14px;
+        color: var(--text-secondary);
+        white-space: nowrap;
+    }
+
+    .message, .content {
+        font-size: 15px;
+        line-height: 1.4;
+        word-break: break-word;
+        display: inline-flex;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    /* Badges / Emotes */
+    .badge, .emote {
+        height: 20px;
+        border-radius: 4px;
+        vertical-align: middle;
+        margin: 0 2px;
+    }
+
+    /* ===== EVENT TYPES ===== */
+
+    /* Superchat (醒目留言) */
+    .event--superchat {
+        background: linear-gradient(90deg, rgba(88, 28, 135, 0.85), rgba(126, 34, 206, 0.65));
+        border-left-color: var(--accent-superchat);
+        box-shadow: 0 6px 16px rgba(126, 34, 206, 0.3), inset 0 0 1px rgba(255, 255, 255, 0.2);
+    }
+    .event--superchat .price {
+        background: rgba(0, 0, 0, 0.4);
+        padding: 2px 8px;
+        border-radius: 999px;
+        font-weight: bold;
+        color: #e9d5ff;
+        font-size: 13px;
+        margin-left: 6px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+    /* Gift (礼物) */
+    .event--gift {
+        background: linear-gradient(90deg, rgba(153, 27, 27, 0.85), rgba(220, 38, 38, 0.65));
+        border-left-color: var(--accent-gift);
+        box-shadow: 0 6px 16px rgba(220, 38, 38, 0.3), inset 0 0 1px rgba(255, 255, 255, 0.2);
+    }
+    .event--gift .content {
+        font-weight: 500;
+    }
+
+    /* System & Toast (系统和通知) */
+    .event--system, .event--toast {
+        background: linear-gradient(90deg, rgba(6, 78, 59, 0.85), rgba(16, 185, 129, 0.65));
+        border-left-color: var(--accent-system);
+        justify-content: center;
+        padding-left: 16px;
+    }
+    .event--system .avatar--sender, .event--toast .avatar--sender {
+        display: none; /* Hide avatars for system messages */
+    }
+    
+    /* Guard Levels (舰长等) */
+    .event--message.guard-level--1 {
+        background: linear-gradient(90deg, rgba(12, 74, 110, 0.75), rgba(2, 132, 199, 0.55));
+        border-left-color: var(--accent-guard1);
+    }
+    .event--message.guard-level--2 {
+        background: linear-gradient(90deg, rgba(88, 28, 135, 0.75), rgba(126, 34, 206, 0.55));
+        border-left-color: var(--accent-guard2);
+    }
+    .event--message.guard-level--3 {
+        background: linear-gradient(90deg, rgba(127, 29, 29, 0.75), rgba(185, 28, 28, 0.55));
+        border-left-color: var(--accent-guard3);
+    }
+
+    /* Hover effect for interactivity */
+    .event:hover {
+        transform: scale(1.02);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25), inset 0 0 1px rgba(255, 255, 255, 0.3);
+    }
+}
