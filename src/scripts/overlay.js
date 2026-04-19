@@ -186,9 +186,9 @@ function updateClock() {
   }
 
   if (refs.minimalDate) {
-    const jpDays = ['日', '月', '火', '水', '木', '金', '土'];
-    const weekday = jpDays[now.getDay()];
-    refs.minimalDate.textContent = `${now.getFullYear()}.${pad(now.getMonth() + 1)}.${pad(now.getDate())} ${weekday}`;
+    const cnDays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+    const weekday = cnDays[now.getDay()];
+    refs.minimalDate.innerHTML = `${weekday}<br>${now.getFullYear()}.${pad(now.getMonth() + 1)}.${pad(now.getDate())}`;
   }
 }
 

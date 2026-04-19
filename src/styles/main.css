@@ -720,7 +720,7 @@
       min-width: 0;
       display: flex;
       flex-direction: row;
-      align-items: baseline;
+      align-items: center;
       gap: 16px;
       justify-content: flex-end;
       position: relative;
@@ -730,7 +730,7 @@
     body[data-theme="minimal-light"] .minimal-time {
       font-family: 'Oxanium', 'Google Sans', sans-serif;
       font-weight: 700;
-      font-size: 46px;
+      font-size: 52px;
       line-height: 1;
       color: rgba(255, 255, 255, 0.95);
       text-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
@@ -793,12 +793,15 @@
 
     body[data-theme="minimal-light"] .minimal-date {
       margin-top: 0;
-      margin-bottom: 2px;
+      margin-bottom: 0;
       font-family: 'Google Sans', sans-serif;
       font-weight: 500;
       font-size: 14px;
-      letter-spacing: 0.5px;
-      display: inline;
+      line-height: 1.4;
+      letter-spacing: 1px;
+      display: inline-flex;
+      flex-direction: column;
+      justify-content: center;
       width: auto;
       white-space: nowrap;
       text-align: left;
