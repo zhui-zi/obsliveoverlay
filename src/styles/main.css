@@ -653,11 +653,12 @@
     body[data-theme="minimal-light"] .minimal-datetime {
       position: absolute;
       right: var(--minimal-clock-right, 40px);
-      top: calc(var(--minimal-clock-top, 1004px) + 2px);
+      bottom: 40px;
       z-index: 60;
       pointer-events: auto;
       width: max-content;
-      height: 66px;
+      height: auto;
+      min-height: 80px;
       display: inline-flex;
       align-items: stretch;
       animation: minimal-datetime-fade-in 0.8s ease-out;
