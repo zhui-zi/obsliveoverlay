@@ -101,7 +101,8 @@ function applyLayout(mode, leftAlign169 = false) {
   if (isMinimalLightTheme) {
     refs.root.style.setProperty('--minimal-clock-left', `${frameRect.x}px`);
     refs.root.style.setProperty('--minimal-clock-right', `${1920 - (frameRect.x + frameRect.width)}px`);
-    refs.root.style.setProperty('--minimal-clock-top', `${frameRect.y + frameRect.height + 10}px`);
+    // 精确计算：置于 84px 缝隙的正中心（11px 顶距，11px 底距）
+    refs.root.style.setProperty('--minimal-clock-top', `${frameRect.y + frameRect.height + 11}px`);
   }
 }
 
