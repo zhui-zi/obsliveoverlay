@@ -596,57 +596,57 @@
 
     body[data-theme="minimal-light"] .effect-glow .path-main {
       stroke: url(#beamGradient);
-      stroke-width: 8;
-      stroke-linejoin: miter;
-      stroke-linecap: square;
-      stroke-dasharray: 16 16;
-      opacity: 0.9;
-      animation: minimal-rainbow-breathe 5.6s ease-in-out infinite, minimal-dash-flow 2s linear infinite;
-      filter: drop-shadow(4px 4px 0 rgba(255, 255, 0,0.4));
+      stroke-width: 3;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+      stroke-dasharray: 60 180;
+      opacity: 0.6;
+      animation: minimal-rainbow-breathe 8s ease-in-out infinite, minimal-dash-flow 5s linear infinite;
+      filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.4));
     }
 
     body[data-theme="minimal-light"] .effect-glow .path-glitch {
       display: inline;
       stroke: url(#beamGradient);
-      stroke-width: 12;
-      stroke-linejoin: miter;
-      stroke-linecap: butt;
-      opacity: 0.28;
-      stroke-dasharray: 28 110;
+      stroke-width: 8;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+      opacity: 0.15;
+      stroke-dasharray: 40 200;
       mix-blend-mode: screen;
-      animation: minimal-halo-run 8s linear infinite;
-      filter: blur(1.6px) saturate(1.12);
+      animation: minimal-halo-run 12s linear infinite;
+      filter: blur(4px) saturate(1.2);
     }
 
     @keyframes minimal-rainbow-breathe {
       0% {
-        opacity: 0.82;
-        stroke-width: 6.2;
-        filter: hue-rotate(0deg) drop-shadow(0 0 5px rgba(255, 165, 0, 0.4)) drop-shadow(0 0 15px rgba(255, 255, 0, 0.3));
+        opacity: 0.5;
+        stroke-width: 2.5;
+        filter: hue-rotate(0deg) drop-shadow(0 0 4px rgba(255, 255, 255, 0.3)) drop-shadow(0 0 10px rgba(255, 255, 255, 0.1));
       }
       50% {
-        opacity: 0.96;
-        stroke-width: 7;
-        filter: hue-rotate(180deg) drop-shadow(0 0 8px rgba(255, 255, 0, 0.6)) drop-shadow(0 0 25px rgba(255, 165, 0, 0.5));
+        opacity: 0.8;
+        stroke-width: 3.5;
+        filter: hue-rotate(180deg) drop-shadow(0 0 8px rgba(150, 200, 255, 0.4)) drop-shadow(0 0 16px rgba(150, 200, 255, 0.2));
       }
       100% {
-        opacity: 0.82;
-        stroke-width: 6.2;
-        filter: hue-rotate(360deg) drop-shadow(0 0 5px rgba(255, 165, 0, 0.4)) drop-shadow(0 0 15px rgba(255, 255, 0, 0.3));
+        opacity: 0.5;
+        stroke-width: 2.5;
+        filter: hue-rotate(360deg) drop-shadow(0 0 4px rgba(255, 255, 255, 0.3)) drop-shadow(0 0 10px rgba(255, 255, 255, 0.1));
       }
     }
 
     @keyframes minimal-halo-run {
       from {
         stroke-dashoffset: 0;
-        opacity: 0.22;
+        opacity: 0.1;
       }
       50% {
-        opacity: 0.35;
+        opacity: 0.25;
       }
       to {
         stroke-dashoffset: -360;
-        opacity: 0.22;
+        opacity: 0.1;
       }
     }
 
