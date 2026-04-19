@@ -101,7 +101,7 @@ function applyLayout(mode, leftAlign169 = false) {
   if (isMinimalLightTheme) {
     refs.root.style.setProperty('--minimal-clock-left', `${frameRect.x}px`);
     refs.root.style.setProperty('--minimal-clock-right', `${1920 - (frameRect.x + frameRect.width)}px`);
-    refs.root.style.setProperty('--minimal-clock-top', `${frameRect.y + frameRect.height + 2}px`);
+    refs.root.style.setProperty('--minimal-clock-top', `${frameRect.y + frameRect.height + 10}px`);
   }
 }
 

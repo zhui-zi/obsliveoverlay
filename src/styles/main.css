@@ -653,7 +653,7 @@
     body[data-theme="minimal-light"] .minimal-datetime {
       position: absolute;
       right: var(--minimal-clock-right, 40px);
-      top: var(--minimal-clock-top, 998px);
+      top: var(--minimal-clock-top, 1006px);
       z-index: 60;
       pointer-events: auto;
       width: max-content;
@@ -671,9 +671,9 @@
     body[data-theme="minimal-light"] .minimal-datetime-inner {
       position: relative;
       margin-left: 0;
-      padding: 10px 24px;
+      padding: 10px 20px;
       width: auto;
-      min-width: 300px;
+      min-width: 260px;
       display: flex;
       flex-direction: row;
       justify-content: flex-start;
@@ -730,10 +730,10 @@
     body[data-theme="minimal-light"] .minimal-time {
       font-family: 'Oxanium', 'Google Sans', sans-serif;
       font-weight: 700;
-      font-size: 56px;
+      font-size: 46px;
       line-height: 1;
       color: rgba(255, 255, 255, 0.95);
-      text-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+      text-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
       text-transform: uppercase;
       letter-spacing: 2px;
     }
@@ -796,8 +796,8 @@
       margin-bottom: 2px;
       font-family: 'Google Sans', sans-serif;
       font-weight: 500;
-      font-size: 16px;
-      letter-spacing: 1px;
+      font-size: 14px;
+      letter-spacing: 0.5px;
       display: inline;
       width: auto;
       white-space: nowrap;
