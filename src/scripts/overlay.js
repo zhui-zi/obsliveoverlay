@@ -186,7 +186,7 @@ function updateClock() {
   }
 
   if (refs.minimalDate) {
-    const jpDays = ['🌞 日', '🌙 月', '🔥 火', '💧 水', '🌲 木', '🌟 金', '🌍 土'];
+    const jpDays = ['日', '月', '火', '水', '木', '金', '土'];
     const weekday = jpDays[now.getDay()];
     refs.minimalDate.textContent = `${now.getFullYear()}.${pad(now.getMonth() + 1)}.${pad(now.getDate())} ${weekday}`;
   }
