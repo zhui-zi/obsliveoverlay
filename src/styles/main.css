@@ -646,11 +646,11 @@
     body[data-theme="minimal-light"] .minimal-datetime {
       position: absolute;
       right: var(--minimal-clock-right, 40px);
-      top: calc(var(--minimal-clock-top, 1004px) - 8px);
+      top: calc(var(--minimal-clock-top, 1004px) + 2px);
       z-index: 60;
       pointer-events: auto;
       width: max-content;
-      height: 84px;
+      height: 66px;
       display: inline-flex;
       align-items: stretch;
       animation: minimal-datetime-fade-in 0.8s ease-out;
@@ -664,7 +664,7 @@
     body[data-theme="minimal-light"] .minimal-datetime-inner {
       position: relative;
       margin-left: 0;
-      padding: 7px 10px 8px 10px;
+      padding: 5px 9px 6px 9px;
       width: 288px;
       min-width: 288px;
       max-width: 288px;
@@ -711,7 +711,7 @@
       flex-direction: column;
       align-items: stretch;
       justify-content: center;
-      gap: 6px;
+      gap: 4px;
       position: relative;
       z-index: 2;
     }
@@ -729,7 +729,7 @@
 
     body[data-theme="minimal-light"] .minimal-live-button {
       width: 100%;
-      height: 20px;
+      height: 17px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -738,8 +738,8 @@
       background: linear-gradient(120deg, rgba(255, 62, 98, 0.38), rgba(255, 82, 82, 0.2));
       color: rgba(255, 243, 245, 0.96);
       font-family: 'Google Sans Mono', 'Consolas', monospace;
-      font-size: 10px;
-      letter-spacing: 1.1px;
+      font-size: 9px;
+      letter-spacing: 0.9px;
       text-transform: uppercase;
       box-shadow: 0 0 12px rgba(255, 62, 98, 0.33), inset 0 0 12px rgba(255, 98, 124, 0.2);
       animation: minimal-live-pulse 2.1s ease-in-out infinite;
@@ -759,7 +759,7 @@
 
     body[data-theme="minimal-light"] .minimal-home-link {
       width: 100%;
-      height: 20px;
+      height: 17px;
       padding: 0 8px;
       border-radius: 999px;
       display: inline-flex;
@@ -769,8 +769,8 @@
       background: linear-gradient(120deg, rgba(0, 117, 255, 0.24), rgba(0, 220, 255, 0.12));
       color: rgba(220, 240, 255, 0.92);
       font-family: 'Google Sans Mono', 'Consolas', monospace;
-      font-size: 10px;
-      letter-spacing: 1px;
+      font-size: 9px;
+      letter-spacing: 0.8px;
       text-decoration: none;
       transition: transform 0.22s ease, box-shadow 0.22s ease, color 0.22s ease;
       pointer-events: auto;
@@ -784,8 +784,8 @@
 
     body[data-theme="minimal-light"] .minimal-time {
       font-family: 'Oxanium', 'Orbitron', 'Consolas', monospace;
-      font-size: 31px;
-      letter-spacing: 2.6px;
+      font-size: 27px;
+      letter-spacing: 2.2px;
       line-height: 1;
       display: inline;
       width: 100%;
@@ -805,10 +805,10 @@
     }
 
     body[data-theme="minimal-light"] .minimal-date {
-      margin-top: 4px;
+      margin-top: 3px;
       font-family: 'Google Sans Mono', 'Consolas', monospace;
-      font-size: 11px;
-      letter-spacing: 1.35px;
+      font-size: 10px;
+      letter-spacing: 1.05px;
       display: inline;
       width: 100%;
       white-space: nowrap;
