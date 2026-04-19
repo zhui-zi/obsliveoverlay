@@ -1,0 +1,152 @@
+/* 🌟 Y2K Millennium Retro Theme 🌟 */
+@import url('https://fonts.googleapis.com/css2?family=VT323&family=Chakra+Petch:wght@500;700&display=swap');
+
+:root {
+  --y2k-pink: #ff00ff;
+  --y2k-cyan: #00ffff;
+  --y2k-yellow: #ffff00;
+  --y2k-silver: linear-gradient(135deg, #e0e0e0 0%, #ffffff 50%, #a0a0a0 100%);
+  --y2k-bg: rgba(255, 255, 255, 0.85);
+  --y2k-border: 3px solid #000;
+  --y2k-shadow: 4px 4px 0px #000;
+  
+  --event-gap: 12px;
+  --font-main: 'Chakra Petch', sans-serif;
+  --font-pixel: 'VT323', monospace;
+}
+
+/* Container */
+.log-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--event-gap);
+  padding: 10px;
+  max-width: 400px;
+  font-family: var(--font-main);
+}
+
+/* Base Event Card - Y2K Window Style */
+.event {
+  background: var(--y2k-silver);
+  border: var(--y2k-border);
+  border-radius: 12px;
+  box-shadow: var(--y2k-shadow);
+  padding: 10px 14px;
+  position: relative;
+  overflow: hidden;
+  animation: y2k-pop-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  transform-origin: left center;
+  margin-left: 4px;
+  margin-bottom: 4px;
+}
+
+/* Y2K Shine effect */
+.event::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%; width: 50%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+  transform: skewX(-20deg);
+  animation: y2k-shine 4s infinite;
+}
+
+/* Inner wrapper */
+.event-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.6);
+  border: 2px dashed #ff00ff;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.content-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  word-break: break-word;
+  gap: 6px;
+  flex: 1;
+}
+
+/* Avatar - CD/Pixel Art vibe */
+.avatar-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #00ffff;
+  box-shadow: 2px 2px 0px #ff00ff;
+  background-color: #000;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+/* Username - Bright Colors & Outline */
+.username {
+  font-family: var(--font-main);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #ff00ff;
+  text-shadow: 1px 1px 0 #00ffff, -1px -1px 0 #00ffff, 1px -1px 0 #00ffff, -1px 1px 0 #00ffff;
+  letter-spacing: 0.5px;
+}
+
+/* Message Text */
+.message-text {
+  font-family: var(--font-pixel);
+  font-size: 1.3rem;
+  color: #000;
+  line-height: 1.2;
+}
+
+/* Badges */
+.badge-icon {
+  height: 18px;
+  vertical-align: middle;
+  border-radius: 4px;
+  border: 1px solid #000;
+}
+
+/* Event Types Overrides */
+
+/* Gifts & Likes - Hot Pink & Yellow */
+.event[data-event-id="like"] .event-wrap,
+.event[data-event-id="gift"] .event-wrap {
+  border-color: #ffff00;
+  background: rgba(255, 0, 255, 0.15);
+}
+.event[data-event-id="like"] .username,
+.event[data-event-id="gift"] .username {
+  color: #ffff00;
+  text-shadow: 1px 1px 0 #ff00ff, -1px -1px 0 #ff00ff, 1px -1px 0 #ff00ff, -1px 1px 0 #ff00ff;
+}
+
+/* Follows, Joins - Cyan & Yellow */
+.event[data-event-id="follow"] .event-wrap,
+.event[data-event-id="join"] .event-wrap,
+.event[data-event-id="subscribe"] .event-wrap {
+  border-color: #00ffff;
+  background: rgba(0, 255, 255, 0.15);
+}
+.event[data-event-id="follow"] .username,
+.event[data-event-id="join"] .username,
+.event[data-event-id="subscribe"] .username {
+  color: #000;
+  text-shadow: 1px 1px 0 #00ffff, -1px -1px 0 #00ffff, 1px -1px 0 #00ffff, -1px 1px 0 #00ffff;
+}
+
+/* Animations */
+@keyframes y2k-pop-in {
+  0% { transform: scale(0.5) rotate(-5deg); opacity: 0; }
+  70% { transform: scale(1.05) rotate(2deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+
+@keyframes y2k-shine {
+  0% { left: -100%; }
+  20% { left: 200%; }
+  100% { left: 200%; }
+}
