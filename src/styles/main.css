@@ -646,11 +646,11 @@
     body[data-theme="minimal-light"] .minimal-datetime {
       position: absolute;
       right: var(--minimal-clock-right, 40px);
-      top: var(--minimal-clock-top, 1004px);
+      top: calc(var(--minimal-clock-top, 1004px) - 26px);
       z-index: 60;
       pointer-events: auto;
       width: max-content;
-      height: 112px;
+      height: 84px;
       display: inline-flex;
       align-items: stretch;
       animation: minimal-datetime-fade-in 0.8s ease-out;
@@ -664,42 +664,32 @@
     body[data-theme="minimal-light"] .minimal-datetime-inner {
       position: relative;
       margin-left: 0;
-      padding: 8px 12px 10px 12px;
-      width: 346px;
-      min-width: 346px;
-      max-width: 346px;
+      padding: 7px 10px 8px 10px;
+      width: 288px;
+      min-width: 288px;
+      max-width: 288px;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      border-radius: 14px;
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(220, 236, 255, 0.28);
+      border-radius: 12px;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), 0 0 14px rgba(106, 153, 255, 0.14);
       background: linear-gradient(150deg, rgba(8, 10, 18, 0.58), rgba(8, 10, 18, 0.18));
       backdrop-filter: blur(38px) saturate(1.2);
       -webkit-backdrop-filter: blur(38px) saturate(1.2);
       overflow: hidden;
       isolation: isolate;
+      animation: minimal-border-breathe 3.8s ease-in-out infinite;
     }
 
     body[data-theme="minimal-light"] .minimal-datetime-inner::before {
       content: '';
       position: absolute;
-      inset: -1px;
-      border-radius: 14px;
-      padding: 1.5px;
-      background: conic-gradient(
-        from 0deg,
-        rgba(0, 214, 255, 0.86) 0deg,
-        rgba(122, 92, 255, 0.95) 90deg,
-        rgba(111, 255, 210, 0.92) 180deg,
-        rgba(255, 203, 120, 0.9) 270deg,
-        rgba(0, 214, 255, 0.86) 360deg
-      );
-      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      animation: minimal-border-marquee 4.2s linear infinite;
+      inset: 0;
+      border-radius: 12px;
+      border: 1px solid rgba(170, 204, 255, 0.36);
+      opacity: 0.72;
       pointer-events: none;
     }
 
@@ -718,13 +708,13 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 6px;
-      gap: 8px;
+      margin-bottom: 4px;
+      gap: 6px;
     }
 
     body[data-theme="minimal-light"] .minimal-live-button {
-      min-width: 98px;
-      height: 24px;
+      min-width: 86px;
+      height: 20px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -733,8 +723,8 @@
       background: linear-gradient(120deg, rgba(255, 62, 98, 0.38), rgba(255, 82, 82, 0.2));
       color: rgba(255, 243, 245, 0.96);
       font-family: 'Google Sans Mono', 'Consolas', monospace;
-      font-size: 11px;
-      letter-spacing: 1.6px;
+      font-size: 10px;
+      letter-spacing: 1.1px;
       text-transform: uppercase;
       box-shadow: 0 0 12px rgba(255, 62, 98, 0.33), inset 0 0 12px rgba(255, 98, 124, 0.2);
       animation: minimal-live-pulse 2.1s ease-in-out infinite;
@@ -743,9 +733,9 @@
 
     body[data-theme="minimal-light"] .minimal-live-button::before {
       content: '';
-      width: 7px;
-      height: 7px;
-      margin-right: 7px;
+      width: 6px;
+      height: 6px;
+      margin-right: 6px;
       border-radius: 50%;
       background: #ff4d79;
       box-shadow: 0 0 8px rgba(255, 88, 125, 0.95);
@@ -753,8 +743,8 @@
     }
 
     body[data-theme="minimal-light"] .minimal-home-link {
-      height: 24px;
-      padding: 0 10px;
+      height: 20px;
+      padding: 0 8px;
       border-radius: 999px;
       display: inline-flex;
       align-items: center;
@@ -763,8 +753,8 @@
       background: linear-gradient(120deg, rgba(0, 117, 255, 0.24), rgba(0, 220, 255, 0.12));
       color: rgba(220, 240, 255, 0.92);
       font-family: 'Google Sans Mono', 'Consolas', monospace;
-      font-size: 11px;
-      letter-spacing: 1.3px;
+      font-size: 10px;
+      letter-spacing: 1px;
       text-decoration: none;
       transition: transform 0.22s ease, box-shadow 0.22s ease, color 0.22s ease;
       pointer-events: auto;
@@ -778,8 +768,8 @@
 
     body[data-theme="minimal-light"] .minimal-time {
       font-family: 'Oxanium', 'Orbitron', 'Consolas', monospace;
-      font-size: 38px;
-      letter-spacing: 3.2px;
+      font-size: 31px;
+      letter-spacing: 2.6px;
       line-height: 1;
       display: inline;
       width: 100%;
@@ -799,10 +789,10 @@
     }
 
     body[data-theme="minimal-light"] .minimal-date {
-      margin-top: 5px;
+      margin-top: 4px;
       font-family: 'Google Sans Mono', 'Consolas', monospace;
-      font-size: 13px;
-      letter-spacing: 1.95px;
+      font-size: 11px;
+      letter-spacing: 1.35px;
       display: inline;
       width: 100%;
       white-space: nowrap;
@@ -824,9 +814,15 @@
       82% { transform: translateX(120%); }
     }
 
-    @keyframes minimal-border-marquee {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
+    @keyframes minimal-border-breathe {
+      0%, 100% {
+        border-color: rgba(220, 236, 255, 0.26);
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), 0 0 12px rgba(106, 153, 255, 0.12);
+      }
+      50% {
+        border-color: rgba(230, 244, 255, 0.38);
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1), 0 0 18px rgba(106, 153, 255, 0.2);
+      }
     }
 
     @keyframes minimal-live-pulse {
