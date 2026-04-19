@@ -580,24 +580,39 @@
 
     body[data-theme="minimal-light"] .frame-decor {
       position: absolute;
-      width: 14px;
-      height: 14px;
-      border: 2px solid #ffa500;
-      box-shadow: 2px 2px 0 #ffff00;
-      opacity: 0.8;
-      animation: y2k-decor-spin 4s linear infinite;
+      font-size: 22px;
+      font-weight: 900;
+      font-family: 'Inter', sans-serif;
+      opacity: 0.9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      animation: ps-decor-spin 4s linear infinite, ps-decor-colors 4s infinite step-end;
       z-index: 60;
     }
 
-    body[data-theme="minimal-light"] .decor-tl { top: 12px; left: 12px; }
-    body[data-theme="minimal-light"] .decor-tr { top: 12px; right: 12px; animation-direction: reverse; }
-    body[data-theme="minimal-light"] .decor-bl { bottom: 250px; left: 12px; animation-direction: reverse; }
-    body[data-theme="minimal-light"] .decor-br { bottom: 250px; right: 12px; }
+    body[data-theme="minimal-light"] .decor-tl { top: 12px; left: 16px; }
+    body[data-theme="minimal-light"] .decor-tc { top: 12px; left: 960px; animation-duration: 5s; animation-direction: reverse; }
+    body[data-theme="minimal-light"] .decor-tr { top: 12px; right: 16px; animation-direction: reverse; }
+    body[data-theme="minimal-light"] .decor-rc { top: 540px; right: 16px; animation-duration: 5s; }
+    body[data-theme="minimal-light"] .decor-bl { bottom: 250px; left: 16px; animation-direction: reverse; }
+    body[data-theme="minimal-light"] .decor-bc { bottom: 250px; left: 960px; animation-duration: 5s; }
+    body[data-theme="minimal-light"] .decor-br { bottom: 250px; right: 16px; }
+    body[data-theme="minimal-light"] .decor-lc { top: 540px; left: 16px; animation-duration: 5s; animation-direction: reverse; }
 
-    @keyframes y2k-decor-spin {
-      0% { transform: rotate(0deg) scale(1); border-color: #ffa500; box-shadow: 2px 2px 0 #ffff00; }
-      50% { transform: rotate(180deg) scale(1.1); border-color: #ffff00; box-shadow: -2px -2px 0 #ffa500; }
-      100% { transform: rotate(360deg) scale(1); border-color: #ffa500; box-shadow: 2px 2px 0 #ffff00; }
+    @keyframes ps-decor-spin {
+      0% { transform: rotate(0deg) scale(1); }
+      50% { transform: rotate(180deg) scale(1.1); }
+      100% { transform: rotate(360deg) scale(1); }
+    }
+
+    @keyframes ps-decor-colors {
+      0% { color: #00ffcc; text-shadow: 2px 2px 0px rgba(0,255,204,0.5); }
+      25% { color: #ff66cc; text-shadow: 2px 2px 0px rgba(255,102,204,0.5); }
+      50% { color: #ff3333; text-shadow: 2px 2px 0px rgba(255,51,51,0.5); }
+      75% { color: #33ccff; text-shadow: 2px 2px 0px rgba(51,204,255,0.5); }
+      100% { color: #00ffcc; text-shadow: 2px 2px 0px rgba(0,255,204,0.5); }
     }
 
     @keyframes minimal-dash-flow {
@@ -824,8 +839,8 @@
       width: 100%;
       white-space: nowrap;
       text-align: right;
-      color: #fff;
-      text-shadow: 2px 2px 0 #ffa500, -2px -2px 0 #ffff00;
+      color: #ffffff;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), 1px 1px 0px #b37400;
       font-variant-numeric: tabular-nums;
       position: relative;
       z-index: 2;
@@ -840,7 +855,8 @@
       width: 100%;
       white-space: nowrap;
       text-align: right;
-      color: #ffff00;
+      color: #ffeba1;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8), 1px 1px 0px #996300;
       text-transform: uppercase;
       position: relative;
       z-index: 2;

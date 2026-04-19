@@ -186,7 +186,8 @@ function updateClock() {
   }
 
   if (refs.minimalDate) {
-    const weekday = now.toLocaleDateString('en-US', { weekday: 'long' }).toUpperCase();
+    const jpDays = ['🌞 日', '🌙 月', '🔥 火', '💧 水', '🌲 木', '🌟 金', '🌍 土'];
+    const weekday = jpDays[now.getDay()];
     refs.minimalDate.textContent = `${now.getFullYear()}.${pad(now.getMonth() + 1)}.${pad(now.getDate())} ${weekday}`;
   }
 }
