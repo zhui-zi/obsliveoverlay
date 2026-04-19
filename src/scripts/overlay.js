@@ -82,7 +82,8 @@ function applyLayout(mode, leftAlign169 = false) {
   let frameRect = mode === '16:9' ? layout16x9.frameRect : preset.frameRect;
   if (isMinimalLightTheme) {
     if (refs.beamSvg) refs.beamSvg.setAttribute('viewBox', '0 0 1920 1080');
-    frameRect = { x: 152, y: 24, width: 1728, height: 972 };
+    // 缩小游戏直播区域，给底部巨大的时钟留出足够的空间防止重叠裁切 (维持16:9比例)
+    frameRect = { x: 160, y: 32, width: 1600, height: 900 };
   } else if (refs.beamSvg) {
     refs.beamSvg.setAttribute('viewBox', '0 0 1940 843');
   }
