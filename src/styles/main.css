@@ -704,13 +704,12 @@
     }
 
     body[data-theme="minimal-light"] .minimal-actions-col {
-      width: 82px;
-      min-width: 82px;
+      width: 76px;
+      min-width: 76px;
       display: flex;
       flex-direction: column;
       align-items: stretch;
       justify-content: center;
-      gap: 4px;
       position: relative;
       z-index: 2;
     }
@@ -730,7 +729,7 @@
     body[data-theme="minimal-light"] .minimal-time {
       font-family: 'Oxanium', 'Google Sans', sans-serif;
       font-weight: 700;
-      font-size: 34px;
+      font-size: 42px;
       line-height: 1;
       color: rgba(255, 255, 255, 0.95);
       text-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
@@ -740,7 +739,7 @@
 
     body[data-theme="minimal-light"] .minimal-live-button {
       width: 100%;
-      height: 20px;
+      height: 24px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -750,7 +749,7 @@
       color: rgba(255, 255, 255, 0.9);
       font-family: 'Google Sans', sans-serif;
       font-weight: 700;
-      font-size: 10px;
+      font-size: 11px;
       letter-spacing: 1px;
       text-transform: uppercase;
       animation: minimal-pulse-live 2s ease-in-out infinite;
@@ -764,27 +763,6 @@
       color: #ff4757;
       text-shadow: 0 0 8px rgba(255, 71, 87, 0.8);
     }
-
-    body[data-theme="minimal-light"] .minimal-home-link {
-      width: 100%;
-      height: 20px;
-      padding: 0 8px;
-      border-radius: 4px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(255, 255, 255, 0.05);
-      color: rgba(255, 255, 255, 0.7);
-      font-family: 'Google Sans', sans-serif;
-      font-weight: 500;
-      font-size: 10px;
-      text-decoration: none;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      position: relative;
-      z-index: 2;
-    }
     
     @keyframes minimal-pulse-live {
       0%, 100% { opacity: 1; border-color: rgba(255, 99, 71, 0.6); box-shadow: 0 0 6px rgba(255, 99, 71, 0.3); }
@@ -796,7 +774,7 @@
       margin-bottom: 0;
       font-family: 'Google Sans', sans-serif;
       font-weight: 500;
-      font-size: 11px;
+      font-size: 13px;
       line-height: 1.4;
       letter-spacing: 1px;
       display: inline-flex;
