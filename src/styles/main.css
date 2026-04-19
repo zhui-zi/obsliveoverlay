@@ -1,4 +1,4 @@
-﻿:root {
+:root {
       /* ===== 📝 文字内容配置 ===== */
       --announcement-text: "没啥好说的，都来我家喝酒吧！";
       --game-name-text: "cities skylines 2";
@@ -575,6 +575,33 @@
       right: 0;
       height: 1080px;
       z-index: 50;
+      pointer-events: none;
+    }
+
+    body[data-theme="minimal-light"] .frame-decor {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border: 2px solid #ffa500;
+      box-shadow: 2px 2px 0 #ffff00;
+      opacity: 0.8;
+      animation: y2k-decor-spin 4s linear infinite;
+      z-index: 60;
+    }
+
+    body[data-theme="minimal-light"] .decor-tl { top: 12px; left: 12px; }
+    body[data-theme="minimal-light"] .decor-tr { top: 12px; right: 12px; animation-direction: reverse; }
+    body[data-theme="minimal-light"] .decor-bl { bottom: 250px; left: 12px; animation-direction: reverse; }
+    body[data-theme="minimal-light"] .decor-br { bottom: 250px; right: 12px; }
+
+    @keyframes y2k-decor-spin {
+      0% { transform: rotate(0deg) scale(1); border-color: #ffa500; box-shadow: 2px 2px 0 #ffff00; }
+      50% { transform: rotate(180deg) scale(1.1); border-color: #ffff00; box-shadow: -2px -2px 0 #ffa500; }
+      100% { transform: rotate(360deg) scale(1); border-color: #ffa500; box-shadow: 2px 2px 0 #ffff00; }
+    }
+
+    @keyframes minimal-dash-flow {
+      to { stroke-dashoffset: -100; }
     }
 
     body[data-theme="minimal-light"] .beam-svg {
@@ -591,11 +618,13 @@
 
     body[data-theme="minimal-light"] .effect-glow .path-main {
       stroke: url(#beamGradient);
-      stroke-width: 6.5;
+      stroke-width: 8;
       stroke-linejoin: miter;
-      stroke-linecap: butt;
-      opacity: 0.88;
-      animation: minimal-rainbow-breathe 5.6s ease-in-out infinite;
+      stroke-linecap: square;
+      stroke-dasharray: 16 16;
+      opacity: 0.9;
+      animation: minimal-rainbow-breathe 5.6s ease-in-out infinite, minimal-dash-flow 2s linear infinite;
+      filter: drop-shadow(4px 4px 0 rgba(255, 255, 0,0.4));
     }
 
     body[data-theme="minimal-light"] .effect-glow .path-glitch {
@@ -615,17 +644,17 @@
       0% {
         opacity: 0.82;
         stroke-width: 6.2;
-        filter: hue-rotate(0deg) drop-shadow(0 0 5px rgba(255, 0, 255, 0.4)) drop-shadow(0 0 15px rgba(0, 255, 255, 0.3));
+        filter: hue-rotate(0deg) drop-shadow(0 0 5px rgba(255, 165, 0, 0.4)) drop-shadow(0 0 15px rgba(255, 255, 0, 0.3));
       }
       50% {
         opacity: 0.96;
         stroke-width: 7;
-        filter: hue-rotate(180deg) drop-shadow(0 0 8px rgba(0, 255, 255, 0.6)) drop-shadow(0 0 25px rgba(255, 0, 255, 0.5));
+        filter: hue-rotate(180deg) drop-shadow(0 0 8px rgba(255, 255, 0, 0.6)) drop-shadow(0 0 25px rgba(255, 165, 0, 0.5));
       }
       100% {
         opacity: 0.82;
         stroke-width: 6.2;
-        filter: hue-rotate(360deg) drop-shadow(0 0 5px rgba(255, 0, 255, 0.4)) drop-shadow(0 0 15px rgba(0, 255, 255, 0.3));
+        filter: hue-rotate(360deg) drop-shadow(0 0 5px rgba(255, 165, 0, 0.4)) drop-shadow(0 0 15px rgba(255, 255, 0, 0.3));
       }
     }
 
@@ -673,9 +702,9 @@
       justify-content: flex-start;
       align-items: center;
       gap: 10px;
-      border: 2px solid #ff00ff;
+      border: 2px solid #ffa500;
       border-radius: 4px;
-      box-shadow: 4px 4px 0px rgba(0, 255, 255, 0.5), inset 0 0 10px rgba(255, 0, 255, 0.2);
+      box-shadow: 4px 4px 0px rgba(255, 255, 0, 0.5), inset 0 0 10px rgba(255, 165, 0, 0.2);
       background: linear-gradient(135deg, rgba(16, 16, 24, 0.9), rgba(8, 8, 12, 0.95));
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
@@ -692,8 +721,8 @@
         0deg,
         transparent,
         transparent 2px,
-        rgba(0, 255, 255, 0.05) 2px,
-        rgba(0, 255, 255, 0.05) 4px
+        rgba(255, 255, 0, 0.05) 2px,
+        rgba(255, 255, 0, 0.05) 4px
       );
       pointer-events: none;
     }
@@ -738,15 +767,15 @@
       align-items: center;
       justify-content: center;
       border-radius: 2px;
-      border: 1px solid #ff00ff;
-      background: rgba(255, 0, 255, 0.2);
+      border: 1px solid #ffa500;
+      background: rgba(255, 165, 0, 0.2);
       color: #fff;
       font-family: 'Chakra Petch', 'Consolas', monospace;
       font-weight: 700;
       font-size: 10px;
       letter-spacing: 1px;
       text-transform: uppercase;
-      box-shadow: 0 0 5px rgba(255, 0, 255, 0.5);
+      box-shadow: 0 0 5px rgba(255, 165, 0, 0.5);
       animation: y2k-live-blink 1.5s infinite steps(2);
       user-select: none;
     }
@@ -754,8 +783,8 @@
     body[data-theme="minimal-light"] .minimal-live-button::before {
       content: '●';
       margin-right: 4px;
-      color: #00ffff;
-      text-shadow: 0 0 5px #00ffff;
+      color: #ffff00;
+      text-shadow: 0 0 5px #ffff00;
     }
 
     body[data-theme="minimal-light"] .minimal-home-link {
@@ -766,23 +795,23 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      border: 1px solid #00ffff;
-      background: rgba(0, 255, 255, 0.1);
-      color: #00ffff;
+      border: 1px solid #ffff00;
+      background: rgba(255, 255, 0, 0.1);
+      color: #ffff00;
       font-family: 'Chakra Petch', 'Consolas', monospace;
       font-weight: 700;
       font-size: 10px;
       letter-spacing: 1px;
       text-decoration: none;
-      text-shadow: 1px 1px 0 #ff00ff;
+      text-shadow: 1px 1px 0 #ffa500;
       transition: all 0.2s ease;
       pointer-events: auto;
     }
 
     body[data-theme="minimal-light"] .minimal-home-link:hover {
-      background: rgba(0, 255, 255, 0.3);
+      background: rgba(255, 255, 0, 0.3);
       color: #fff;
-      box-shadow: 0 0 8px #00ffff;
+      box-shadow: 0 0 8px #ffff00;
       transform: translate(1px, 1px);
     }
 
@@ -796,7 +825,7 @@
       white-space: nowrap;
       text-align: right;
       color: #fff;
-      text-shadow: 2px 2px 0 #ff00ff, -2px -2px 0 #00ffff;
+      text-shadow: 2px 2px 0 #ffa500, -2px -2px 0 #ffff00;
       font-variant-numeric: tabular-nums;
       position: relative;
       z-index: 2;
@@ -811,7 +840,7 @@
       width: 100%;
       white-space: nowrap;
       text-align: right;
-      color: #00ffff;
+      color: #ffff00;
       text-transform: uppercase;
       position: relative;
       z-index: 2;
@@ -829,12 +858,12 @@
 
     @keyframes y2k-border-glitch {
       0%, 100% {
-        border-color: #ff00ff;
-        box-shadow: 4px 4px 0px rgba(0, 255, 255, 0.5), inset 0 0 10px rgba(255, 0, 255, 0.2);
+        border-color: #ffa500;
+        box-shadow: 4px 4px 0px rgba(255, 255, 0, 0.5), inset 0 0 10px rgba(255, 165, 0, 0.2);
       }
       50% {
-        border-color: #00ffff;
-        box-shadow: 4px 4px 0px rgba(255, 0, 255, 0.5), inset 0 0 10px rgba(0, 255, 255, 0.2);
+        border-color: #ffff00;
+        box-shadow: 4px 4px 0px rgba(255, 165, 0, 0.5), inset 0 0 10px rgba(255, 255, 0, 0.2);
       }
     }
 
@@ -1380,8 +1409,8 @@
 
     @keyframes rgb-glitch {
       0%, 96%, 100% { box-shadow: none; }
-      97% { box-shadow: -2px 0 0 rgba(255,0,0,0.2), 2px 0 0 rgba(0,255,255,0.2); }
-      98% { box-shadow: 2px 0 0 rgba(255,0,0,0.2), -2px 0 0 rgba(0,255,255,0.2); }
+      97% { box-shadow: -2px 0 0 rgba(255,0,0,0.2), 2px 0 0 rgba(255, 255, 0,0.2); }
+      98% { box-shadow: 2px 0 0 rgba(255,0,0,0.2), -2px 0 0 rgba(255, 255, 0,0.2); }
     }
 
     /* 角落装饰 */

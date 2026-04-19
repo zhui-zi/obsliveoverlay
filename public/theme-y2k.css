@@ -2,8 +2,8 @@
 @import url('https://fonts.googleapis.com/css2?family=VT323&family=Chakra+Petch:wght@500;700&display=swap');
 
 :root {
-  --y2k-pink: #ff00ff;
-  --y2k-cyan: #00ffff;
+  --y2k-orange: #ffa500;
+  --y2k-yellow: #ffff00;
   --y2k-yellow: #ffff00;
   --y2k-silver: linear-gradient(135deg, #e0e0e0 0%, #ffffff 50%, #a0a0a0 100%);
   --y2k-bg: rgba(255, 255, 255, 0.85);
@@ -58,7 +58,7 @@
   position: relative;
   z-index: 2;
   background: rgba(255, 255, 255, 0.6);
-  border: 2px dashed #ff00ff;
+  border: 2px dashed #ffa500;
   border-radius: 8px;
   padding: 8px;
 }
@@ -77,8 +77,8 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 2px solid #00ffff;
-  box-shadow: 2px 2px 0px #ff00ff;
+  border: 2px solid #ffff00;
+  box-shadow: 2px 2px 0px #ffa500;
   background-color: #000;
   object-fit: cover;
   flex-shrink: 0;
@@ -89,8 +89,8 @@
   font-family: var(--font-main);
   font-weight: 700;
   font-size: 1.1rem;
-  color: #ff00ff;
-  text-shadow: 1px 1px 0 #00ffff, -1px -1px 0 #00ffff, 1px -1px 0 #00ffff, -1px 1px 0 #00ffff;
+  color: #ffa500;
+  text-shadow: 1px 1px 0 #ffff00, -1px -1px 0 #ffff00, 1px -1px 0 #ffff00, -1px 1px 0 #ffff00;
   letter-spacing: 0.5px;
 }
 
@@ -112,30 +112,30 @@
 
 /* Event Types Overrides */
 
-/* Gifts & Likes - Hot Pink & Yellow */
+/* Gifts & Likes - Hot orange & Yellow */
 .event[data-event-id="like"] .event-wrap,
 .event[data-event-id="gift"] .event-wrap {
   border-color: #ffff00;
-  background: rgba(255, 0, 255, 0.15);
+  background: rgba(255, 165, 0, 0.15);
 }
 .event[data-event-id="like"] .username,
 .event[data-event-id="gift"] .username {
   color: #ffff00;
-  text-shadow: 1px 1px 0 #ff00ff, -1px -1px 0 #ff00ff, 1px -1px 0 #ff00ff, -1px 1px 0 #ff00ff;
+  text-shadow: 1px 1px 0 #ffa500, -1px -1px 0 #ffa500, 1px -1px 0 #ffa500, -1px 1px 0 #ffa500;
 }
 
-/* Follows, Joins - Cyan & Yellow */
+/* Follows, Joins - yellow & Yellow */
 .event[data-event-id="follow"] .event-wrap,
 .event[data-event-id="join"] .event-wrap,
 .event[data-event-id="subscribe"] .event-wrap {
-  border-color: #00ffff;
-  background: rgba(0, 255, 255, 0.15);
+  border-color: #ffff00;
+  background: rgba(255, 255, 0, 0.15);
 }
 .event[data-event-id="follow"] .username,
 .event[data-event-id="join"] .username,
 .event[data-event-id="subscribe"] .username {
   color: #000;
-  text-shadow: 1px 1px 0 #00ffff, -1px -1px 0 #00ffff, 1px -1px 0 #00ffff, -1px 1px 0 #00ffff;
+  text-shadow: 1px 1px 0 #ffff00, -1px -1px 0 #ffff00, 1px -1px 0 #ffff00, -1px 1px 0 #ffff00;
 }
 
 /* Animations */

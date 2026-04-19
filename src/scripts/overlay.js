@@ -24,11 +24,11 @@ const DEFAULT_GRADIENT_STOPS = Object.freeze([
 ]);
 
 const MINIMAL_RAINBOW_STOPS = Object.freeze([
-  { offset: '0%', color: '#FF00FF' },
-  { offset: '25%', color: '#00FFFF' },
+  { offset: '0%', color: '#FFA500' },
+  { offset: '25%', color: '#FFFF00' },
   { offset: '50%', color: '#E0E0E0' },
-  { offset: '75%', color: '#00FFFF' },
-  { offset: '100%', color: '#FF00FF' }
+  { offset: '75%', color: '#FFFF00' },
+  { offset: '100%', color: '#FFA500' }
 ]);
 
 const CENTERED_16_9 = Object.freeze({
